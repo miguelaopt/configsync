@@ -9,7 +9,9 @@ export async function getDashboardData(userId: string) {
     db
       .select()
       .from(games)
-      .where(and(eq(games.userId, userId), eq(games.isArchived, false), isNotNull(games.lastOpenedAt)))
+      .where(
+        and(eq(games.userId, userId), eq(games.isArchived, false), isNotNull(games.lastOpenedAt)),
+      )
       .orderBy(desc(games.lastOpenedAt))
       .limit(6),
     db
@@ -28,11 +30,13 @@ export async function getDashboardData(userId: string) {
         gameName: games.name,
         gameSlug: games.slug,
         accentColor: games.accentColor,
-        settingCount: sql<number>`(select count(*) from ${schema.settings} s where s.preset_id = ${presets.id})`,
+        settingCount: sql<number>`(select count(*) from settings s where s.preset_id = "presets"."id")`,
       })
       .from(presets)
       .innerJoin(games, eq(games.id, presets.gameId))
-      .where(and(eq(presets.userId, userId), eq(presets.isArchived, false), eq(games.isArchived, false)))
+      .where(
+        and(eq(presets.userId, userId), eq(presets.isArchived, false), eq(games.isArchived, false)),
+      )
       .orderBy(desc(presets.updatedAt))
       .limit(6),
     db

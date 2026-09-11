@@ -4,10 +4,10 @@ import { requireUserId, UnauthorizedError } from "@/lib/auth/session";
 import { AppError } from "@/lib/data/errors";
 
 export type ActionResult<T = null> =
-  | { ok: true; data: T }
-  | { ok: false; error: string; fieldErrors?: Record<string, string> };
+  { ok: true; data: T } | { ok: false; error: string; fieldErrors?: Record<string, string> };
 
-export const GENERIC_ERROR = "Something went wrong on our side. Your changes are still here — try again.";
+export const GENERIC_ERROR =
+  "Something went wrong on our side. Your changes are still here — try again.";
 
 /**
  * Runs an authenticated action: validates input, executes, and turns any failure into a
@@ -50,5 +50,8 @@ export function toUserMessage(error: unknown): string {
 
 function isNextControlFlow(error: unknown) {
   const digest = (error as { digest?: unknown })?.digest;
-  return typeof digest === "string" && (digest.startsWith("NEXT_REDIRECT") || digest === "NEXT_NOT_FOUND");
+  return (
+    typeof digest === "string" &&
+    (digest.startsWith("NEXT_REDIRECT") || digest === "NEXT_NOT_FOUND")
+  );
 }

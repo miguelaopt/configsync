@@ -180,7 +180,11 @@ export const NUMERIC_TYPES: ReadonlySet<SettingTypeId> = new Set([
   "slider",
   "percentage",
 ]);
-export const CHOICE_TYPES: ReadonlySet<SettingTypeId> = new Set(["dropdown", "enum", "multi_select"]);
+export const CHOICE_TYPES: ReadonlySet<SettingTypeId> = new Set([
+  "dropdown",
+  "enum",
+  "multi_select",
+]);
 
 export const settingTypeSchema = z.enum(SETTING_TYPE_IDS);
 export const settingOptionSchema = z.object({
@@ -241,7 +245,10 @@ export function valueSchemaFor(def: SettingDefinition): z.ZodType<SettingValue> 
 }
 
 /** Human-readable value, used by the viewer, copy output and markdown export. */
-export function formatValue(def: SettingDefinition, value: SettingValue | null | undefined): string {
+export function formatValue(
+  def: SettingDefinition,
+  value: SettingValue | null | undefined,
+): string {
   if (value == null || value === "") return "—";
   switch (def.type) {
     case "boolean":
@@ -286,7 +293,10 @@ export function isResolution(v: unknown): v is Resolution {
 }
 
 /** Deep equality for setting values (primitives, string arrays, resolutions). */
-export function valuesEqual(a: SettingValue | null | undefined, b: SettingValue | null | undefined) {
+export function valuesEqual(
+  a: SettingValue | null | undefined,
+  b: SettingValue | null | undefined,
+) {
   if (a === b) return true;
   if (a == null || b == null) return false;
   if (Array.isArray(a) && Array.isArray(b)) {

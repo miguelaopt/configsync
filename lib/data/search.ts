@@ -22,7 +22,13 @@ export async function searchAll(userId: string, query: string, limit = 8): Promi
 
   const [gameRows, presetRows, categoryRows, settingRows] = await Promise.all([
     db
-      .select({ id: games.id, name: games.name, slug: games.slug, platforms: games.platforms, tags: games.tags })
+      .select({
+        id: games.id,
+        name: games.name,
+        slug: games.slug,
+        platforms: games.platforms,
+        tags: games.tags,
+      })
       .from(games)
       .where(
         and(

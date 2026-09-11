@@ -1,0 +1,462 @@
+{
+  "format": "gamesettings-vault",
+  "version": 1,
+  "kind": "library",
+  "app": { "name": "GameSettings Vault", "version": "0.1.0" },
+  "games": [
+    {
+      "name": "Skyline Drift",
+      "platforms": ["PC", "PlayStation 5"],
+      "tags": ["racing", "arcade"],
+      "accentColor": "#e5655c",
+      "notes": "Fictional demo game. Night-city street racer; the wheel setup is tuned for a direct-drive base.",
+      "presets": [
+        {
+          "name": "Wheel Setup",
+          "description": "Direct-drive wheel, 900° rotation",
+          "tags": ["wheel", "sim"],
+          "isDefault": true,
+          "notes": "FFB feels best around 65%. Above 75% clips on curbs.",
+          "categories": [
+            {
+              "name": "Controls",
+              "icon": "gamepad",
+              "settings": [
+                { "name": "Input Device", "type": "enum", "value": "wheel", "options": [{ "label": "Wheel", "value": "wheel" }, { "label": "Pad", "value": "pad" }, { "label": "Keyboard", "value": "keyboard" }] },
+                { "name": "Steering Rotation", "type": "integer", "value": 900, "unit": "°", "min": 180, "max": 1080, "step": 10, "defaultValue": 540 },
+                { "name": "Force Feedback", "type": "percentage", "value": 65, "defaultValue": 100, "notes": "Clips on curbs above 75%." },
+                { "name": "Steering Linearity", "type": "slider", "value": 1.0, "min": 0.5, "max": 2, "step": 0.05, "defaultValue": 1 },
+                { "name": "Handbrake", "type": "controller_binding", "value": "Paddle R" },
+                { "name": "Look Back", "type": "controller_binding", "value": "Paddle L" },
+                { "name": "Clutch", "type": "boolean", "value": true, "description": "Manual clutch with H-pattern shifter" }
+              ]
+            },
+            {
+              "name": "Display",
+              "icon": "monitor",
+              "settings": [
+                { "name": "Resolution", "type": "resolution", "value": { "width": 3440, "height": 1440 } },
+                { "name": "Window Mode", "type": "enum", "value": "fullscreen", "options": [{ "label": "Fullscreen", "value": "fullscreen" }, { "label": "Borderless", "value": "borderless" }, { "label": "Windowed", "value": "windowed" }] },
+                { "name": "V-Sync", "type": "boolean", "value": false },
+                { "name": "FPS Limit", "type": "integer", "value": 144, "unit": "fps", "min": 30, "max": 360 },
+                { "name": "Field of View", "type": "slider", "value": 78, "min": 60, "max": 110, "step": 1, "defaultValue": 75 },
+                { "name": "Brightness", "type": "percentage", "value": 55 }
+              ]
+            },
+            {
+              "name": "Graphics",
+              "icon": "eye",
+              "settings": [
+                { "name": "Preset", "type": "enum", "value": "high", "options": [{ "label": "Low", "value": "low" }, { "label": "Medium", "value": "medium" }, { "label": "High", "value": "high" }, { "label": "Ultra", "value": "ultra" }] },
+                { "name": "Anti-Aliasing", "type": "dropdown", "value": "taa", "options": [{ "label": "Off", "value": "off" }, { "label": "FXAA", "value": "fxaa" }, { "label": "TAA", "value": "taa" }, { "label": "DLAA", "value": "dlaa" }] },
+                { "name": "Motion Blur", "type": "boolean", "value": false, "defaultValue": true },
+                { "name": "Reflections", "type": "enum", "value": "ssr", "options": [{ "label": "Off", "value": "off" }, { "label": "SSR", "value": "ssr" }, { "label": "Ray traced", "value": "rt" }] },
+                { "name": "Post effects", "type": "multi_select", "value": ["bloom", "lens_flare"], "options": [{ "label": "Bloom", "value": "bloom" }, { "label": "Lens flare", "value": "lens_flare" }, { "label": "Chromatic aberration", "value": "chromatic" }, { "label": "Film grain", "value": "grain" }] }
+              ]
+            },
+            {
+              "name": "Audio",
+              "icon": "volume",
+              "settings": [
+                { "name": "Master", "type": "percentage", "value": 80 },
+                { "name": "Engine", "type": "percentage", "value": 90 },
+                { "name": "Music", "type": "percentage", "value": 25 },
+                { "name": "Output", "type": "dropdown", "value": "headphones", "options": [{ "label": "Speakers", "value": "speakers" }, { "label": "Headphones", "value": "headphones" }, { "label": "Surround 5.1", "value": "surround" }] }
+              ]
+            },
+            {
+              "name": "HUD",
+              "icon": "layout",
+              "settings": [
+                { "name": "Speedometer Units", "type": "enum", "value": "kmh", "options": [{ "label": "km/h", "value": "kmh" }, { "label": "mph", "value": "mph" }] },
+                { "name": "Minimap", "type": "boolean", "value": true },
+                { "name": "Racing Line", "type": "enum", "value": "corners", "options": [{ "label": "Off", "value": "off" }, { "label": "Corners", "value": "corners" }, { "label": "Full", "value": "full" }] },
+                { "name": "HUD Color", "type": "color", "value": "#e5655c" }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Controller",
+          "description": "Couch play on the TV",
+          "tags": ["controller", "tv"],
+          "isDefault": false,
+          "categories": [
+            {
+              "name": "Controls",
+              "icon": "gamepad",
+              "settings": [
+                { "name": "Input Device", "type": "enum", "value": "pad", "options": [{ "label": "Wheel", "value": "wheel" }, { "label": "Pad", "value": "pad" }, { "label": "Keyboard", "value": "keyboard" }] },
+                { "name": "Steering Sensitivity", "type": "slider", "value": 6, "min": 1, "max": 10, "step": 1, "defaultValue": 5 },
+                { "name": "Steering Deadzone", "type": "percentage", "value": 8, "defaultValue": 10 },
+                { "name": "Vibration", "type": "boolean", "value": true },
+                { "name": "Handbrake", "type": "controller_binding", "value": "A" },
+                { "name": "Look Back", "type": "controller_binding", "value": "R3" }
+              ]
+            },
+            {
+              "name": "Display",
+              "icon": "monitor",
+              "settings": [
+                { "name": "Resolution", "type": "resolution", "value": { "width": 3840, "height": 2160 } },
+                { "name": "Window Mode", "type": "enum", "value": "borderless", "options": [{ "label": "Fullscreen", "value": "fullscreen" }, { "label": "Borderless", "value": "borderless" }, { "label": "Windowed", "value": "windowed" }] },
+                { "name": "V-Sync", "type": "boolean", "value": true },
+                { "name": "FPS Limit", "type": "integer", "value": 60, "unit": "fps", "min": 30, "max": 360 },
+                { "name": "Field of View", "type": "slider", "value": 72, "min": 60, "max": 110, "step": 1, "defaultValue": 75 },
+                { "name": "Brightness", "type": "percentage", "value": 60 }
+              ]
+            },
+            {
+              "name": "Audio",
+              "icon": "volume",
+              "settings": [
+                { "name": "Master", "type": "percentage", "value": 70 },
+                { "name": "Engine", "type": "percentage", "value": 80 },
+                { "name": "Music", "type": "percentage", "value": 50 },
+                { "name": "Output", "type": "dropdown", "value": "surround", "options": [{ "label": "Speakers", "value": "speakers" }, { "label": "Headphones", "value": "headphones" }, { "label": "Surround 5.1", "value": "surround" }] }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ironvale Tactics",
+      "platforms": ["PC"],
+      "tags": ["shooter", "competitive", "5v5"],
+      "accentColor": "#59c48d",
+      "notes": "Fictional demo game. Round-based tactical shooter; keep the competitive preset lean.",
+      "presets": [
+        {
+          "name": "Competitive",
+          "description": "Ranked — visibility over eye candy",
+          "tags": ["ranked", "240hz"],
+          "isDefault": true,
+          "notes": "eDPI 280 (800 × 0.35). Don't change mid-season.",
+          "categories": [
+            {
+              "name": "Mouse",
+              "icon": "mouse",
+              "settings": [
+                { "name": "DPI", "type": "info", "value": "800 (set on the mouse)" },
+                { "name": "Sensitivity", "type": "decimal", "value": 0.35, "min": 0.01, "max": 10, "step": 0.01, "defaultValue": 0.5 },
+                { "name": "ADS Sensitivity", "type": "decimal", "value": 1.0, "min": 0.1, "max": 2, "step": 0.05, "defaultValue": 1, "description": "Multiplier while aiming down sights" },
+                { "name": "Raw Input", "type": "boolean", "value": true, "defaultValue": true },
+                { "name": "Invert Y", "type": "boolean", "value": false, "defaultValue": false }
+              ]
+            },
+            {
+              "name": "Keyboard",
+              "icon": "keyboard",
+              "settings": [
+                { "name": "Crouch", "type": "keybind", "value": "Ctrl", "notes": "Hold, not toggle." },
+                { "name": "Walk", "type": "keybind", "value": "Shift" },
+                { "name": "Use / Defuse", "type": "keybind", "value": "F" },
+                { "name": "Ping", "type": "keybind", "value": "Mouse4" },
+                { "name": "Ability 1", "type": "keybind", "value": "Q" },
+                { "name": "Ability 2", "type": "keybind", "value": "E" },
+                { "name": "Ultimate", "type": "keybind", "value": "X" }
+              ]
+            },
+            {
+              "name": "Display",
+              "icon": "monitor",
+              "settings": [
+                { "name": "Resolution", "type": "resolution", "value": { "width": 1920, "height": 1080 } },
+                { "name": "Window Mode", "type": "enum", "value": "fullscreen", "options": [{ "label": "Fullscreen", "value": "fullscreen" }, { "label": "Borderless", "value": "borderless" }] },
+                { "name": "Refresh Rate", "type": "integer", "value": 240, "unit": "Hz", "min": 60, "max": 360 },
+                { "name": "FPS Cap", "type": "integer", "value": 400, "unit": "fps", "min": 60, "max": 1000 },
+                { "name": "V-Sync", "type": "boolean", "value": false, "defaultValue": true },
+                { "name": "Low Latency Mode", "type": "enum", "value": "on_boost", "options": [{ "label": "Off", "value": "off" }, { "label": "On", "value": "on" }, { "label": "On + Boost", "value": "on_boost" }] }
+              ]
+            },
+            {
+              "name": "Graphics",
+              "icon": "eye",
+              "settings": [
+                { "name": "Texture Quality", "type": "enum", "value": "medium", "options": [{ "label": "Low", "value": "low" }, { "label": "Medium", "value": "medium" }, { "label": "High", "value": "high" }] },
+                { "name": "Shadows", "type": "enum", "value": "low", "options": [{ "label": "Off", "value": "off" }, { "label": "Low", "value": "low" }, { "label": "High", "value": "high" }] },
+                { "name": "Anti-Aliasing", "type": "dropdown", "value": "msaa2", "options": [{ "label": "None", "value": "none" }, { "label": "MSAA 2x", "value": "msaa2" }, { "label": "MSAA 4x", "value": "msaa4" }, { "label": "TAA", "value": "taa" }] },
+                { "name": "Anisotropic Filtering", "type": "enum", "value": "16x", "options": [{ "label": "1x", "value": "1x" }, { "label": "4x", "value": "4x" }, { "label": "8x", "value": "8x" }, { "label": "16x", "value": "16x" }] },
+                { "name": "Render Scale", "type": "percentage", "value": 100, "defaultValue": 100 },
+                { "name": "Bloom", "type": "boolean", "value": false, "defaultValue": true },
+                { "name": "First-person Shadows", "type": "boolean", "value": false }
+              ]
+            },
+            {
+              "name": "HUD",
+              "icon": "layout",
+              "settings": [
+                { "name": "Crosshair Color", "type": "color", "value": "#00ff66" },
+                { "name": "Crosshair Thickness", "type": "integer", "value": 1, "min": 0, "max": 5 },
+                { "name": "Crosshair Length", "type": "integer", "value": 4, "min": 0, "max": 20 },
+                { "name": "Center Dot", "type": "boolean", "value": false },
+                { "name": "Show Teammate Outlines", "type": "boolean", "value": true },
+                { "name": "Minimap Rotation", "type": "enum", "value": "fixed", "options": [{ "label": "Fixed", "value": "fixed" }, { "label": "Rotate", "value": "rotate" }] }
+              ]
+            },
+            {
+              "name": "Audio",
+              "icon": "volume",
+              "settings": [
+                { "name": "Master", "type": "percentage", "value": 60 },
+                { "name": "Music", "type": "percentage", "value": 0 },
+                { "name": "Voice Chat", "type": "percentage", "value": 85 },
+                { "name": "HRTF", "type": "boolean", "value": true, "description": "Head-related transfer function for better positional audio" },
+                { "name": "Mic Activation", "type": "enum", "value": "ptt", "options": [{ "label": "Push to talk", "value": "ptt" }, { "label": "Open mic", "value": "open" }] },
+                { "name": "Push to Talk", "type": "keybind", "value": "Mouse5" }
+              ]
+            },
+            {
+              "name": "Network",
+              "icon": "wifi",
+              "settings": [
+                { "name": "Preferred Region", "type": "dropdown", "value": "eu-west", "options": [{ "label": "EU West", "value": "eu-west" }, { "label": "EU Central", "value": "eu-central" }, { "label": "US East", "value": "us-east" }, { "label": "US West", "value": "us-west" }] },
+                { "name": "Max Ping", "type": "integer", "value": 60, "unit": "ms", "min": 20, "max": 300 },
+                { "name": "Show Net Graph", "type": "boolean", "value": true }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Casual / Ultra",
+          "description": "Screenshots and friends nights",
+          "tags": ["quality"],
+          "isDefault": false,
+          "categories": [
+            {
+              "name": "Mouse",
+              "icon": "mouse",
+              "settings": [
+                { "name": "DPI", "type": "info", "value": "800 (set on the mouse)" },
+                { "name": "Sensitivity", "type": "decimal", "value": 0.5, "min": 0.01, "max": 10, "step": 0.01, "defaultValue": 0.5 },
+                { "name": "ADS Sensitivity", "type": "decimal", "value": 0.9, "min": 0.1, "max": 2, "step": 0.05, "defaultValue": 1 },
+                { "name": "Raw Input", "type": "boolean", "value": true, "defaultValue": true }
+              ]
+            },
+            {
+              "name": "Display",
+              "icon": "monitor",
+              "settings": [
+                { "name": "Resolution", "type": "resolution", "value": { "width": 2560, "height": 1440 } },
+                { "name": "Window Mode", "type": "enum", "value": "borderless", "options": [{ "label": "Fullscreen", "value": "fullscreen" }, { "label": "Borderless", "value": "borderless" }] },
+                { "name": "Refresh Rate", "type": "integer", "value": 144, "unit": "Hz", "min": 60, "max": 360 },
+                { "name": "FPS Cap", "type": "integer", "value": 144, "unit": "fps", "min": 60, "max": 1000 },
+                { "name": "V-Sync", "type": "boolean", "value": true, "defaultValue": true }
+              ]
+            },
+            {
+              "name": "Graphics",
+              "icon": "eye",
+              "settings": [
+                { "name": "Texture Quality", "type": "enum", "value": "high", "options": [{ "label": "Low", "value": "low" }, { "label": "Medium", "value": "medium" }, { "label": "High", "value": "high" }] },
+                { "name": "Shadows", "type": "enum", "value": "high", "options": [{ "label": "Off", "value": "off" }, { "label": "Low", "value": "low" }, { "label": "High", "value": "high" }] },
+                { "name": "Anti-Aliasing", "type": "dropdown", "value": "taa", "options": [{ "label": "None", "value": "none" }, { "label": "MSAA 2x", "value": "msaa2" }, { "label": "MSAA 4x", "value": "msaa4" }, { "label": "TAA", "value": "taa" }] },
+                { "name": "Render Scale", "type": "percentage", "value": 100, "defaultValue": 100 },
+                { "name": "Bloom", "type": "boolean", "value": true, "defaultValue": true },
+                { "name": "First-person Shadows", "type": "boolean", "value": true },
+                { "name": "Ray Traced Reflections", "type": "boolean", "value": true }
+              ]
+            },
+            {
+              "name": "HUD",
+              "icon": "layout",
+              "settings": [
+                { "name": "Crosshair Color", "type": "color", "value": "#ffffff" },
+                { "name": "Crosshair Thickness", "type": "integer", "value": 2, "min": 0, "max": 5 },
+                { "name": "Center Dot", "type": "boolean", "value": true }
+              ]
+            },
+            {
+              "name": "Audio",
+              "icon": "volume",
+              "settings": [
+                { "name": "Master", "type": "percentage", "value": 75 },
+                { "name": "Music", "type": "percentage", "value": 40 },
+                { "name": "Voice Chat", "type": "percentage", "value": 80 },
+                { "name": "Mic Activation", "type": "enum", "value": "open", "options": [{ "label": "Push to talk", "value": "ptt" }, { "label": "Open mic", "value": "open" }] }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hollow Reach",
+      "platforms": ["PC", "Xbox Series X|S"],
+      "tags": ["action rpg", "single-player"],
+      "accentColor": "#c084fc",
+      "presets": [
+        {
+          "name": "Main Setup",
+          "description": "Story playthrough, controller on the couch",
+          "tags": ["controller"],
+          "isDefault": true,
+          "categories": [
+            {
+              "name": "Controller",
+              "icon": "gamepad",
+              "settings": [
+                { "name": "Camera Sensitivity", "type": "slider", "value": 6, "min": 1, "max": 10, "step": 1, "defaultValue": 5 },
+                { "name": "Invert Camera Y", "type": "boolean", "value": false },
+                { "name": "Dodge", "type": "controller_binding", "value": "B" },
+                { "name": "Lock On", "type": "controller_binding", "value": "R3" },
+                { "name": "Vibration", "type": "percentage", "value": 40 },
+                { "name": "Adaptive Triggers", "type": "boolean", "value": true }
+              ]
+            },
+            {
+              "name": "Camera",
+              "icon": "camera",
+              "settings": [
+                { "name": "Field of View", "type": "slider", "value": 85, "min": 60, "max": 100, "step": 1, "defaultValue": 80 },
+                { "name": "Camera Distance", "type": "enum", "value": "far", "options": [{ "label": "Near", "value": "near" }, { "label": "Default", "value": "default" }, { "label": "Far", "value": "far" }] },
+                { "name": "Camera Shake", "type": "percentage", "value": 20, "defaultValue": 100 },
+                { "name": "Auto-Center", "type": "boolean", "value": false }
+              ]
+            },
+            {
+              "name": "Gameplay",
+              "icon": "zap",
+              "settings": [
+                { "name": "Difficulty", "type": "enum", "value": "hard", "options": [{ "label": "Story", "value": "story" }, { "label": "Normal", "value": "normal" }, { "label": "Hard", "value": "hard" }, { "label": "Nightmare", "value": "nightmare" }] },
+                { "name": "Auto-pickup", "type": "boolean", "value": true },
+                { "name": "Damage Numbers", "type": "boolean", "value": false, "defaultValue": true },
+                { "name": "Tutorial Hints", "type": "boolean", "value": false, "defaultValue": true }
+              ]
+            },
+            {
+              "name": "Accessibility",
+              "icon": "accessibility",
+              "settings": [
+                { "name": "Subtitles", "type": "boolean", "value": true },
+                { "name": "Subtitle Size", "type": "enum", "value": "large", "options": [{ "label": "Small", "value": "small" }, { "label": "Medium", "value": "medium" }, { "label": "Large", "value": "large" }] },
+                { "name": "Colorblind Mode", "type": "dropdown", "value": "off", "options": [{ "label": "Off", "value": "off" }, { "label": "Deuteranopia", "value": "deuteranopia" }, { "label": "Protanopia", "value": "protanopia" }, { "label": "Tritanopia", "value": "tritanopia" }] },
+                { "name": "Screen Flash Reduction", "type": "boolean", "value": true },
+                { "name": "Hold to Toggle", "type": "multi_select", "value": ["sprint", "aim"], "options": [{ "label": "Sprint", "value": "sprint" }, { "label": "Aim", "value": "aim" }, { "label": "Crouch", "value": "crouch" }] }
+              ]
+            },
+            {
+              "name": "Display",
+              "icon": "monitor",
+              "settings": [
+                { "name": "Resolution", "type": "resolution", "value": { "width": 3840, "height": 2160 } },
+                { "name": "HDR", "type": "boolean", "value": true },
+                { "name": "HDR Peak Brightness", "type": "integer", "value": 1000, "unit": "nits", "min": 100, "max": 4000, "step": 50 },
+                { "name": "Upscaling", "type": "dropdown", "value": "dlss_quality", "options": [{ "label": "Off", "value": "off" }, { "label": "DLSS Quality", "value": "dlss_quality" }, { "label": "DLSS Balanced", "value": "dlss_balanced" }, { "label": "FSR Quality", "value": "fsr_quality" }] },
+                { "name": "Frame Generation", "type": "boolean", "value": true }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Orbital Front",
+      "platforms": ["PC", "Steam Deck"],
+      "tags": ["space sim", "co-op"],
+      "accentColor": "#6fa8ff",
+      "notes": "Fictional demo game. Two presets because the Deck needs a very different balance.",
+      "presets": [
+        {
+          "name": "Desktop 1440p",
+          "tags": ["1440p", "hotas"],
+          "isDefault": true,
+          "categories": [
+            {
+              "name": "Flight Controls",
+              "icon": "gamepad",
+              "settings": [
+                { "name": "Control Scheme", "type": "enum", "value": "hotas", "options": [{ "label": "Mouse + KB", "value": "mkb" }, { "label": "Gamepad", "value": "pad" }, { "label": "HOTAS", "value": "hotas" }] },
+                { "name": "Pitch Sensitivity", "type": "slider", "value": 0.8, "min": 0.1, "max": 2, "step": 0.05, "defaultValue": 1 },
+                { "name": "Yaw Sensitivity", "type": "slider", "value": 0.7, "min": 0.1, "max": 2, "step": 0.05, "defaultValue": 1 },
+                { "name": "Throttle Curve", "type": "enum", "value": "linear", "options": [{ "label": "Linear", "value": "linear" }, { "label": "Soft", "value": "soft" }, { "label": "Aggressive", "value": "aggressive" }] },
+                { "name": "Boost", "type": "keybind", "value": "Tab" },
+                { "name": "Flight Assist Toggle", "type": "keybind", "value": "Z" }
+              ]
+            },
+            {
+              "name": "Display",
+              "icon": "monitor",
+              "settings": [
+                { "name": "Resolution", "type": "resolution", "value": { "width": 2560, "height": 1440 } },
+                { "name": "FPS Limit", "type": "integer", "value": 165, "unit": "fps", "min": 30, "max": 360 },
+                { "name": "Field of View", "type": "slider", "value": 95, "min": 70, "max": 120, "step": 1, "defaultValue": 90 },
+                { "name": "Cockpit Camera Shake", "type": "percentage", "value": 30 }
+              ]
+            },
+            {
+              "name": "Graphics",
+              "icon": "eye",
+              "settings": [
+                { "name": "Preset", "type": "enum", "value": "ultra", "options": [{ "label": "Low", "value": "low" }, { "label": "Medium", "value": "medium" }, { "label": "High", "value": "high" }, { "label": "Ultra", "value": "ultra" }] },
+                { "name": "Volumetric Nebulae", "type": "enum", "value": "high", "options": [{ "label": "Off", "value": "off" }, { "label": "Low", "value": "low" }, { "label": "High", "value": "high" }] },
+                { "name": "Asteroid Density", "type": "percentage", "value": 100 },
+                { "name": "Texture Streaming Budget", "type": "integer", "value": 6144, "unit": "MB", "min": 1024, "max": 16384, "step": 512 }
+              ]
+            },
+            {
+              "name": "Interface",
+              "icon": "layout",
+              "settings": [
+                { "name": "HUD Scale", "type": "percentage", "value": 90, "defaultValue": 100 },
+                { "name": "HUD Color", "type": "color", "value": "#6fa8ff" },
+                { "name": "Show Radar", "type": "boolean", "value": true },
+                { "name": "Chat Filter", "type": "multi_select", "value": ["party", "wing"], "options": [{ "label": "Global", "value": "global" }, { "label": "Party", "value": "party" }, { "label": "Wing", "value": "wing" }] }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Steam Deck",
+          "description": "40 fps lock, battery friendly",
+          "tags": ["deck", "handheld"],
+          "isDefault": false,
+          "notes": "TDP 12W. Anything above Medium drops below 40.",
+          "categories": [
+            {
+              "name": "Flight Controls",
+              "icon": "gamepad",
+              "settings": [
+                { "name": "Control Scheme", "type": "enum", "value": "pad", "options": [{ "label": "Mouse + KB", "value": "mkb" }, { "label": "Gamepad", "value": "pad" }, { "label": "HOTAS", "value": "hotas" }] },
+                { "name": "Pitch Sensitivity", "type": "slider", "value": 1.1, "min": 0.1, "max": 2, "step": 0.05, "defaultValue": 1 },
+                { "name": "Yaw Sensitivity", "type": "slider", "value": 1.0, "min": 0.1, "max": 2, "step": 0.05, "defaultValue": 1 },
+                { "name": "Throttle Curve", "type": "enum", "value": "soft", "options": [{ "label": "Linear", "value": "linear" }, { "label": "Soft", "value": "soft" }, { "label": "Aggressive", "value": "aggressive" }] },
+                { "name": "Gyro Aim", "type": "boolean", "value": true }
+              ]
+            },
+            {
+              "name": "Display",
+              "icon": "monitor",
+              "settings": [
+                { "name": "Resolution", "type": "resolution", "value": { "width": 1280, "height": 800 } },
+                { "name": "FPS Limit", "type": "integer", "value": 40, "unit": "fps", "min": 30, "max": 360 },
+                { "name": "Field of View", "type": "slider", "value": 90, "min": 70, "max": 120, "step": 1, "defaultValue": 90 },
+                { "name": "Cockpit Camera Shake", "type": "percentage", "value": 0 }
+              ]
+            },
+            {
+              "name": "Graphics",
+              "icon": "eye",
+              "settings": [
+                { "name": "Preset", "type": "enum", "value": "medium", "options": [{ "label": "Low", "value": "low" }, { "label": "Medium", "value": "medium" }, { "label": "High", "value": "high" }, { "label": "Ultra", "value": "ultra" }] },
+                { "name": "Volumetric Nebulae", "type": "enum", "value": "low", "options": [{ "label": "Off", "value": "off" }, { "label": "Low", "value": "low" }, { "label": "High", "value": "high" }] },
+                { "name": "Asteroid Density", "type": "percentage", "value": 60 },
+                { "name": "FSR", "type": "dropdown", "value": "balanced", "options": [{ "label": "Off", "value": "off" }, { "label": "Quality", "value": "quality" }, { "label": "Balanced", "value": "balanced" }, { "label": "Performance", "value": "performance" }] }
+              ]
+            },
+            {
+              "name": "Interface",
+              "icon": "layout",
+              "settings": [
+                { "name": "HUD Scale", "type": "percentage", "value": 115, "defaultValue": 100, "max": 150 },
+                { "name": "HUD Color", "type": "color", "value": "#6fa8ff" },
+                { "name": "Show Radar", "type": "boolean", "value": true }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

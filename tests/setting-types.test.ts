@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { formatValue, valueSchemaFor, valuesEqual, SETTING_TYPES, SETTING_TYPE_IDS } from "@/lib/settings/types";
+import {
+  formatValue,
+  valueSchemaFor,
+  valuesEqual,
+  SETTING_TYPES,
+  SETTING_TYPE_IDS,
+} from "@/lib/settings/types";
 
 describe("valueSchemaFor", () => {
   it("validates booleans", () => {
@@ -33,8 +39,12 @@ describe("valueSchemaFor", () => {
     expect(valueSchemaFor({ type: "multi_select" }).safeParse("a").success).toBe(false);
     expect(valueSchemaFor({ type: "color" }).safeParse("#ff8800").success).toBe(true);
     expect(valueSchemaFor({ type: "color" }).safeParse("orange").success).toBe(false);
-    expect(valueSchemaFor({ type: "resolution" }).safeParse({ width: 1920, height: 1080 }).success).toBe(true);
-    expect(valueSchemaFor({ type: "resolution" }).safeParse({ width: 0, height: 1080 }).success).toBe(false);
+    expect(
+      valueSchemaFor({ type: "resolution" }).safeParse({ width: 1920, height: 1080 }).success,
+    ).toBe(true);
+    expect(
+      valueSchemaFor({ type: "resolution" }).safeParse({ width: 0, height: 1080 }).success,
+    ).toBe(false);
   });
 
   it("every type has metadata and a default value that validates", () => {
@@ -57,16 +67,13 @@ describe("formatValue", () => {
     expect(formatValue({ type: "integer" }, 8)).toBe("8");
     expect(formatValue({ type: "resolution" }, { width: 1920, height: 1080 })).toBe("1920×1080");
     expect(
-      formatValue(
-        { type: "enum", options: [{ label: "Ultra", value: "ultra" }] },
-        "ultra",
-      ),
+      formatValue({ type: "enum", options: [{ label: "Ultra", value: "ultra" }] }, "ultra"),
     ).toBe("Ultra");
     expect(
-      formatValue(
-        { type: "multi_select", options: [{ label: "Blood", value: "blood" }] },
-        ["blood", "gore"],
-      ),
+      formatValue({ type: "multi_select", options: [{ label: "Blood", value: "blood" }] }, [
+        "blood",
+        "gore",
+      ]),
     ).toBe("Blood, gore");
     expect(formatValue({ type: "text" }, "")).toBe("—");
     expect(formatValue({ type: "text" }, null)).toBe("—");

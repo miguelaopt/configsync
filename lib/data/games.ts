@@ -53,8 +53,8 @@ export async function listPresetsForGame(userId: string, gameId: string) {
   const rows = await db
     .select({
       preset: presets,
-      categoryCount: sql<number>`(select count(*) from ${schema.categories} c where c.preset_id = ${presets.id})`,
-      settingCount: sql<number>`(select count(*) from ${schema.settings} s where s.preset_id = ${presets.id})`,
+      categoryCount: sql<number>`(select count(*) from categories c where c.preset_id = "presets"."id")`,
+      settingCount: sql<number>`(select count(*) from settings s where s.preset_id = "presets"."id")`,
     })
     .from(presets)
     .where(and(eq(presets.userId, userId), eq(presets.gameId, gameId)))

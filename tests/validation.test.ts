@@ -6,8 +6,12 @@ describe("gameInputSchema", () => {
     const r = gameInputSchema.parse({ name: "  GTA V ", tags: ["pc", "pc", " racing "] });
     expect(r.name).toBe("GTA V");
     expect(r.tags).toEqual(["pc", "racing"]);
-    expect(gameInputSchema.safeParse({ name: "X", coverUrl: "http://x.com/a.png" }).success).toBe(false);
-    expect(gameInputSchema.safeParse({ name: "X", coverUrl: "https://x.com/a.png" }).success).toBe(true);
+    expect(gameInputSchema.safeParse({ name: "X", coverUrl: "http://x.com/a.png" }).success).toBe(
+      false,
+    );
+    expect(gameInputSchema.safeParse({ name: "X", coverUrl: "https://x.com/a.png" }).success).toBe(
+      true,
+    );
     expect(gameInputSchema.safeParse({ name: "" }).success).toBe(false);
   });
 });

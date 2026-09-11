@@ -44,7 +44,10 @@ export async function getPresetById(userId: string, presetId: string, tx: Tx | t
 }
 
 async function takenPresetSlugs(gameId: string, tx: Tx | typeof db) {
-  const rows = await tx.select({ slug: presets.slug }).from(presets).where(eq(presets.gameId, gameId));
+  const rows = await tx
+    .select({ slug: presets.slug })
+    .from(presets)
+    .where(eq(presets.gameId, gameId));
   return rows.map((r) => r.slug);
 }
 
@@ -122,7 +125,13 @@ export async function setDefaultPreset(userId: string, presetId: string) {
     await tx
       .update(presets)
       .set({ isDefault: false })
-      .where(and(eq(presets.gameId, preset.gameId), ne(presets.id, presetId), eq(presets.isDefault, true)));
+      .where(
+        and(
+          eq(presets.gameId, preset.gameId),
+          ne(presets.id, presetId),
+          eq(presets.isDefault, true),
+        ),
+      );
     await tx.update(presets).set({ isDefault: true }).where(eq(presets.id, presetId));
     return preset;
   });
@@ -205,7 +214,13 @@ export async function insertCategoriesFromDocs(
   for (const [i, cat] of docs.entries()) {
     const [inserted] = await tx
       .insert(categories)
-      .values({ presetId, userId, name: cat.name, icon: cat.icon ?? null, position: startPosition + i })
+      .values({
+        presetId,
+        userId,
+        name: cat.name,
+        icon: cat.icon ?? null,
+        position: startPosition + i,
+      })
       .returning({ id: categories.id });
     if (cat.settings.length === 0) continue;
     await tx.insert(settings).values(

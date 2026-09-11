@@ -29,7 +29,15 @@ const game: GameDoc = {
           settings: [
             { name: "Resolution", type: "resolution", value: { width: 1920, height: 1080 } },
             { name: "Brightness", type: "percentage", value: 100 },
-            { name: "Motion Blur, \"Cinematic\"", type: "enum", value: "off", options: [{ label: "Off", value: "off" }, { label: "Low", value: "low" }] },
+            {
+              name: 'Motion Blur, "Cinematic"',
+              type: "enum",
+              value: "off",
+              options: [
+                { label: "Off", value: "off" },
+                { label: "Low", value: "low" },
+              ],
+            },
           ],
         },
       ],
@@ -67,14 +75,20 @@ describe("parseImportFile", () => {
   });
 
   it("rejects unknown versions instead of guessing", () => {
-    const r = parseImportFile(JSON.stringify({ format: "gamesettings-vault", version: 99, games: [] }));
+    const r = parseImportFile(
+      JSON.stringify({ format: "gamesettings-vault", version: 99, games: [] }),
+    );
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.errors[0]).toMatch(/version 99/);
   });
 
   it("reports structural problems with a path", () => {
     const r = parseImportFile(
-      JSON.stringify({ format: "gamesettings-vault", version: 1, games: [{ name: "", presets: [] }] }),
+      JSON.stringify({
+        format: "gamesettings-vault",
+        version: 1,
+        games: [{ name: "", presets: [] }],
+      }),
     );
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.errors[0]).toMatch(/games\.0\.name/);
@@ -89,7 +103,10 @@ describe("parseImportFile", () => {
             {
               ...game.presets[0]!,
               categories: [
-                { name: "Controls", settings: [{ name: "Sensitivity", type: "integer", value: "eight" }] },
+                {
+                  name: "Controls",
+                  settings: [{ name: "Sensitivity", type: "integer", value: "eight" }],
+                },
               ],
             },
           ],
@@ -104,7 +121,12 @@ describe("parseImportFile", () => {
 
   it("warns (not errors) about empty presets", () => {
     const r = parseImportFile(
-      JSON.stringify(buildExportFile([{ ...game, presets: [{ name: "Empty", tags: [], isDefault: false, categories: [] }] }], "game")),
+      JSON.stringify(
+        buildExportFile(
+          [{ ...game, presets: [{ name: "Empty", tags: [], isDefault: false, categories: [] }] }],
+          "game",
+        ),
+      ),
     );
     expect(r.ok).toBe(true);
     if (r.ok) expect(r.warnings[0]).toMatch(/no categories/);

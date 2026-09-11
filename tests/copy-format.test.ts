@@ -11,7 +11,9 @@ const controls = {
 };
 const display = {
   name: "Display",
-  settings: [{ name: "Resolution", type: "resolution" as const, value: { width: 2560, height: 1440 } }],
+  settings: [
+    { name: "Resolution", type: "resolution" as const, value: { width: 2560, height: 1440 } },
+  ],
 };
 
 describe("formatForCopy", () => {
@@ -22,7 +24,10 @@ describe("formatForCopy", () => {
   });
 
   it("plain: several categories get bracketed headers and a title", () => {
-    const out = formatForCopy({ title: "GTA V — Main Setup", categories: [controls, display] }, "plain");
+    const out = formatForCopy(
+      { title: "GTA V — Main Setup", categories: [controls, display] },
+      "plain",
+    );
     expect(out).toBe(
       [
         "GTA V — Main Setup",
@@ -59,10 +64,17 @@ describe("formatForCopy", () => {
   it("json: duplicate names don't clobber each other", () => {
     const out = JSON.parse(
       formatForCopy(
-        { categories: [{ name: "X", settings: [
-          { name: "FOV", type: "integer", value: 1 },
-          { name: "fov", type: "integer", value: 2 },
-        ] }] },
+        {
+          categories: [
+            {
+              name: "X",
+              settings: [
+                { name: "FOV", type: "integer", value: 1 },
+                { name: "fov", type: "integer", value: 2 },
+              ],
+            },
+          ],
+        },
         "json",
       ),
     );

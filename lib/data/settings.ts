@@ -71,7 +71,13 @@ export async function reorderCategories(userId: string, presetId: string, ordere
       await tx
         .update(categories)
         .set({ position, updatedAt: sql`${categories.updatedAt}` })
-        .where(and(eq(categories.id, id), eq(categories.presetId, presetId), eq(categories.userId, userId)));
+        .where(
+          and(
+            eq(categories.id, id),
+            eq(categories.presetId, presetId),
+            eq(categories.userId, userId),
+          ),
+        );
     }
   });
 }
@@ -124,11 +130,16 @@ export async function duplicateCategory(userId: string, categoryId: string) {
 // Settings
 // ----------------------------------------------------------------------------
 
-function assertValueValid(def: SettingInput | schema.Setting, value: SettingValue | null | undefined) {
+function assertValueValid(
+  def: SettingInput | schema.Setting,
+  value: SettingValue | null | undefined,
+) {
   if (value == null) return;
   const check = valueSchemaFor(def).safeParse(value);
   if (!check.success) {
-    throw new AppError(check.error.issues[0]?.message ?? "That value isn't valid for this setting type.");
+    throw new AppError(
+      check.error.issues[0]?.message ?? "That value isn't valid for this setting type.",
+    );
   }
 }
 
@@ -180,7 +191,9 @@ export async function updateSettingValues(
   const rows = await db
     .select()
     .from(settings)
-    .where(and(eq(settings.userId, userId), eq(settings.presetId, presetId), inArray(settings.id, ids)));
+    .where(
+      and(eq(settings.userId, userId), eq(settings.presetId, presetId), inArray(settings.id, ids)),
+    );
   const byId = new Map(rows.map((r) => [r.id, r]));
   for (const u of updates) {
     const def = byId.get(u.id);
@@ -212,13 +225,22 @@ export async function reorderSettings(userId: string, categoryId: string, ordere
       await tx
         .update(settings)
         .set({ position, updatedAt: sql`${settings.updatedAt}` })
-        .where(and(eq(settings.id, id), eq(settings.categoryId, categoryId), eq(settings.userId, userId)));
+        .where(
+          and(
+            eq(settings.id, id),
+            eq(settings.categoryId, categoryId),
+            eq(settings.userId, userId),
+          ),
+        );
     }
   });
 }
 
 /** Resets every setting in a category (or preset) to its default value where one exists. */
-export async function resetToDefaults(userId: string, scope: { presetId: string } | { categoryId: string }) {
+export async function resetToDefaults(
+  userId: string,
+  scope: { presetId: string } | { categoryId: string },
+) {
   const where =
     "presetId" in scope
       ? and(eq(settings.userId, userId), eq(settings.presetId, scope.presetId))
@@ -228,4 +250,3 @@ export async function resetToDefaults(userId: string, scope: { presetId: string 
     .set({ value: sql`${settings.defaultValue}` })
     .where(and(where, sql`${settings.defaultValue} is not null`));
 }
-

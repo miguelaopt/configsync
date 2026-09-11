@@ -21,12 +21,13 @@
     "test:e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node scripts/migrate.mjs",
-    "db:seed": "tsx scripts/seed.ts",
-    "db:reset": "tsx scripts/reset.ts",
+    "db:seed": "tsx --conditions=react-server --tsconfig tsconfig.json scripts/seed.ts",
+    "db:reset": "tsx --conditions=react-server --tsconfig tsconfig.json scripts/reset.ts",
     "db:studio": "drizzle-kit studio",
     "check": "pnpm typecheck && pnpm lint && pnpm test"
   },
   "dependencies": {
+    "@fontsource/barlow-semi-condensed": "^5.3.0",
     "better-auth": "^1.7.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

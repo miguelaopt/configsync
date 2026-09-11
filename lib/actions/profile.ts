@@ -26,7 +26,9 @@ export async function updateProfileAction(input: unknown) {
 
 export async function updatePreferencesAction(input: unknown) {
   return runAction(preferencesSchema, input, async (v, userId) => {
-    const current = await db.query.profiles.findFirst({ where: eq(schema.profiles.userId, userId) });
+    const current = await db.query.profiles.findFirst({
+      where: eq(schema.profiles.userId, userId),
+    });
     await db
       .update(schema.profiles)
       .set({ preferences: { ...(current?.preferences ?? {}), ...v } })

@@ -3,7 +3,12 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import * as data from "@/lib/data/settings";
 import { createRevision } from "@/lib/data/revisions";
-import { categoryInputSchema, id, settingInputSchema, settingValueUpdateSchema } from "@/lib/validation";
+import {
+  categoryInputSchema,
+  id,
+  settingInputSchema,
+  settingValueUpdateSchema,
+} from "@/lib/validation";
 import { runAction } from "./shared";
 
 // Categories ------------------------------------------------------------------
@@ -120,7 +125,11 @@ export async function saveSettingValuesAction(presetId: string, updates: unknown
     { presetId, updates },
     async (v, userId) => {
       await data.updateSettingValues(userId, v.presetId, v.updates);
-      await createRevision(userId, v.presetId, `Edited ${v.updates.length} setting${v.updates.length === 1 ? "" : "s"}`);
+      await createRevision(
+        userId,
+        v.presetId,
+        `Edited ${v.updates.length} setting${v.updates.length === 1 ? "" : "s"}`,
+      );
       revalidatePath("/", "layout");
       return null;
     },

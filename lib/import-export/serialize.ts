@@ -43,7 +43,12 @@ export function toMarkdown(games: GameDoc[]): string {
     }
     out.push("");
   }
-  return out.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+  return (
+    out
+      .join("\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trimEnd() + "\n"
+  );
 }
 
 /** CSV export: one row per setting. RFC 4180 quoting. */

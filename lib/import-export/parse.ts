@@ -3,8 +3,7 @@ import { exportFileSchema, FORMAT_ID, FORMAT_VERSION, type ExportFile } from "./
 import { valueSchemaFor } from "@/lib/settings/types";
 
 export type ParseResult =
-  | { ok: true; file: ExportFile; warnings: string[] }
-  | { ok: false; errors: string[] };
+  { ok: true; file: ExportFile; warnings: string[] } | { ok: false; errors: string[] };
 
 const MAX_BYTES = 5 * 1024 * 1024;
 
@@ -21,7 +20,10 @@ export function parseImportFile(raw: string): ParseResult {
   try {
     json = JSON.parse(raw);
   } catch {
-    return { ok: false, errors: ["This isn't valid JSON. Export files end in .json and start with {."] };
+    return {
+      ok: false,
+      errors: ["This isn't valid JSON. Export files end in .json and start with {."],
+    };
   }
   if (typeof json !== "object" || json === null || Array.isArray(json)) {
     return { ok: false, errors: ["Expected a JSON object at the top level."] };
@@ -63,7 +65,8 @@ export function parseImportFile(raw: string): ParseResult {
           }
         });
       });
-      if (preset.categories.length === 0) warnings.push(`Preset "${preset.name}" has no categories.`);
+      if (preset.categories.length === 0)
+        warnings.push(`Preset "${preset.name}" has no categories.`);
     });
     if (game.presets.length === 0) warnings.push(`Game "${game.name}" has no presets.`);
   });

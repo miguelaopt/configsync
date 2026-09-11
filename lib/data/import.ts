@@ -73,14 +73,18 @@ async function importPresetsInto(
     .from(presets)
     .where(eq(presets.gameId, gameId));
   const taken = new Set(existing.map((p) => p.slug));
-  const hasDefault =
-    (await tx.query.presets.findFirst({ where: and(eq(presets.gameId, gameId), eq(presets.isDefault, true)) })) !=
-    null;
+  let hasDefault =
+    (await tx.query.presets.findFirst({
+      where: and(eq(presets.gameId, gameId), eq(presets.isDefault, true)),
+    })) != null;
 
   for (const presetDoc of gameDoc.presets) {
     const slug = uniqueSlug(presetDoc.name, taken);
     taken.add(slug);
-    const name = slug === uniqueSlug(presetDoc.name, []) ? presetDoc.name : `${presetDoc.name} (${slug.split("-").pop()})`;
+    const name =
+      slug === uniqueSlug(presetDoc.name, [])
+        ? presetDoc.name
+        : `${presetDoc.name} (${slug.split("-").pop()})`;
     const [created] = await tx
       .insert(presets)
       .values({
@@ -91,9 +95,10 @@ async function importPresetsInto(
         description: presetDoc.description ?? null,
         notes: presetDoc.notes ?? null,
         tags: presetDoc.tags,
-        isDefault: !hasDefault && presetDoc.isDefault && outcome.createdPresets === 0,
+        isDefault: !hasDefault && presetDoc.isDefault,
       })
       .returning({ id: presets.id });
+    if (!hasDefault && presetDoc.isDefault) hasDefault = true;
     await insertCategoriesFromDocs(tx, userId, created!.id, presetDoc.categories);
     outcome.createdPresets++;
     outcome.createdSettings += presetDoc.categories.reduce((n, c) => n + c.settings.length, 0);

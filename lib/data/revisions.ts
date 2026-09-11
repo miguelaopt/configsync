@@ -22,7 +22,12 @@ export async function createRevision(userId: string, presetId: string, note?: st
       .orderBy(desc(revisions.createdAt))
       .offset(KEEP_PER_PRESET);
     if (stale.length > 0) {
-      await tx.delete(revisions).where(inArray(revisions.id, stale.map((r) => r.id)));
+      await tx.delete(revisions).where(
+        inArray(
+          revisions.id,
+          stale.map((r) => r.id),
+        ),
+      );
     }
   });
 }
@@ -58,7 +63,9 @@ export async function restoreRevision(userId: string, presetId: string, revision
   const doc = await getRevisionDoc(userId, revisionId);
   await createRevision(userId, presetId, "Before restore");
   await db.transaction(async (tx) => {
-    await tx.delete(categories).where(and(eq(categories.presetId, presetId), eq(categories.userId, userId)));
+    await tx
+      .delete(categories)
+      .where(and(eq(categories.presetId, presetId), eq(categories.userId, userId)));
     await insertCategoriesFromDocs(tx, userId, presetId, doc.categories);
   });
 }

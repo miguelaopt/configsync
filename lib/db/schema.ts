@@ -151,8 +151,14 @@ export const games = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     slug: text("slug").notNull(),
-    platforms: text("platforms").array().default(sql`'{}'::text[]`).notNull(),
-    tags: text("tags").array().default(sql`'{}'::text[]`).notNull(),
+    platforms: text("platforms")
+      .array()
+      .default(sql`'{}'::text[]`)
+      .notNull(),
+    tags: text("tags")
+      .array()
+      .default(sql`'{}'::text[]`)
+      .notNull(),
     /** User-supplied cover: either an uploaded attachment or an external https URL. */
     coverAttachmentId: uuid("cover_attachment_id").references(() => attachments.id, {
       onDelete: "set null",
@@ -193,7 +199,10 @@ export const presets = pgTable(
     slug: text("slug").notNull(),
     description: text("description"),
     notes: text("notes"),
-    tags: text("tags").array().default(sql`'{}'::text[]`).notNull(),
+    tags: text("tags")
+      .array()
+      .default(sql`'{}'::text[]`)
+      .notNull(),
     isDefault: boolean("is_default").default(false).notNull(),
     isFavorite: boolean("is_favorite").default(false).notNull(),
     isArchived: boolean("is_archived").default(false).notNull(),

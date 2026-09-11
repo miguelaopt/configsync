@@ -8,3 +8,4 @@ test-results
 pnpm-lock.yaml
 drizzle/meta
 CHANGELOG.md
+scripts/dev/
