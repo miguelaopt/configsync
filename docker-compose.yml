@@ -1,0 +1,42 @@
+# Local development: `docker compose up -d db` then `pnpm dev`.
+# Full self-host:     `docker compose --profile app up -d --build`.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-gsv}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gsv}
+      POSTGRES_DB: ${POSTGRES_DB:-gsv}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - gsv-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-gsv} -d ${POSTGRES_DB:-gsv}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    profiles: ["app"]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-gsv}:${POSTGRES_PASSWORD:-gsv}@db:5432/${POSTGRES_DB:-gsv}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET in .env}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      RUN_MIGRATIONS: "true"
+    ports:
+      - "${APP_PORT:-3000}:3000"
+
+volumes:
+  gsv-pgdata:
