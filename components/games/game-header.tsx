@@ -154,6 +154,7 @@ export function GameHeader({ game, presetCount, copyPayload, copyFormat }: Props
                   {t}
                 </Badge>
               ))}
+              {game.catalogId ? <Badge>Catalog · {game.catalogId}</Badge> : null}
               {game.isArchived ? <Badge variant="bad">Archived</Badge> : null}
             </div>
             {game.notes ? (

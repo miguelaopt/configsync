@@ -24,6 +24,13 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
-    env: { PORT: String(port), BETTER_AUTH_URL: baseURL, NEXT_PUBLIC_APP_URL: baseURL },
+    env: {
+      PORT: String(port),
+      BETTER_AUTH_URL: baseURL,
+      NEXT_PUBLIC_APP_URL: baseURL,
+      // Own distDir so this server's lockfile never collides with a `next dev` already
+      // running on the default port/distDir (see next.config.ts).
+      NEXT_DIST_DIR: ".next-e2e",
+    },
   },
 });

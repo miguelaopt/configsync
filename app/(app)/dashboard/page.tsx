@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Download, Layers, Search, Star, Upload } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { getDashboardData } from "@/lib/data/dashboard";
+import { publicCatalog } from "@/lib/catalog";
 import { Page, SectionTitle } from "@/components/app/page-header";
 import { GameCover } from "@/components/games/game-cover";
 import { NewGameButton } from "@/components/games/new-game-button";
@@ -17,6 +18,7 @@ export const metadata: Metadata = { title: "Dashboard" };
 export default async function DashboardPage() {
   const user = await requireUser();
   const data = await getDashboardData(user.id);
+  const catalog = publicCatalog();
   const firstName = user.name.split(" ")[0] || "there";
   const empty = data.totals.games === 0;
 
@@ -32,7 +34,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <NewGameButton />
+          <NewGameButton catalog={catalog} />
           <Button asChild variant="secondary">
             <Link href="/import">
               <Upload /> Import
@@ -51,7 +53,7 @@ export default async function DashboardPage() {
           description="Add a game, create a preset like “Main Setup”, then add categories and settings that mirror the game's own menu."
           action={
             <>
-              <NewGameButton />
+              <NewGameButton catalog={catalog} />
               <Button asChild variant="secondary">
                 <Link href="/import">Import a JSON file</Link>
               </Button>

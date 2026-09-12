@@ -169,6 +169,16 @@ test.describe("library flow", () => {
     await page.goto("/search?q=Sensitivity");
     await expect(page.getByRole("heading", { name: /Settings/ })).toBeVisible();
 
+    // --- Add from catalog ----------------------------------------------------
+    await page.goto("/games");
+    await page.getByRole("button", { name: "Add game" }).first().click();
+    await page.getByRole("button", { name: /Counter-Strike 2/ }).click();
+    await page.waitForURL("**/games/counter-strike-2");
+    await page.getByRole("link", { name: "Default" }).click();
+    await page.waitForURL("**/games/counter-strike-2/default");
+    await expect(page.getByRole("heading", { name: "Video" })).toBeVisible();
+    await expect(page.getByText("Multisampling Anti-Aliasing Mode")).toBeVisible();
+
     // --- Archive + delete ---------------------------------------------------
     await page.goto("/games/imported-arena");
     await page.getByRole("button", { name: "Game actions" }).click();

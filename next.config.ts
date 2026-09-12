@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
   poweredByHeader: false,
+  // Playwright's webServer runs a second `next dev`/`next start` from this same directory.
+  // Next 16 locks `<distDir>/lock` per directory (see experimental.lockDistDir), so give the
+  // e2e server its own distDir instead of disabling that lock.
+  distDir: process.env.NEXT_DIST_DIR,
   images: {
     // Covers are stored in our own database and served from /api/attachments/*.
     // Remote URLs are rendered with a plain <img> (any host, validated as https on input).
