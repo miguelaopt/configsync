@@ -1,0 +1,11 @@
+{
+  "id": "cs2",
+  "name": "Counter-Strike 2",
+  "steamAppId": 730,
+  "platforms": ["PC"],
+  "tags": ["fps", "competitive"],
+  "accentColor": "#e9b44c",
+  "coverUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg",
+  "files": [],
+  "presets": [{ "name": "Default", "isDefault": true, "categories": [] }]
+}

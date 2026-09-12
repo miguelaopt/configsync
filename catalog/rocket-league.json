@@ -1,0 +1,12 @@
+{
+  "id": "rocket-league",
+  "name": "Rocket League",
+  "steamAppId": 252950,
+  "epicAppName": "Sugar",
+  "platforms": ["PC"],
+  "tags": ["sports", "competitive"],
+  "accentColor": "#6fa8ff",
+  "coverUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/252950/header.jpg",
+  "files": [],
+  "presets": [{ "name": "Default", "isDefault": true, "categories": [] }]
+}
