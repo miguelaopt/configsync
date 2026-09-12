@@ -17,13 +17,13 @@ export default defineConfig({
   },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile", use: { ...devices["iPhone 13"] } },
+    { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
     command: process.env.CI ? `pnpm start -p ${port}` : `pnpm dev -p ${port}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
-    env: { PORT: String(port) },
+    env: { PORT: String(port), BETTER_AUTH_URL: baseURL, NEXT_PUBLIC_APP_URL: baseURL },
   },
 });

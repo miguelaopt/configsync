@@ -73,18 +73,13 @@ export function SignInForm({ githubEnabled }: { githubEnabled: boolean }) {
           />
         </Field>
         <Field
-          label={
-            <span className="flex w-full items-baseline justify-between">
-              Password
-              <Link
-                href="/forgot-password"
-                className="text-xs font-normal text-ink-2 hover:text-ink"
-              >
-                Forgot password?
-              </Link>
-            </span>
-          }
+          label="Password"
           htmlFor="password"
+          hint={
+            <Link href="/forgot-password" className="text-ink-2 hover:text-ink">
+              Forgot password?
+            </Link>
+          }
         >
           <Input
             id="password"
