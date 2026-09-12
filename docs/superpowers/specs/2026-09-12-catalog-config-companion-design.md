@@ -73,12 +73,12 @@ UI: the Add-game dialog starts with a "From the catalog" list (cover, name, "N s
 
 `lib/game-configs/index.ts`
 
-- `readGameConfig(game: CatalogGame, files: Partial<Record<fileId,string>>): { preset: PresetDoc; missingFiles: string[]; unmappedSettings: string[]; unknownKeys: Record<fileId,string[]> }` — starts from the catalog preset (defaults), overwrites values found in files. Lenient boolean read (`1/0/true/false/True/False`), numbers via `Number()`, invalid → keep default and count in `unknownKeys`? No — invalid values are reported in `warnings: string[]`.
+- `readGameConfig(game: CatalogGame, files: Partial<Record<fileId,string>>): { preset: PresetDoc; missingFiles: string[]; unmappedSettings: string[]; warnings: string[] }` — starts from the catalog preset (defaults) and overwrites values found in files. Lenient boolean read (`1/0/true/false/True/False`), numbers via `Number()`; a value that fails to parse keeps the default and adds a warning naming the key. `unmappedSettings` lists catalog settings without a `source` (e.g. Rocket League camera), so the UI can say they were not imported.
 - `writeGameConfig(game, preset: PresetDoc, originalFiles): { files: Record<fileId,string>; skipped: string[] }` — for each catalog setting with a `source`, find the preset setting by category+name; serialise per the file's `bool` style; patch. Settings without a source or without an original file are `skipped`.
 
 Web import: `/import` gets a second tab "From game files": choose a catalog game with files → one file input per file (any subset) → preview (`readGameConfig` in a server action; shows counts and warnings) → "Import as preset" into the user's matching game (created from the catalog if missing). Preset name: `Imported <YYYY-MM-DD>`.
 
-Web export: preset actions menu → "Game config files…" dialog: for CS2 the files can be **generated from the catalog defaults** when the user has no originals to patch? No — without an original file, generation would emit a partial file the game may reject. The dialog explains that and offers download only when the companion is the writer… Decision: the web dialog lets the user **upload their current files** and downloads the patched ones (same server action as apply). Simple, honest, no zip: one download link per file.
+Web export: preset actions menu → "Game config files…" dialog. The user uploads their current files (the same inputs as the import tab) and gets one download link per patched file. Files are patched, never generated from scratch: a file built only from catalog defaults could be rejected by the game. Without an upload the dialog explains this and points to the companion's `apply`.
 
 Tests (`tests/game-configs.test.ts`): KV and INI parse/patch round-trips on fixtures derived from the real files (bindings stripped), CS2 and RL `readGameConfig`/`writeGameConfig` round-trip: read → write → read gives the same preset.
 
