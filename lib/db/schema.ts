@@ -167,6 +167,8 @@ export const games = pgTable(
     /** Hex color used as the game's accent (theme foundation). */
     accentColor: text("accent_color"),
     notes: text("notes"),
+    /** Id of the catalog template this game was created from (catalog/<id>.json). */
+    catalogId: text("catalog_id"),
     isFavorite: boolean("is_favorite").default(false).notNull(),
     isArchived: boolean("is_archived").default(false).notNull(),
     lastOpenedAt: timestamp("last_opened_at", { withTimezone: true }),
@@ -320,6 +322,51 @@ export const revisions = pgTable(
   },
   (t) => [index("revisions_preset_created_idx").on(t.presetId, t.createdAt)],
 );
+
+// ---------------------------------------------------------------------------
+// Companion CLI: personal access tokens and what it found installed
+// ---------------------------------------------------------------------------
+
+export const companionTokens = pgTable(
+  "companion_tokens",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    /** sha256 hex of the token; the token itself is shown once and never stored. */
+    tokenHash: text("token_hash").notNull(),
+    lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("companion_tokens_hash_uq").on(t.tokenHash),
+    index("companion_tokens_user_idx").on(t.userId),
+  ],
+);
+
+export const deviceGameSource = pgEnum("device_game_source", ["steam", "epic"]);
+
+export const deviceGames = pgTable(
+  "device_games",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    device: text("device").notNull(),
+    source: deviceGameSource("source").notNull(),
+    appId: text("app_id").notNull(),
+    name: text("name").notNull(),
+    installDir: text("install_dir"),
+    seenAt: timestamp("seen_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("device_games_uq").on(t.userId, t.device, t.source, t.appId)],
+);
+
+export type CompanionToken = typeof companionTokens.$inferSelect;
+export type DeviceGame = typeof deviceGames.$inferSelect;
 
 // ---------------------------------------------------------------------------
 // Relations

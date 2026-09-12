@@ -15,6 +15,7 @@ function gameToDoc(game: schema.Game, presetRows: PresetFull[]): GameDoc {
     accentColor: game.accentColor,
     coverUrl: game.coverUrl,
     notes: game.notes,
+    catalogId: game.catalogId,
     presets: presetRows.map(toPresetDoc),
   };
 }

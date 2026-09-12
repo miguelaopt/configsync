@@ -69,6 +69,8 @@ export const gameDocSchema = z.object({
     .max(2_000)
     .nullish(),
   notes: optionalText(5_000),
+  /** Catalog template this game came from; optional and informational. */
+  catalogId: z.string().trim().max(60).nullish(),
   presets: z.array(presetDocSchema).max(200).default([]),
 });
 
