@@ -206,7 +206,8 @@
     min-height: var(--row-h);
     border-bottom: 1px solid var(--hairline);
   }
-  .menu-row::before {
+  /* :not(tr) — a pseudo-element on a table row becomes an anonymous cell and shifts columns */
+  .menu-row:not(tr)::before {
     content: "";
     position: absolute;
     left: 0;

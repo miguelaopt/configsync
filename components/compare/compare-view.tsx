@@ -121,7 +121,7 @@ export function CompareView({
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[560px] border-collapse text-[13px]">
+          <table className="w-full border-collapse text-[13px] sm:min-w-[560px]">
             <thead className="sr-only sm:not-sr-only">
               <tr className="text-left text-xs text-ink-3">
                 <th scope="col" className="w-28 py-2 pl-3 font-medium">
@@ -159,13 +159,13 @@ export function CompareView({
                       <tr key={`${c.name}-${e.name}`} className="menu-row">
                         <td
                           className={cn(
-                            "py-2.5 pl-3 align-top whitespace-nowrap",
+                            "py-2.5 pr-2 pl-3 align-top whitespace-nowrap",
                             STATUS[e.status].className,
                           )}
                         >
                           <span className="inline-flex items-center gap-1.5">
                             <Icon className="size-3.5" aria-hidden />
-                            {STATUS[e.status].label}
+                            <span className="sr-only sm:not-sr-only">{STATUS[e.status].label}</span>
                           </span>
                         </td>
                         <td className="py-2.5 pr-3 align-top text-ink">{e.name}</td>
