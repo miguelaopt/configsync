@@ -19,9 +19,11 @@ export async function GET(req: Request) {
   if (!session) return NextResponse.json({ error: "Sign in to export." }, { status: 401 });
   const url = new URL(req.url);
   const parsed = query.safeParse(Object.fromEntries(url.searchParams));
-  if (!parsed.success) return NextResponse.json({ error: "Invalid export request." }, { status: 400 });
+  if (!parsed.success)
+    return NextResponse.json({ error: "Invalid export request." }, { status: 400 });
   const { scope, id, format, archived } = parsed.data;
-  if (scope !== "library" && !id) return NextResponse.json({ error: "Missing id." }, { status: 400 });
+  if (scope !== "library" && !id)
+    return NextResponse.json({ error: "Missing id." }, { status: 400 });
 
   try {
     const userId = session.user.id;
@@ -40,8 +42,14 @@ export async function GET(req: Request) {
           ? `${slugify(games[0]!.name)}-${stamp}`
           : `${slugify(games[0]!.name)}-${slugify(games[0]!.presets[0]?.name ?? "preset")}-${stamp}`;
 
-    const body = format === "json" ? toJson(buildExportFile(games, scope)) : format === "md" ? toMarkdown(games) : toCsv(games);
-    const type = format === "json" ? "application/json" : format === "md" ? "text/markdown" : "text/csv";
+    const body =
+      format === "json"
+        ? toJson(buildExportFile(games, scope))
+        : format === "md"
+          ? toMarkdown(games)
+          : toCsv(games);
+    const type =
+      format === "json" ? "application/json" : format === "md" ? "text/markdown" : "text/csv";
     return new NextResponse(body, {
       headers: {
         "Content-Type": `${type}; charset=utf-8`,
@@ -50,7 +58,8 @@ export async function GET(req: Request) {
       },
     });
   } catch (error) {
-    if (error instanceof AppError) return NextResponse.json({ error: error.message }, { status: 404 });
+    if (error instanceof AppError)
+      return NextResponse.json({ error: error.message }, { status: 404 });
     console.error("[gsv:export]", error);
     return NextResponse.json({ error: "Export failed. Try again." }, { status: 500 });
   }

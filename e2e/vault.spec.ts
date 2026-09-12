@@ -36,7 +36,11 @@ test.describe("library flow", () => {
     await page.waitForURL("**/dashboard");
   });
 
-  test("game → preset → category → settings → edit → duplicate → compare → copy → export → import → delete", async ({ page, context, browserName }) => {
+  test("game → preset → category → settings → edit → duplicate → compare → copy → export → import → delete", async ({
+    page,
+    context,
+    browserName,
+  }) => {
     // --- Create game -------------------------------------------------------
     await page.goto("/games");
     await page.getByRole("button", { name: "Add game" }).first().click();
@@ -66,7 +70,11 @@ test.describe("library flow", () => {
     await expect(page.getByRole("heading", { name: "Mouse" })).toBeVisible();
 
     // --- Add settings to Controls -------------------------------------------
-    const addSetting = async (name: string, type: string, fillValue?: (dialog: ReturnType<Page["getByRole"]>) => Promise<void>) => {
+    const addSetting = async (
+      name: string,
+      type: string,
+      fillValue?: (dialog: ReturnType<Page["getByRole"]>) => Promise<void>,
+    ) => {
       await page.getByRole("button", { name: "Add setting to Controls" }).click();
       const dialog = page.getByRole("dialog", { name: "Add a setting" });
       await dialog.getByLabel("Name", { exact: true }).fill(name);
@@ -92,7 +100,10 @@ test.describe("library flow", () => {
     await expect(page.getByText("1 unsaved change")).toBeVisible();
     await page.getByRole("button", { name: "Save" }).click();
     await expect(page.getByText(/Saved 1 change/)).toBeVisible();
-    await expect(page.getByRole("switch", { name: "Vibration" })).toHaveAttribute("aria-checked", "true");
+    await expect(page.getByRole("switch", { name: "Vibration" })).toHaveAttribute(
+      "aria-checked",
+      "true",
+    );
 
     // --- Duplicate preset -------------------------------------------------
     await page.getByRole("button", { name: "Actions for Main Setup" }).click();
@@ -113,7 +124,8 @@ test.describe("library flow", () => {
     await expect(page.getByRole("cell", { name: "Vibration" })).toBeVisible();
 
     // --- Copy ---------------------------------------------------------------
-    if (browserName === "chromium") await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    if (browserName === "chromium")
+      await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await page.goto("/games/test-arena/main-setup");
     await page.getByRole("button", { name: /Copy preset as/ }).click();
     await expect(page.getByText(/Copied 3 settings as plain text/)).toBeVisible();
@@ -131,11 +143,18 @@ test.describe("library flow", () => {
     expect(download.suggestedFilename()).toMatch(/gamesettings-vault-library-.*\.json/);
     const path = await download.path();
     const fs = await import("node:fs");
-    const exported = JSON.parse(fs.readFileSync(path!, "utf8")) as { games: { name: string; presets: { name: string }[] }[] };
+    const exported = JSON.parse(fs.readFileSync(path!, "utf8")) as {
+      games: { name: string; presets: { name: string }[] }[];
+    };
     expect(exported.games.map((g) => g.name)).toContain("Test Arena");
 
     // --- Import into a new game ---------------------------------------------
-    const importFile = { ...exported, games: exported.games.filter((g) => g.name === "Test Arena").map((g) => ({ ...g, name: "Imported Arena" })) };
+    const importFile = {
+      ...exported,
+      games: exported.games
+        .filter((g) => g.name === "Test Arena")
+        .map((g) => ({ ...g, name: "Imported Arena" })),
+    };
     await page.goto("/import");
     await page.getByText("Or paste JSON").click();
     await page.getByLabel("JSON to import").fill(JSON.stringify(importFile));

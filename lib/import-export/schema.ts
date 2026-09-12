@@ -64,7 +64,10 @@ export const gameDocSchema = z.object({
     .string()
     .regex(/^#[0-9a-fA-F]{6}$/)
     .nullish(),
-  coverUrl: z.url().max(2_000).nullish(),
+  coverUrl: z
+    .url({ protocol: /^https$/ })
+    .max(2_000)
+    .nullish(),
   notes: optionalText(5_000),
   presets: z.array(presetDocSchema).max(200).default([]),
 });
