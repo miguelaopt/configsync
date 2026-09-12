@@ -24,7 +24,7 @@ export const catalogFileSchema = z.object({
   format: z.enum(["keyvalues", "ini"]),
   bool: z.enum(["01", "truefalse", "TrueFalse"]),
   section: z.array(z.string()).default([]),
-  paths: z.record(
+  paths: z.partialRecord(
     z.enum(["steam-linux", "steam-windows", "epic-linux", "epic-windows"]),
     z.string(),
   ),

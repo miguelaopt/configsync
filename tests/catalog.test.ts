@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { CATALOG, catalogToExportFile, getCatalogGame } from "@/lib/catalog";
+import {
+  CATALOG,
+  catalogToExportFile,
+  catalogToGameDoc,
+  getCatalogGame,
+  type CatalogGame,
+} from "@/lib/catalog";
 import { exportFileSchema } from "@/lib/import-export/schema";
+import { buildExportFile } from "@/lib/import-export/serialize";
 
 describe("catalog", () => {
   it("contains cs2 and rocket-league", () => {
@@ -22,5 +29,45 @@ describe("catalog", () => {
     expect(exportFileSchema.safeParse(file).success).toBe(true);
     expect(file.games[0]!.catalogId).toBe("cs2");
     expect(JSON.stringify(file)).not.toContain('"source"');
+  });
+  it("strips catalog-only fields from a game that actually has them", () => {
+    const game: CatalogGame = {
+      id: "test-game",
+      name: "Test Game",
+      platforms: [],
+      tags: [],
+      files: [
+        {
+          id: "video",
+          format: "keyvalues",
+          bool: "01",
+          section: [],
+          paths: { "steam-linux": "/x" },
+        },
+      ],
+      presets: [
+        {
+          name: "Default",
+          tags: [],
+          isDefault: true,
+          categories: [
+            {
+              name: "Video",
+              settings: [
+                { name: "Resolution", type: "resolution", source: { file: "video", key: "k" } },
+              ],
+            },
+          ],
+        },
+      ],
+    };
+    const doc = catalogToGameDoc(game);
+    expect(doc.catalogId).toBe("test-game");
+    expect(doc).not.toHaveProperty("files");
+    expect(doc).not.toHaveProperty("id");
+    expect(doc).not.toHaveProperty("steamAppId");
+    expect(doc).not.toHaveProperty("epicAppName");
+    expect(doc.presets[0]!.categories[0]!.settings[0]).not.toHaveProperty("source");
+    expect(exportFileSchema.safeParse(buildExportFile([doc], "game")).success).toBe(true);
   });
 });

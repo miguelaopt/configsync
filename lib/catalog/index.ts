@@ -7,12 +7,14 @@ import type { ExportFile, GameDoc } from "@/lib/import-export/schema";
 export * from "./schema";
 
 /** Add a game: drop its JSON in catalog/ and import it here. Validated once at module load. */
-export const CATALOG: CatalogGame[] = [cs2, rocketLeague].map((raw) => {
+export const CATALOG: CatalogGame[] = [cs2, rocketLeague].map((raw, index) => {
   const parsed = catalogGameSchema.safeParse(raw);
-  if (!parsed.success)
+  if (!parsed.success) {
+    const id = (raw as { id?: string }).id ?? index;
     throw new Error(
-      `Invalid catalog entry: ${parsed.error.issues[0]?.path.join(".")}: ${parsed.error.issues[0]?.message}`,
+      `Invalid catalog entry "${id}": ${parsed.error.issues[0]?.path.join(".")}: ${parsed.error.issues[0]?.message}`,
     );
+  }
   return parsed.data;
 });
 
