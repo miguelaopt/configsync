@@ -3,9 +3,847 @@
   "name": "Counter-Strike 2",
   "steamAppId": 730,
   "platforms": ["PC"],
-  "tags": ["fps", "competitive"],
+  "tags": ["fps", "competitive", "valve"],
   "accentColor": "#e9b44c",
   "coverUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg",
-  "files": [],
-  "presets": [{ "name": "Default", "isDefault": true, "categories": [] }]
+  "notes": null,
+  "files": [
+    {
+      "id": "video",
+      "format": "keyvalues",
+      "bool": "01",
+      "section": ["video.cfg"],
+      "paths": {
+        "steam-linux": "{steam_userdata}/730/local/cfg/cs2_video.txt",
+        "steam-windows": "{steam_userdata}/730/local/cfg/cs2_video.txt"
+      }
+    },
+    {
+      "id": "convars",
+      "format": "keyvalues",
+      "bool": "truefalse",
+      "section": ["config", "convars"],
+      "paths": {
+        "steam-linux": "{steam_userdata}/730/local/cfg/cs2_user_convars_0_slot0.vcfg",
+        "steam-windows": "{steam_userdata}/730/local/cfg/cs2_user_convars_0_slot0.vcfg"
+      }
+    },
+    {
+      "id": "keys",
+      "format": "keyvalues",
+      "bool": "01",
+      "section": ["config", "bindings"],
+      "paths": {
+        "steam-linux": "{steam_userdata}/730/local/cfg/cs2_user_keys_0_slot0.vcfg",
+        "steam-windows": "{steam_userdata}/730/local/cfg/cs2_user_keys_0_slot0.vcfg"
+      }
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default",
+      "isDefault": true,
+      "tags": [],
+      "categories": [
+        {
+          "name": "Video",
+          "icon": "monitor",
+          "settings": [
+            {
+              "name": "Brightness",
+              "type": "slider",
+              "value": 100,
+              "defaultValue": 100,
+              "min": 50,
+              "max": 130,
+              "step": 1,
+              "unit": "%"
+            },
+            {
+              "name": "Color Mode",
+              "type": "dropdown",
+              "value": "Computer Monitor",
+              "defaultValue": "Computer Monitor",
+              "options": [
+                { "label": "Computer Monitor", "value": "Computer Monitor" },
+                { "label": "Television", "value": "Television" }
+              ]
+            },
+            {
+              "name": "Display Mode",
+              "type": "dropdown",
+              "value": "Fullscreen",
+              "defaultValue": "Fullscreen",
+              "options": [
+                { "label": "Fullscreen", "value": "Fullscreen" },
+                { "label": "Fullscreen Windowed", "value": "Fullscreen Windowed" },
+                { "label": "Windowed", "value": "Windowed" }
+              ],
+              "source": {
+                "file": "video",
+                "match": [
+                  { "value": "Fullscreen", "keys": { "setting.fullscreen": "1" } },
+                  {
+                    "value": "Fullscreen Windowed",
+                    "keys": { "setting.fullscreen": "0", "setting.nowindowborder": "1" }
+                  },
+                  {
+                    "value": "Windowed",
+                    "keys": { "setting.fullscreen": "0", "setting.nowindowborder": "0" }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Aspect Ratio",
+              "type": "dropdown",
+              "value": "1",
+              "defaultValue": "1",
+              "options": [
+                { "label": "Normal 4:3", "value": "0" },
+                { "label": "Widescreen 16:9", "value": "1" },
+                { "label": "Widescreen 16:10", "value": "2" }
+              ],
+              "source": { "file": "video", "key": "setting.aspectratiomode" }
+            },
+            {
+              "name": "Resolution",
+              "type": "resolution",
+              "value": { "width": 1920, "height": 1080 },
+              "defaultValue": { "width": 1920, "height": 1080 },
+              "source": {
+                "file": "video",
+                "width": "setting.defaultres",
+                "height": "setting.defaultresheight"
+              }
+            },
+            {
+              "name": "Refresh Rate",
+              "type": "integer",
+              "value": 0,
+              "defaultValue": 0,
+              "unit": "Hz"
+            },
+            {
+              "name": "Laptop Power Savings",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false
+            },
+            {
+              "name": "NVIDIA Reflex Low Latency",
+              "type": "dropdown",
+              "value": "0",
+              "defaultValue": "0",
+              "options": [
+                { "label": "Disabled", "value": "0" },
+                { "label": "Enabled", "value": "1" },
+                { "label": "Enabled + Boost", "value": "2" }
+              ],
+              "source": { "file": "video", "key": "setting.r_low_latency" }
+            },
+            {
+              "name": "Wait for Vertical Sync",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false,
+              "source": { "file": "video", "key": "setting.mat_vsync" }
+            },
+            {
+              "name": "Multisampling Anti-Aliasing Mode",
+              "type": "dropdown",
+              "value": "4x MSAA",
+              "defaultValue": "4x MSAA",
+              "options": [
+                { "label": "None", "value": "None" },
+                { "label": "CMAA2", "value": "CMAA2" },
+                { "label": "2x MSAA", "value": "2x MSAA" },
+                { "label": "4x MSAA", "value": "4x MSAA" },
+                { "label": "8x MSAA", "value": "8x MSAA" }
+              ],
+              "source": {
+                "file": "video",
+                "match": [
+                  {
+                    "value": "None",
+                    "keys": { "setting.msaa_samples": "0", "setting.r_csgo_cmaa_enable": "0" }
+                  },
+                  {
+                    "value": "CMAA2",
+                    "keys": { "setting.msaa_samples": "0", "setting.r_csgo_cmaa_enable": "1" }
+                  },
+                  {
+                    "value": "2x MSAA",
+                    "keys": { "setting.msaa_samples": "2", "setting.r_csgo_cmaa_enable": "0" }
+                  },
+                  {
+                    "value": "4x MSAA",
+                    "keys": { "setting.msaa_samples": "4", "setting.r_csgo_cmaa_enable": "0" }
+                  },
+                  {
+                    "value": "8x MSAA",
+                    "keys": { "setting.msaa_samples": "8", "setting.r_csgo_cmaa_enable": "0" }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Global Shadow Quality",
+              "type": "dropdown",
+              "value": "2",
+              "defaultValue": "2",
+              "options": [
+                { "label": "Low", "value": "0" },
+                { "label": "Medium", "value": "1" },
+                { "label": "High", "value": "2" },
+                { "label": "Very High", "value": "3" }
+              ],
+              "source": { "file": "video", "key": "setting.videocfg_shadow_quality" }
+            },
+            {
+              "name": "Dynamic Shadows",
+              "type": "dropdown",
+              "value": "1",
+              "defaultValue": "1",
+              "options": [
+                { "label": "Sun Only", "value": "0" },
+                { "label": "All", "value": "1" }
+              ],
+              "source": { "file": "video", "key": "setting.videocfg_dynamic_shadows" }
+            },
+            {
+              "name": "Model / Texture Detail",
+              "type": "dropdown",
+              "value": "2",
+              "defaultValue": "2",
+              "options": [
+                { "label": "Low", "value": "0" },
+                { "label": "Medium", "value": "1" },
+                { "label": "High", "value": "2" }
+              ],
+              "source": { "file": "video", "key": "setting.videocfg_texture_detail" }
+            },
+            {
+              "name": "Texture Filtering Mode",
+              "type": "dropdown",
+              "value": "3",
+              "defaultValue": "3",
+              "options": [
+                { "label": "Bilinear", "value": "0" },
+                { "label": "Trilinear", "value": "1" },
+                { "label": "Anisotropic 2x", "value": "2" },
+                { "label": "Anisotropic 4x", "value": "3" },
+                { "label": "Anisotropic 8x", "value": "4" },
+                { "label": "Anisotropic 16x", "value": "5" }
+              ],
+              "source": { "file": "video", "key": "setting.r_texturefilteringquality" }
+            },
+            {
+              "name": "Shader Detail",
+              "type": "dropdown",
+              "value": "1",
+              "defaultValue": "1",
+              "options": [
+                { "label": "Low", "value": "0" },
+                { "label": "High", "value": "1" }
+              ],
+              "source": { "file": "video", "key": "setting.shaderquality" }
+            },
+            {
+              "name": "Particle Detail",
+              "type": "dropdown",
+              "value": "2",
+              "defaultValue": "2",
+              "options": [
+                { "label": "Low", "value": "0" },
+                { "label": "Medium", "value": "1" },
+                { "label": "High", "value": "2" },
+                { "label": "Very High", "value": "3" }
+              ],
+              "source": { "file": "video", "key": "setting.videocfg_particle_detail" }
+            },
+            {
+              "name": "Ambient Occlusion",
+              "type": "dropdown",
+              "value": "2",
+              "defaultValue": "2",
+              "options": [
+                { "label": "Disabled", "value": "0" },
+                { "label": "Medium", "value": "1" },
+                { "label": "High", "value": "2" }
+              ],
+              "source": { "file": "video", "key": "setting.videocfg_ao_detail" }
+            },
+            {
+              "name": "High Dynamic Range",
+              "type": "dropdown",
+              "value": "1",
+              "defaultValue": "1",
+              "options": [
+                { "label": "Performance", "value": "0" },
+                { "label": "Quality", "value": "1" }
+              ],
+              "source": { "file": "video", "key": "setting.videocfg_hdr_detail" }
+            },
+            {
+              "name": "FidelityFX Super Resolution",
+              "type": "dropdown",
+              "value": "0",
+              "defaultValue": "0",
+              "options": [
+                { "label": "Disabled (Highest Quality)", "value": "0" },
+                { "label": "Ultra Quality", "value": "1" },
+                { "label": "Quality", "value": "2" },
+                { "label": "Balanced", "value": "3" },
+                { "label": "Performance", "value": "4" }
+              ],
+              "source": { "file": "video", "key": "setting.videocfg_fsr_detail" }
+            },
+            {
+              "name": "Maximum FPS In Game",
+              "type": "integer",
+              "value": 0,
+              "defaultValue": 0
+            },
+            {
+              "name": "Maximum FPS In Menus",
+              "type": "integer",
+              "value": 120,
+              "defaultValue": 120
+            }
+          ]
+        },
+        {
+          "name": "Keyboard / Mouse",
+          "icon": "mouse",
+          "settings": [
+            {
+              "name": "Mouse Sensitivity",
+              "type": "decimal",
+              "value": 2.5,
+              "defaultValue": 2.5,
+              "min": 0.01,
+              "max": 20,
+              "step": 0.01,
+              "source": { "file": "convars", "key": "sensitivity" }
+            },
+            {
+              "name": "Zoom Sensitivity Multiplier",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": 0.1,
+              "max": 3,
+              "step": 0.01,
+              "source": { "file": "convars", "key": "zoom_sensitivity_ratio" }
+            },
+            {
+              "name": "Mouse Acceleration",
+              "type": "dropdown",
+              "value": "Off",
+              "defaultValue": "Off",
+              "options": [
+                { "label": "Off", "value": "Off" },
+                { "label": "Legacy", "value": "Legacy" },
+                { "label": "Precision", "value": "Precision" }
+              ]
+            },
+            {
+              "name": "Reverse Mouse Buttons",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false
+            }
+          ]
+        },
+        {
+          "name": "Keybinds",
+          "icon": "keyboard",
+          "settings": [
+            {
+              "name": "Move Forward",
+              "type": "keybind",
+              "value": "w",
+              "defaultValue": "w",
+              "source": { "file": "keys", "bind": "+forward" }
+            },
+            {
+              "name": "Move Left",
+              "type": "keybind",
+              "value": "a",
+              "defaultValue": "a",
+              "source": { "file": "keys", "bind": "+left" }
+            },
+            {
+              "name": "Move Back",
+              "type": "keybind",
+              "value": "s",
+              "defaultValue": "s",
+              "source": { "file": "keys", "bind": "+back" }
+            },
+            {
+              "name": "Move Right",
+              "type": "keybind",
+              "value": "d",
+              "defaultValue": "d",
+              "source": { "file": "keys", "bind": "+right" }
+            },
+            {
+              "name": "Walk",
+              "type": "keybind",
+              "value": "shift",
+              "defaultValue": "shift",
+              "source": { "file": "keys", "bind": "+sprint" }
+            },
+            {
+              "name": "Jump",
+              "type": "keybind",
+              "value": "space",
+              "defaultValue": "space",
+              "source": { "file": "keys", "bind": "+jump" }
+            },
+            {
+              "name": "Duck",
+              "type": "keybind",
+              "value": "ctrl",
+              "defaultValue": "ctrl",
+              "source": { "file": "keys", "bind": "+duck" }
+            },
+            {
+              "name": "Fire",
+              "type": "keybind",
+              "value": "mouse1",
+              "defaultValue": "mouse1",
+              "source": { "file": "keys", "bind": "+attack" }
+            },
+            {
+              "name": "Secondary Fire",
+              "type": "keybind",
+              "value": "mouse2",
+              "defaultValue": "mouse2",
+              "source": { "file": "keys", "bind": "+attack2" }
+            },
+            {
+              "name": "Reload",
+              "type": "keybind",
+              "value": "r",
+              "defaultValue": "r",
+              "source": { "file": "keys", "bind": "+reload" }
+            },
+            {
+              "name": "Use",
+              "type": "keybind",
+              "value": "e",
+              "defaultValue": "e",
+              "source": { "file": "keys", "bind": "+use" }
+            },
+            {
+              "name": "Drop Weapon",
+              "type": "keybind",
+              "value": "g",
+              "defaultValue": "g",
+              "source": { "file": "keys", "bind": "drop" }
+            },
+            {
+              "name": "Inspect Weapon",
+              "type": "keybind",
+              "value": "f",
+              "defaultValue": "f",
+              "source": { "file": "keys", "bind": "+lookatweapon" }
+            },
+            {
+              "name": "Switch Hands",
+              "type": "keybind",
+              "value": "h",
+              "defaultValue": "h",
+              "source": { "file": "keys", "bind": "switchhands" }
+            },
+            {
+              "name": "Primary Weapon",
+              "type": "keybind",
+              "value": "1",
+              "defaultValue": "1",
+              "source": { "file": "keys", "bind": "slot1" }
+            },
+            {
+              "name": "Secondary Weapon",
+              "type": "keybind",
+              "value": "2",
+              "defaultValue": "2",
+              "source": { "file": "keys", "bind": "slot2" }
+            },
+            {
+              "name": "Melee Weapon",
+              "type": "keybind",
+              "value": "3",
+              "defaultValue": "3",
+              "source": { "file": "keys", "bind": "slot3" }
+            },
+            {
+              "name": "Cycle Grenades",
+              "type": "keybind",
+              "value": "4",
+              "defaultValue": "4",
+              "source": { "file": "keys", "bind": "slot4" }
+            },
+            {
+              "name": "Explosives & Traps",
+              "type": "keybind",
+              "value": "5",
+              "defaultValue": "5",
+              "source": { "file": "keys", "bind": "slot5" }
+            },
+            {
+              "name": "Previous Weapon",
+              "type": "keybind",
+              "value": "mwheelup",
+              "defaultValue": "mwheelup",
+              "source": { "file": "keys", "bind": "invprev" }
+            },
+            {
+              "name": "Next Weapon",
+              "type": "keybind",
+              "value": "mwheeldown",
+              "defaultValue": "mwheeldown",
+              "source": { "file": "keys", "bind": "invnext" }
+            },
+            {
+              "name": "Last Weapon Used",
+              "type": "keybind",
+              "value": "q",
+              "defaultValue": "q",
+              "source": { "file": "keys", "bind": "lastinv" }
+            },
+            {
+              "name": "Buy Menu",
+              "type": "keybind",
+              "value": "b",
+              "defaultValue": "b",
+              "source": { "file": "keys", "bind": "buymenu" }
+            },
+            {
+              "name": "Scoreboard",
+              "type": "keybind",
+              "value": "tab",
+              "defaultValue": "tab",
+              "source": { "file": "keys", "bind": "+showscores" }
+            },
+            {
+              "name": "Chat Message",
+              "type": "keybind",
+              "value": "y",
+              "defaultValue": "y",
+              "source": { "file": "keys", "bind": "messagemode" }
+            },
+            {
+              "name": "Team Message",
+              "type": "keybind",
+              "value": "u",
+              "defaultValue": "u",
+              "source": { "file": "keys", "bind": "messagemode2" }
+            },
+            {
+              "name": "Use Microphone",
+              "type": "keybind",
+              "value": "k",
+              "defaultValue": "k",
+              "source": { "file": "keys", "bind": "+voicerecord" }
+            },
+            {
+              "name": "Player Ping",
+              "type": "keybind",
+              "value": "mouse3",
+              "defaultValue": "mouse3",
+              "source": { "file": "keys", "bind": "player_ping" }
+            },
+            {
+              "name": "Graffiti Menu",
+              "type": "keybind",
+              "value": "t",
+              "defaultValue": "t",
+              "source": { "file": "keys", "bind": "+spray_menu" }
+            },
+            {
+              "name": "Toggle Console",
+              "type": "keybind",
+              "value": "`",
+              "defaultValue": "`",
+              "source": { "file": "keys", "bind": "toggleconsole" }
+            }
+          ]
+        },
+        {
+          "name": "Crosshair",
+          "icon": "sliders",
+          "settings": [
+            {
+              "name": "Crosshair Style",
+              "type": "dropdown",
+              "value": "4",
+              "defaultValue": "4",
+              "options": [
+                { "label": "Default", "value": "0" },
+                { "label": "Default Static", "value": "1" },
+                { "label": "Classic", "value": "2" },
+                { "label": "Classic Dynamic", "value": "3" },
+                { "label": "Classic Static", "value": "4" },
+                { "label": "Legacy", "value": "5" }
+              ],
+              "source": { "file": "convars", "key": "cl_crosshairstyle" }
+            },
+            {
+              "name": "Follow Recoil",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false,
+              "source": { "file": "convars", "key": "cl_crosshair_recoil" }
+            },
+            {
+              "name": "Center Dot",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false,
+              "source": { "file": "convars", "key": "cl_crosshairdot" }
+            },
+            {
+              "name": "Length",
+              "type": "decimal",
+              "value": 5,
+              "defaultValue": 5,
+              "min": 0,
+              "max": 10,
+              "step": 0.1,
+              "source": { "file": "convars", "key": "cl_crosshairsize" }
+            },
+            {
+              "name": "Thickness",
+              "type": "decimal",
+              "value": 0.5,
+              "defaultValue": 0.5,
+              "min": 0,
+              "max": 5,
+              "step": 0.1,
+              "source": { "file": "convars", "key": "cl_crosshairthickness" }
+            },
+            {
+              "name": "Gap",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": -5,
+              "max": 5,
+              "step": 0.1,
+              "source": { "file": "convars", "key": "cl_crosshairgap" }
+            },
+            {
+              "name": "Outline",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "convars", "key": "cl_crosshair_drawoutline" }
+            },
+            {
+              "name": "Outline Thickness",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": 0,
+              "max": 3,
+              "step": 0.1,
+              "source": { "file": "convars", "key": "cl_crosshair_outlinethickness" }
+            },
+            {
+              "name": "Color",
+              "type": "dropdown",
+              "value": "1",
+              "defaultValue": "1",
+              "options": [
+                { "label": "Red", "value": "0" },
+                { "label": "Green", "value": "1" },
+                { "label": "Yellow", "value": "2" },
+                { "label": "Blue", "value": "3" },
+                { "label": "Cyan", "value": "4" },
+                { "label": "Custom", "value": "5" }
+              ],
+              "source": { "file": "convars", "key": "cl_crosshaircolor" }
+            },
+            {
+              "name": "Alpha",
+              "type": "integer",
+              "value": 200,
+              "defaultValue": 200,
+              "min": 0,
+              "max": 255,
+              "source": { "file": "convars", "key": "cl_crosshairalpha" }
+            },
+            {
+              "name": "T Style",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false,
+              "source": { "file": "convars", "key": "cl_crosshair_t" }
+            },
+            {
+              "name": "Deployed Weapon Gap",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "convars", "key": "cl_crosshairgap_useweaponvalue" }
+            },
+            {
+              "name": "Sniper Crosshair Width",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": 1,
+              "max": 3,
+              "step": 0.1,
+              "source": { "file": "convars", "key": "cl_crosshair_sniper_width" }
+            }
+          ]
+        },
+        {
+          "name": "Radar",
+          "icon": "layout",
+          "settings": [
+            {
+              "name": "Radar Centers The Player",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "convars", "key": "cl_radar_always_centered" }
+            },
+            {
+              "name": "Radar Is Rotating",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "convars", "key": "cl_radar_rotate" }
+            },
+            {
+              "name": "Radar HUD Size",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": 0.8,
+              "max": 1.3,
+              "step": 0.05,
+              "source": { "file": "convars", "key": "cl_hud_radar_scale" }
+            },
+            {
+              "name": "Radar Map Zoom",
+              "type": "decimal",
+              "value": 0.7,
+              "defaultValue": 0.7,
+              "min": 0.25,
+              "max": 1,
+              "step": 0.05,
+              "source": { "file": "convars", "key": "cl_radar_scale" }
+            },
+            {
+              "name": "Toggle Shape With Scoreboard",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "convars", "key": "cl_radar_square_with_scoreboard" }
+            }
+          ]
+        },
+        {
+          "name": "HUD",
+          "icon": "layout",
+          "settings": [
+            {
+              "name": "HUD Scale",
+              "type": "decimal",
+              "value": 0.95,
+              "defaultValue": 0.95,
+              "min": 0.5,
+              "max": 0.95,
+              "step": 0.01,
+              "source": { "file": "convars", "key": "hud_scaling" }
+            },
+            {
+              "name": "HUD Color",
+              "type": "dropdown",
+              "value": "0",
+              "defaultValue": "0",
+              "options": [
+                { "label": "Default", "value": "0" },
+                { "label": "White", "value": "1" },
+                { "label": "Light Blue", "value": "2" },
+                { "label": "Blue", "value": "3" },
+                { "label": "Purple", "value": "4" },
+                { "label": "Red", "value": "5" },
+                { "label": "Orange", "value": "6" },
+                { "label": "Yellow", "value": "7" },
+                { "label": "Green", "value": "8" },
+                { "label": "Aqua", "value": "9" },
+                { "label": "Pink", "value": "10" }
+              ],
+              "source": { "file": "convars", "key": "cl_hud_color" }
+            }
+          ]
+        },
+        {
+          "name": "Audio",
+          "icon": "volume",
+          "settings": [
+            {
+              "name": "Master Volume",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": 0,
+              "max": 1,
+              "step": 0.01,
+              "source": { "file": "convars", "key": "volume" }
+            },
+            {
+              "name": "Audio Device",
+              "type": "text",
+              "value": "Default",
+              "defaultValue": "Default"
+            },
+            {
+              "name": "EQ Profile",
+              "type": "dropdown",
+              "value": "Natural",
+              "defaultValue": "Natural",
+              "options": [
+                { "label": "Crisp", "value": "Crisp" },
+                { "label": "Smooth", "value": "Smooth" },
+                { "label": "Natural", "value": "Natural" }
+              ]
+            },
+            {
+              "name": "L/R Isolation",
+              "type": "percentage",
+              "value": 50,
+              "defaultValue": 50,
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "Perspective Correction",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true
+            },
+            {
+              "name": "Enable Voice",
+              "type": "dropdown",
+              "value": "Press to use mic",
+              "defaultValue": "Press to use mic",
+              "options": [
+                { "label": "Press to use mic", "value": "Press to use mic" },
+                { "label": "Open mic", "value": "Open mic" },
+                { "label": "Not enabled", "value": "Not enabled" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -70,4 +70,25 @@ describe("catalog", () => {
     expect(doc.presets[0]!.categories[0]!.settings[0]).not.toHaveProperty("source");
     expect(exportFileSchema.safeParse(buildExportFile([doc], "game")).success).toBe(true);
   });
+  it("cs2 maps resolution, display mode and a keybind", () => {
+    const cs2 = getCatalogGame("cs2")!;
+    const all = cs2.presets[0]!.categories.flatMap((c) =>
+      c.settings.map((s) => ({ ...s, category: c.name })),
+    );
+    const res = all.find((s) => s.name === "Resolution")!;
+    expect(res.source).toEqual({
+      file: "video",
+      width: "setting.defaultres",
+      height: "setting.defaultresheight",
+    });
+    expect(all.find((s) => s.name === "Display Mode")!.source).toHaveProperty("match");
+    expect(all.find((s) => s.name === "Fire")!.source).toEqual({ file: "keys", bind: "+attack" });
+    expect(cs2.files.map((f) => f.id)).toEqual(["video", "convars", "keys"]);
+  });
+  it("rocket league marks camera settings as manual", () => {
+    const rl = getCatalogGame("rocket-league")!;
+    const camera = rl.presets[0]!.categories.find((c) => c.name === "Camera")!;
+    expect(camera.settings.every((s) => !s.source)).toBe(true);
+    expect(rl.files.map((f) => f.id)).toEqual(["video", "input"]);
+  });
 });
