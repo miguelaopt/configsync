@@ -6,7 +6,8 @@ import { updatePreferencesAction, updateProfileAction } from "@/lib/actions/prof
 import type { Profile } from "@/lib/db/schema";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Input, Textarea } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { Segmented } from "@/components/ui/segmented";
 import { COPY_FORMAT_LABELS, COPY_FORMATS } from "@/lib/copy/format";
 
@@ -14,13 +15,22 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
   const router = useRouter();
   const [username, setUsername] = React.useState(profile.username);
   const [displayName, setDisplayName] = React.useState(profile.displayName ?? "");
+  const [isPublic, setIsPublic] = React.useState(profile.isPublic);
+  const [bio, setBio] = React.useState(profile.bio ?? "");
+  const [links, setLinks] = React.useState<string[]>(profile.links);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [pending, startTransition] = React.useTransition();
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     startTransition(async () => {
-      const r = await updateProfileAction({ username, displayName: displayName || null });
+      const r = await updateProfileAction({
+        username,
+        displayName: displayName || null,
+        isPublic,
+        bio: bio || null,
+        links: links.map((l) => l.trim()).filter(Boolean),
+      });
       if (!r.ok) {
         setErrors(r.fieldErrors ?? {});
         toast.error(r.error);
@@ -46,7 +56,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
       <Field
         label="Username"
         htmlFor="username"
-        hint="Reserved for your future public profile: /p/username"
+        hint="Your public profile lives at /p/username"
         error={errors.username}
       >
         <Input
@@ -58,6 +68,53 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
           spellCheck={false}
           aria-invalid={!!errors.username}
         />
+      </Field>
+      <Field
+        label="Public profile"
+        htmlFor="is-public"
+        hint={
+          isPublic
+            ? `Live at ${process.env.NEXT_PUBLIC_APP_URL ?? ""}/p/${username} — only presets you make public show up.`
+            : "Off — nobody can see your presets, even the ones marked public."
+        }
+      >
+        <div className="flex h-9 items-center">
+          <Switch id="is-public" checked={isPublic} onCheckedChange={setIsPublic} />
+        </div>
+      </Field>
+      <Field label="Bio" htmlFor="bio" optional error={errors.bio}>
+        <Textarea
+          id="bio"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+          rows={3}
+          maxLength={300}
+          placeholder="What you play, what you stream…"
+        />
+      </Field>
+      <Field
+        label="Links"
+        htmlFor="link-0"
+        optional
+        hint="https:// links to Twitch, YouTube, X, Discord, your site… up to 6."
+        error={errors.links ?? errors["links.0"]}
+      >
+        <div className="flex flex-col gap-2">
+          {[...links, ""].slice(0, 6).map((l, i) => (
+            <Input
+              key={i}
+              id={`link-${i}`}
+              type="url"
+              value={l}
+              placeholder="https://twitch.tv/you"
+              onChange={(e) => {
+                const next = [...links, ""];
+                next[i] = e.target.value;
+                setLinks(next.filter((x, j) => x !== "" || j < i));
+              }}
+            />
+          ))}
+        </div>
       </Field>
       <Field label="Email" htmlFor="email" hint="Used to sign in. Changing it isn't supported yet.">
         <Input id="email" value={email} readOnly disabled />

@@ -108,7 +108,7 @@ export async function updatePreset(userId: string, presetId: string, input: Pres
 export async function setPresetFlags(
   userId: string,
   presetId: string,
-  flags: Partial<Pick<schema.Preset, "isFavorite" | "isArchived">>,
+  flags: Partial<Pick<schema.Preset, "isFavorite" | "isArchived" | "visibility">>,
 ) {
   const [preset] = await db
     .update(presets)

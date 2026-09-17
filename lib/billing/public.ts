@@ -12,7 +12,7 @@ export const FEATURES = {
     "Up to 3 active games",
     "Manual apply with automatic local backups",
     "10 snapshots per preset",
-    "Public profile with your configs (coming soon)",
+    "Public profile with your configs and links",
   ],
   pro: [
     "Unlimited games and presets",

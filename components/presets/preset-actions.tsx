@@ -7,7 +7,9 @@ import {
   ArchiveRestore,
   Copy,
   Download,
+  EyeOff,
   FileCog,
+  Globe,
   FileText,
   MoreHorizontal,
   Pencil,
@@ -25,6 +27,7 @@ import {
   setDefaultPresetAction,
   setPresetArchivedAction,
   setPresetFavoriteAction,
+  setPresetVisibilityAction,
 } from "@/lib/actions/presets";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/alert-dialog";
@@ -126,6 +129,17 @@ export function PresetActionsMenu({
           >
             <Star className={cn(preset.isFavorite && "fill-current")} />{" "}
             {preset.isFavorite ? "Unfavorite" : "Favorite"}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() =>
+              run(
+                setPresetVisibilityAction(preset.id, preset.visibility !== "public"),
+                preset.visibility === "public" ? "Preset is private again" : "Preset is public",
+              )
+            }
+          >
+            {preset.visibility === "public" ? <EyeOff /> : <Globe />}{" "}
+            {preset.visibility === "public" ? "Make private" : "Make public"}
           </DropdownMenuItem>
           {onShowHistory ? (
             <DropdownMenuItem onSelect={onShowHistory}>
