@@ -36,8 +36,11 @@ export const httpsUrlSchema = z
   .nullish()
   .refine((v) => v == null || /^https:\/\//.test(v), "Cover URL must start with https://");
 
+export const catalogIdSchema = z.string().regex(/^[a-z0-9-]+$/, "Invalid catalog id");
+
 export const gameInputSchema = z.object({
   name: trimmed(120, "Game name"),
+  catalogId: catalogIdSchema.nullish(),
   platforms: tagsSchema.default([]),
   tags: tagsSchema.default([]),
   accentColor: hexColorSchema,
@@ -104,3 +107,9 @@ export const preferencesSchema = z.object({
   theme: z.enum(["dark", "light", "system"]).optional(),
   density: z.enum(["comfortable", "compact"]).optional(),
 });
+
+/** Catalog file id → raw file text. Real config files are a few KB; 512 KB catches the wrong file. */
+export const configFilesSchema = z.record(
+  z.string().max(40),
+  z.string().max(512 * 1024, "Each file must be 512 KB or smaller."),
+);

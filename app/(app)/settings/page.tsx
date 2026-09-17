@@ -5,6 +5,10 @@ import { db, schema } from "@/lib/db";
 import { Page, PageHeader } from "@/components/app/page-header";
 import { PreferencesForm, ProfileForm } from "@/components/settings-page/profile-form";
 import { ChangePasswordForm, DeleteAccount } from "@/components/settings-page/account-forms";
+import { CompanionCard } from "@/components/settings-page/companion-card";
+import { listCompanionTokens } from "@/lib/data/companion-tokens";
+import { listDevices } from "@/lib/data/devices";
+import { env } from "@/lib/env";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -17,6 +21,7 @@ export default async function SettingsPage() {
     where: and(eq(schema.accounts.userId, user.id), eq(schema.accounts.providerId, "credential")),
     columns: { id: true },
   });
+  const [tokens, devices] = await Promise.all([listCompanionTokens(user.id), listDevices(user.id)]);
 
   return (
     <Page size="lg">
@@ -30,6 +35,9 @@ export default async function SettingsPage() {
         </Section>
         <Section id="preferences" title="Preferences">
           <PreferencesForm profile={profile} />
+        </Section>
+        <Section id="companion" title="Companion">
+          <CompanionCard tokens={tokens} devices={devices} appUrl={env.BETTER_AUTH_URL} />
         </Section>
         <Section id="password" title="Password">
           <ChangePasswordForm hasPassword={Boolean(credential)} />
@@ -71,7 +79,7 @@ function Section({
       <h2 id={`${id}-title`} className="font-display text-[19px]">
         {title}
       </h2>
-      <div>{children}</div>
+      <div className="min-w-0">{children}</div>
     </section>
   );
 }

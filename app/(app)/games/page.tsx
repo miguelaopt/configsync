@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Gamepad2 } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { listGames } from "@/lib/data/games";
+import { listOwnedCatalogIds } from "@/lib/data/catalog";
+import { publicCatalog } from "@/lib/catalog";
 import { Page, PageHeader } from "@/components/app/page-header";
 import { GameGrid } from "@/components/games/game-grid";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -20,13 +22,15 @@ export default async function GamesPage({ searchParams }: { searchParams: Search
   const archived = params.view === "archived";
   const openNew = params.new === "1";
   const games = await listGames(user.id, { archived, query: q });
+  const catalog = publicCatalog();
+  const owned = await listOwnedCatalogIds(user.id);
 
   return (
     <Page size="xl">
       <PageHeader
         title={archived ? "Archived games" : "Games"}
         description={archived ? "Archived games stay searchable and exportable." : undefined}
-        actions={<NewGameButton autoOpen={openNew} />}
+        actions={<NewGameButton autoOpen={openNew} catalog={catalog} owned={owned} />}
       >
         <LibraryToolbar query={q} archived={archived} />
       </PageHeader>
@@ -56,7 +60,7 @@ export default async function GamesPage({ searchParams }: { searchParams: Search
             description="Any game works — you name it, add presets, and build categories that mirror the game's own menu."
             action={
               <>
-                <NewGameButton variant="primary" />
+                <NewGameButton variant="primary" catalog={catalog} owned={owned} />
                 <Button asChild variant="secondary">
                   <Link href="/import">Import a file</Link>
                 </Button>

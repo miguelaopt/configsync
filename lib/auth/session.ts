@@ -26,8 +26,8 @@ export async function requireUserId(): Promise<string> {
 }
 
 export class UnauthorizedError extends Error {
-  constructor() {
-    super("You need to sign in to do that.");
+  constructor(message = "You need to sign in to do that.") {
+    super(message);
     this.name = "UnauthorizedError";
   }
 }

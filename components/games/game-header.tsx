@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import type { Game } from "@/lib/db/schema";
+import { getCatalogGame } from "@/lib/catalog";
 import {
   deleteGameAction,
   removeGameCoverAction,
@@ -154,6 +155,9 @@ export function GameHeader({ game, presetCount, copyPayload, copyFormat }: Props
                   {t}
                 </Badge>
               ))}
+              {game.catalogId ? (
+                <Badge>Catalog · {getCatalogGame(game.catalogId)?.name ?? game.catalogId}</Badge>
+              ) : null}
               {game.isArchived ? <Badge variant="bad">Archived</Badge> : null}
             </div>
             {game.notes ? (

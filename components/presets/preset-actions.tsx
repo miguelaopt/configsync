@@ -7,6 +7,7 @@ import {
   ArchiveRestore,
   Copy,
   Download,
+  FileCog,
   FileText,
   MoreHorizontal,
   Pencil,
@@ -17,6 +18,7 @@ import {
   History,
 } from "lucide-react";
 import type { Preset } from "@/lib/db/schema";
+import type { PublicCatalogEntry } from "@/lib/catalog";
 import {
   deletePresetAction,
   duplicatePresetAction,
@@ -37,12 +39,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PresetDialog } from "./preset-dialog";
+import { ConfigFilesDialog } from "./config-files-dialog";
 import { cn } from "@/lib/utils/cn";
 
 type Props = {
   preset: Preset;
   gameSlug: string;
   siblings?: { id: string; name: string }[];
+  /** The game's catalog entry, when it has one; enables "Game config files…". */
+  catalogEntry?: PublicCatalogEntry | null;
   /** Called after delete when the current page is the preset itself. */
   onDeleted?: () => void;
   onShowHistory?: () => void;
@@ -53,6 +58,7 @@ export function PresetActionsMenu({
   preset,
   gameSlug,
   siblings = [],
+  catalogEntry,
   onDeleted,
   onShowHistory,
   className,
@@ -60,6 +66,7 @@ export function PresetActionsMenu({
   const router = useRouter();
   const [editing, setEditing] = React.useState(false);
   const [confirmDelete, setConfirmDelete] = React.useState(false);
+  const [configFiles, setConfigFiles] = React.useState(false);
 
   const run = async (p: Promise<{ ok: boolean; error?: string }>, msg: string) => {
     const r = await p;
@@ -148,6 +155,11 @@ export function PresetActionsMenu({
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
+          {catalogEntry?.files.length ? (
+            <DropdownMenuItem onSelect={() => setConfigFiles(true)}>
+              <FileCog /> Game config files…
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuItem
             onSelect={() =>
               run(
@@ -173,6 +185,14 @@ export function PresetActionsMenu({
         preset={preset}
         siblings={siblings}
       />
+      {catalogEntry ? (
+        <ConfigFilesDialog
+          open={configFiles}
+          onOpenChange={setConfigFiles}
+          presetId={preset.id}
+          entry={catalogEntry}
+        />
+      ) : null}
       <ConfirmDialog
         open={confirmDelete}
         onOpenChange={setConfirmDelete}

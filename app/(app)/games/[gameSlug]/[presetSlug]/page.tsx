@@ -4,6 +4,7 @@ import { getProfile, requireUser } from "@/lib/auth/session";
 import { getGameBySlug, listPresetsForGame } from "@/lib/data/games";
 import { getPresetBySlug, getPresetFull, toCategoryDocs } from "@/lib/data/presets";
 import { listRevisions } from "@/lib/data/revisions";
+import { publicCatalog } from "@/lib/catalog";
 import { Page, PageHeader } from "@/components/app/page-header";
 import { PresetHeader } from "@/components/presets/preset-header";
 import { PresetEditor } from "@/components/settings/preset-editor";
@@ -41,6 +42,9 @@ export default async function PresetPage({
   const { categories, ...presetOnly } = preset;
   const settingCount = categories.reduce((n, c) => n + c.settings.length, 0);
   const copyFormat = profile?.preferences.copyFormat ?? "plain";
+  const catalogEntry = game.catalogId
+    ? (publicCatalog().find((c) => c.id === game.catalogId) ?? null)
+    : null;
 
   return (
     <Page size="xl">
@@ -65,6 +69,7 @@ export default async function PresetPage({
           copyFormat={copyFormat}
           settingCount={settingCount}
           revisions={revisions}
+          catalogEntry={catalogEntry}
         />
         <PresetEditor
           game={game}

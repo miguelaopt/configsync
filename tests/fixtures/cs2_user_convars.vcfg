@@ -1,0 +1,12 @@
+"config"
+{
+	"convars"
+	{
+		"cl_crosshair_drawoutline"		"true"
+		"cl_crosshairalpha"		"255"
+		"cl_crosshaircolor"		"5"
+		"cl_crosshairsize"		"1.5"
+		"sensitivity"		"1.25"
+		"zoom_sensitivity_ratio"		"1"
+	}
+}

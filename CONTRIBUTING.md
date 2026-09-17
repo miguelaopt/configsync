@@ -46,6 +46,12 @@ docs: add self-hosting guide
 3. Render it in `components/settings/setting-control.tsx`.
 4. Add a case to `tests/setting-types.test.ts`.
 
+## Adding a game to the catalog
+
+Drop a `catalog/<id>.json` with the game's real menu and its config-file mappings, import it in
+`lib/catalog/index.ts`, add trimmed fixtures and a round-trip test. The rules (exact in-game
+names, no artwork, `source` shapes) are in [docs/catalog.md](docs/catalog.md).
+
 ## Reporting bugs
 
 Open an issue with steps to reproduce, what you expected, what happened, and your browser/OS. For security issues see [SECURITY.md](SECURITY.md) — don't open a public issue.

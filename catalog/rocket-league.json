@@ -1,0 +1,470 @@
+{
+  "id": "rocket-league",
+  "name": "Rocket League",
+  "steamAppId": 252950,
+  "epicAppName": "Sugar",
+  "platforms": ["PC"],
+  "tags": ["sports", "cars", "competitive"],
+  "accentColor": "#6fa8ff",
+  "coverUrl": "https://cdn.cloudflare.steamstatic.com/steam/apps/252950/header.jpg",
+  "notes": null,
+  "files": [
+    {
+      "id": "video",
+      "format": "ini",
+      "bool": "TrueFalse",
+      "section": ["SystemSettings"],
+      "paths": {
+        "epic-linux": "{documents}/My Games/Rocket League/TAGame/Config/TASystemSettings.ini",
+        "epic-windows": "{documents}/My Games/Rocket League/TAGame/Config/TASystemSettings.ini",
+        "steam-linux": "{documents}/My Games/Rocket League/TAGame/Config/TASystemSettings.ini",
+        "steam-windows": "{documents}/My Games/Rocket League/TAGame/Config/TASystemSettings.ini"
+      }
+    },
+    {
+      "id": "input",
+      "format": "ini",
+      "bool": "TrueFalse",
+      "section": ["TAGame.PlayerInput_TA"],
+      "paths": {
+        "epic-linux": "{documents}/My Games/Rocket League/TAGame/Config/TAInput.ini",
+        "epic-windows": "{documents}/My Games/Rocket League/TAGame/Config/TAInput.ini",
+        "steam-linux": "{documents}/My Games/Rocket League/TAGame/Config/TAInput.ini",
+        "steam-windows": "{documents}/My Games/Rocket League/TAGame/Config/TAInput.ini"
+      }
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default",
+      "isDefault": true,
+      "tags": [],
+      "categories": [
+        {
+          "name": "Video",
+          "icon": "monitor",
+          "settings": [
+            {
+              "name": "Resolution",
+              "type": "resolution",
+              "value": { "width": 1920, "height": 1080 },
+              "defaultValue": { "width": 1920, "height": 1080 },
+              "source": { "file": "video", "width": "ResX", "height": "ResY" }
+            },
+            {
+              "name": "Display Mode",
+              "type": "dropdown",
+              "value": "Fullscreen",
+              "defaultValue": "Fullscreen",
+              "options": [
+                { "label": "Fullscreen", "value": "Fullscreen" },
+                { "label": "Borderless", "value": "Borderless" },
+                { "label": "Windowed", "value": "Windowed" }
+              ],
+              "source": {
+                "file": "video",
+                "match": [
+                  {
+                    "value": "Fullscreen",
+                    "keys": { "Fullscreen": "True", "Borderless": "False" }
+                  },
+                  {
+                    "value": "Borderless",
+                    "keys": { "Fullscreen": "False", "Borderless": "True" }
+                  },
+                  {
+                    "value": "Windowed",
+                    "keys": { "Fullscreen": "False", "Borderless": "False" }
+                  }
+                ]
+              }
+            },
+            {
+              "name": "Vertical Sync",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false,
+              "source": { "file": "video", "key": "UseVsync" }
+            },
+            {
+              "name": "Render Quality",
+              "type": "dropdown",
+              "value": "High Quality",
+              "defaultValue": "High Quality",
+              "options": [
+                { "label": "Performance", "value": "Performance" },
+                { "label": "Quality", "value": "Quality" },
+                { "label": "High Quality", "value": "High Quality" }
+              ]
+            },
+            {
+              "name": "Render Detail",
+              "type": "dropdown",
+              "value": "High Quality",
+              "defaultValue": "High Quality",
+              "options": [
+                { "label": "Performance", "value": "Performance" },
+                { "label": "Quality", "value": "Quality" },
+                { "label": "High Quality", "value": "High Quality" }
+              ]
+            },
+            {
+              "name": "FPS",
+              "type": "dropdown",
+              "value": "60",
+              "defaultValue": "60",
+              "options": [
+                { "label": "30", "value": "30" },
+                { "label": "60", "value": "60" },
+                { "label": "120", "value": "120" },
+                { "label": "144", "value": "144" },
+                { "label": "240", "value": "240" },
+                { "label": "250", "value": "250" },
+                { "label": "Uncapped", "value": "Uncapped" }
+              ]
+            },
+            {
+              "name": "Anti-Aliasing",
+              "type": "dropdown",
+              "value": "Off",
+              "defaultValue": "Off",
+              "options": [
+                { "label": "Off", "value": "Off" },
+                { "label": "FXAA Low", "value": "FXAA Low" },
+                { "label": "FXAA High", "value": "FXAA High" },
+                { "label": "MLAA", "value": "MLAA" },
+                { "label": "SMAA", "value": "SMAA" }
+              ]
+            },
+            {
+              "name": "Texture Detail",
+              "type": "dropdown",
+              "value": "High Quality",
+              "defaultValue": "High Quality",
+              "options": [
+                { "label": "Low", "value": "Low" },
+                { "label": "Medium", "value": "Medium" },
+                { "label": "High", "value": "High" },
+                { "label": "High Quality", "value": "High Quality" }
+              ]
+            },
+            {
+              "name": "World Detail",
+              "type": "dropdown",
+              "value": "High Quality",
+              "defaultValue": "High Quality",
+              "options": [
+                { "label": "Performance", "value": "Performance" },
+                { "label": "Quality", "value": "Quality" },
+                { "label": "High Quality", "value": "High Quality" }
+              ]
+            },
+            {
+              "name": "Particle Detail",
+              "type": "dropdown",
+              "value": "High",
+              "defaultValue": "High",
+              "options": [
+                { "label": "Low", "value": "Low" },
+                { "label": "Medium", "value": "Medium" },
+                { "label": "High", "value": "High" }
+              ]
+            },
+            {
+              "name": "Effect Intensity",
+              "type": "dropdown",
+              "value": "High",
+              "defaultValue": "High",
+              "options": [
+                { "label": "Low", "value": "Low" },
+                { "label": "Medium", "value": "Medium" },
+                { "label": "High", "value": "High" }
+              ]
+            },
+            {
+              "name": "High Quality Shaders",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true
+            },
+            {
+              "name": "Ambient Occlusion",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "video", "key": "AmbientOcclusion" }
+            },
+            {
+              "name": "Depth of Field",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "video", "key": "DepthOfField" }
+            },
+            {
+              "name": "Bloom",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "video", "key": "Bloom" }
+            },
+            {
+              "name": "Light Shafts",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "video", "key": "bAllowLightShafts" }
+            },
+            {
+              "name": "Lens Flares",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "video", "key": "LensFlares" }
+            },
+            {
+              "name": "Dynamic Shadows",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "video", "key": "DynamicShadows" }
+            },
+            {
+              "name": "Motion Blur",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true,
+              "source": { "file": "video", "key": "MotionBlur" }
+            },
+            {
+              "name": "Weather Effects",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true
+            },
+            {
+              "name": "Transparent Goalposts",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true
+            }
+          ]
+        },
+        {
+          "name": "Camera",
+          "icon": "camera",
+          "settings": [
+            {
+              "name": "Camera Shake",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false
+            },
+            {
+              "name": "Field of View",
+              "type": "integer",
+              "value": 90,
+              "defaultValue": 90,
+              "min": 60,
+              "max": 110
+            },
+            {
+              "name": "Distance",
+              "type": "integer",
+              "value": 270,
+              "defaultValue": 270,
+              "min": 100,
+              "max": 400,
+              "step": 10
+            },
+            {
+              "name": "Height",
+              "type": "integer",
+              "value": 110,
+              "defaultValue": 110,
+              "min": 40,
+              "max": 200,
+              "step": 10
+            },
+            {
+              "name": "Angle",
+              "type": "integer",
+              "value": -3,
+              "defaultValue": -3,
+              "min": -15,
+              "max": 0
+            },
+            {
+              "name": "Stiffness",
+              "type": "decimal",
+              "value": 0.5,
+              "defaultValue": 0.5,
+              "min": 0,
+              "max": 1,
+              "step": 0.05
+            },
+            {
+              "name": "Swivel Speed",
+              "type": "decimal",
+              "value": 5,
+              "defaultValue": 5,
+              "min": 1,
+              "max": 10,
+              "step": 0.1
+            },
+            {
+              "name": "Transition Speed",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": 1,
+              "max": 2,
+              "step": 0.1
+            },
+            {
+              "name": "Invert Swivel",
+              "type": "boolean",
+              "value": false,
+              "defaultValue": false
+            },
+            {
+              "name": "Ball Camera Mode",
+              "type": "dropdown",
+              "value": "Toggle",
+              "defaultValue": "Toggle",
+              "options": [
+                { "label": "Toggle", "value": "Toggle" },
+                { "label": "Hold", "value": "Hold" }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Controls",
+          "icon": "gamepad",
+          "settings": [
+            {
+              "name": "Steering Sensitivity",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": 1,
+              "max": 10,
+              "step": 0.05
+            },
+            {
+              "name": "Aerial Sensitivity",
+              "type": "decimal",
+              "value": 1,
+              "defaultValue": 1,
+              "min": 1,
+              "max": 10,
+              "step": 0.05
+            },
+            {
+              "name": "Controller Deadzone",
+              "type": "decimal",
+              "value": 0.2,
+              "defaultValue": 0.2,
+              "min": 0.05,
+              "max": 0.5,
+              "step": 0.01
+            },
+            {
+              "name": "Dodge Deadzone",
+              "type": "decimal",
+              "value": 0.5,
+              "defaultValue": 0.5,
+              "min": 0.1,
+              "max": 0.9,
+              "step": 0.01
+            },
+            {
+              "name": "Controller Vibration",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true
+            },
+            {
+              "name": "Vibration Intensity",
+              "type": "percentage",
+              "value": 100,
+              "defaultValue": 100,
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "Ball Cam Indicator",
+              "type": "boolean",
+              "value": true,
+              "defaultValue": true
+            },
+            {
+              "name": "Mouse Sensitivity",
+              "type": "integer",
+              "value": 10,
+              "defaultValue": 10,
+              "min": 1,
+              "max": 100,
+              "source": { "file": "input", "key": "MouseSensitivity" }
+            }
+          ]
+        },
+        {
+          "name": "Audio",
+          "icon": "volume",
+          "settings": [
+            {
+              "name": "Master Volume",
+              "type": "percentage",
+              "value": 100,
+              "defaultValue": 100,
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "Gameplay Volume",
+              "type": "percentage",
+              "value": 100,
+              "defaultValue": 100,
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "Game Music Volume",
+              "type": "percentage",
+              "value": 100,
+              "defaultValue": 100,
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "Music Volume",
+              "type": "percentage",
+              "value": 100,
+              "defaultValue": 100,
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "Crowd Volume",
+              "type": "percentage",
+              "value": 100,
+              "defaultValue": 100,
+              "min": 0,
+              "max": 100
+            },
+            {
+              "name": "Ambient Volume",
+              "type": "percentage",
+              "value": 100,
+              "defaultValue": 100,
+              "min": 0,
+              "max": 100
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -5,11 +5,14 @@ import { toast } from "sonner";
 import { Check } from "lucide-react";
 import { createGameAction, updateGameAction } from "@/lib/actions/games";
 import type { Game } from "@/lib/db/schema";
+import type { PublicCatalogEntry } from "@/lib/catalog";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input, Textarea } from "@/components/ui/input";
 import { TagInput } from "@/components/ui/tag-input";
+import { CatalogPicker } from "./catalog-picker";
+import { GameNameSuggest, type Suggestion } from "./game-name-suggest";
 import { PLATFORM_SUGGESTIONS } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 
@@ -29,18 +32,33 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   game?: Game | null;
+  catalog?: PublicCatalogEntry[];
+  owned?: string[];
 };
 
 /** Create/edit a game. Values stay in the form when a save fails. */
-export function GameDialog({ open, onOpenChange, game }: Props) {
+export function GameDialog({ open, onOpenChange, game, catalog, owned }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         title={game ? "Edit game" : "Add a game"}
         description={
-          game ? undefined : "Any game, any platform. No database lookups — you define everything."
+          game
+            ? undefined
+            : "Pick a game from the catalog to get its real settings menu, or define your own."
         }
       >
+        {!game && catalog?.length ? (
+          <div className="mb-5 flex flex-col gap-2">
+            <p className="text-[13px] font-medium text-ink">From the catalog</p>
+            <CatalogPicker
+              entries={catalog}
+              owned={owned ?? []}
+              onDone={() => onOpenChange(false)}
+            />
+            <p className="text-xs text-ink-3">Or create any game by hand below.</p>
+          </div>
+        ) : null}
         <GameForm game={game} onDone={() => onOpenChange(false)} />
       </DialogContent>
     </Dialog>
@@ -53,16 +71,25 @@ function GameForm({ game, onDone }: { game?: Game | null; onDone: () => void }) 
   const [pending, startTransition] = React.useTransition();
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [name, setName] = React.useState(game?.name ?? "");
+  const [catalogId, setCatalogId] = React.useState<string | null>(game?.catalogId ?? null);
   const [platforms, setPlatforms] = React.useState<string[]>(game?.platforms ?? []);
   const [tags, setTags] = React.useState<string[]>(game?.tags ?? []);
   const [accent, setAccent] = React.useState<string | null>(game?.accentColor ?? null);
   const [coverUrl, setCoverUrl] = React.useState(game?.coverUrl ?? "");
   const [notes, setNotes] = React.useState(game?.notes ?? "");
 
+  const pick = (s: Suggestion) => {
+    setName(s.name);
+    if (s.coverUrl && !coverUrl) setCoverUrl(s.coverUrl);
+    if (!platforms.includes("PC")) setPlatforms([...platforms, "PC"]);
+    setCatalogId(s.catalogId);
+  };
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const input = {
       name,
+      catalogId,
       platforms,
       tags,
       accentColor: accent,
@@ -85,15 +112,25 @@ function GameForm({ game, onDone }: { game?: Game | null; onDone: () => void }) 
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
-      <Field label="Name" htmlFor="game-name" error={errors.name}>
-        <Input
+      <Field
+        label="Name"
+        htmlFor="game-name"
+        error={errors.name}
+        hint={
+          catalogId && !game
+            ? `${name} is in the catalog — pick it above to get its full settings menu.`
+            : undefined
+        }
+      >
+        <GameNameSuggest
           id="game-name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. Skyline Drift"
+          onChange={(v) => {
+            setName(v);
+            if (!game) setCatalogId(null); // typing over a pick unlinks; renaming keeps the link
+          }}
+          onPick={pick}
           autoFocus
-          required
-          maxLength={120}
           aria-invalid={!!errors.name}
         />
       </Field>
