@@ -39,8 +39,7 @@ Replace every user-visible and identifier use of the old name:
 - **Cookies/logs:** better-auth `cookiePrefix` → `csync`; log prefixes `[csync:*]`.
 - **Repo URL:** `SITE.repoUrl` already reads `NEXT_PUBLIC_REPO_URL`; default changes to
   `https://github.com/miguelaopt/configsync`. Renaming the GitHub repo is the owner's action.
-- **Not renamed:** database name, env var names, route paths, the `gsv`-prefixed nothing else.
-  Migration folder names are history.
+- **Not renamed:** database name, env var names, route paths, existing migration files.
 
 ## B. License
 
@@ -58,8 +57,7 @@ personal use). `package.json` `license` fields → `FSL-1.1-MIT`.
 ```
 plans
   user_id            text PK → users.id (cascade)
-  plan               enum plan: free | pro          -- derived, cached for cheap reads
-  source             enum plan_source: none | subscription | lifetime | manual
+  source             enum plan_source: subscription | lifetime | manual
   paddle_customer_id text null
   paddle_subscription_id text null
   subscription_status text null                     -- Paddle's status string as received
@@ -74,7 +72,9 @@ billing_events
   received_at  timestamptz default now()
 ```
 
-No row in `plans` = Free. `manual` lets the owner grant Pro by SQL (support cases, testers).
+No row in `plans` = Free. The plan is never stored: `getPlan` computes `resolvePlan(row, now)`
+on every read, so a canceled subscription expires at `current_period_end` without a job.
+`manual` lets the owner grant Pro by SQL (support cases, testers).
 
 ### Module `lib/billing/`
 
@@ -127,7 +127,7 @@ for up to ~30 s and shows "You're on Pro" when the webhook has landed.
    transactions) else look up `plans.paddle_customer_id`. Unknown → store event, log, 200.
 4. `applyPaddleEvent` then upsert `plans`. Events handled:
    - `transaction.completed` with an item whose `price.id === PADDLE_PRICE_LIFETIME` →
-     `source: lifetime`, `plan: pro`, customer id stored.
+     `source: lifetime`, customer id stored.
    - `subscription.activated | updated | canceled | past_due | paused | resumed` →
      `source: subscription`, `subscription_status`, `current_period_end =
 current_billing_period.ends_at`, customer + subscription ids. Lifetime always wins over
