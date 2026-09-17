@@ -91,6 +91,12 @@ export const settingValueUpdateSchema = z.object({
   value: settingValueSchema.nullish(),
 });
 
+const httpsLink = z
+  .string()
+  .trim()
+  .max(200, "Links are too long (max 200)")
+  .regex(/^https:\/\/\S+$/, "Links must start with https://");
+
 export const profileInputSchema = z.object({
   username: z
     .string()
@@ -100,6 +106,9 @@ export const profileInputSchema = z.object({
     .max(32, "Username is too long")
     .regex(/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/, "Use letters, numbers and hyphens only"),
   displayName: optionalTrimmed(80),
+  isPublic: z.boolean().default(false),
+  bio: optionalTrimmed(300),
+  links: z.array(httpsLink).max(6, "Up to 6 links").default([]),
 });
 
 export const preferencesSchema = z.object({

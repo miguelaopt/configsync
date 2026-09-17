@@ -115,6 +115,10 @@ export const profiles = pgTable(
     username: text("username").notNull(),
     displayName: text("display_name"),
     avatarUrl: text("avatar_url"),
+    /** Public page at /p/<username>. Off by default; presets also need visibility = public. */
+    isPublic: boolean("is_public").default(false).notNull(),
+    bio: text("bio"),
+    links: jsonb("links").$type<string[]>().default([]).notNull(),
     preferences: jsonb("preferences").$type<UserPreferences>().default({}).notNull(),
     ...timestamps,
   },

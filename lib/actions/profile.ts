@@ -14,7 +14,13 @@ export async function updateProfileAction(input: unknown) {
     if (clash) throw new AppError("That username is taken.", "conflict");
     await db
       .update(schema.profiles)
-      .set({ username: v.username, displayName: v.displayName ?? null })
+      .set({
+        username: v.username,
+        displayName: v.displayName ?? null,
+        isPublic: v.isPublic,
+        bio: v.bio ?? null,
+        links: v.links,
+      })
       .where(eq(schema.profiles.userId, userId));
     if (v.displayName) {
       await db.update(schema.users).set({ name: v.displayName }).where(eq(schema.users.id, userId));
