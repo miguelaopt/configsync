@@ -6,6 +6,7 @@ Save, organize, compare, copy and export the settings you use for any game — m
 
 - **Any game.** Add a completely custom game; nothing is hard-coded per title.
 - **Real menus from the catalog.** Counter-Strike 2 and Rocket League come with their actual settings menus, names and options.
+- **Public profile.** Share presets at `/p/<username>` with your Twitch/YouTube links; visitors copy, download or save them to their own vault.
 - **Free and Pro.** Free keeps 3 active games and 10 snapshots per preset; Pro is 2.99 €/month or 24.99 € once. Self-hosting has no plans — everything is unlocked.
 - **Companion CLI.** `csync` scans your installed games, imports their config files as presets and applies presets back — with backups.
 - **Presets.** Multiple setups per game (Main, Competitive, Laptop…). Duplicate, compare, archive, set default.

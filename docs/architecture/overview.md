@@ -43,7 +43,7 @@ docs/           you are here
 ## Data model
 
 ```
-users ─┬─ profiles (username, avatar, preferences)
+users ─┬─ profiles (username, avatar, preferences, is_public, bio, links)
        ├─ attachments (bytea: cover images)
        ├─ plans (Paddle customer/subscription ids, status, period end — read by getPlan)
        ├─ billing_events (every accepted webhook, by Paddle event id)
@@ -79,6 +79,10 @@ users ─┬─ profiles (username, avatar, preferences)
 ## Presets and history
 
 Every meaningful save (`lib/data/revisions.ts`) snapshots the preset as a `PresetDoc` — the same shape used by export. Restore = import that snapshot over the preset. The last 50 snapshots are kept per preset.
+
+## Public pages
+
+`/p/<username>` and `/p/<username>/<game>/<preset>` are unauthenticated. `lib/data/public.ts` is their only reader: every query requires `profiles.is_public` **and** `presets.visibility = 'public'`, skips archived rows, strips preset and setting `notes`, and returns slugs — never ids. Anything else is a 404. "Save to my vault" reuses `importFile` for the viewer's account.
 
 ## Plans
 
