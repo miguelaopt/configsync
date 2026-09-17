@@ -45,7 +45,7 @@ export function CompanionCard({
     <div className="flex flex-col gap-6 text-[13px]">
       <div className="rounded-sm border border-line p-3">
         <p className="text-ink">Install the companion on your gaming PC:</p>
-        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`git clone ${SITE.repoUrl} && cd configsync/companion && npm i -g .\ngsv login ${appUrl}\ngsv scan --push\ngsv import cs2`}</pre>
+        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`git clone ${SITE.repoUrl} && cd configsync/companion && npm i -g .\ncsync login ${appUrl}\ncsync scan --push\ncsync import cs2\ncsync watch --install   # Pro: keeps files equal to each game's Default preset`}</pre>
         <p className="mt-2 text-ink-3">
           It reads your game config files and never writes without a backup. Docs:{" "}
           <a
@@ -54,6 +54,11 @@ export function CompanionCard({
           >
             {SITE.docsCompanion}
           </a>
+        </p>
+        <p className="mt-1 text-ink-3">
+          Steam launch options:{" "}
+          <code className="font-mono text-xs">csync launch cs2 -- %command%</code> applies the
+          Default preset right before the game starts.
         </p>
       </div>
 

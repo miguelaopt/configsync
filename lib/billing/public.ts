@@ -17,7 +17,7 @@ export const FEATURES = {
   pro: [
     "Unlimited games and presets",
     "Unlimited snapshot history",
-    "Auto-switch: the companion applies presets when a game starts (coming soon)",
+    "Auto-switch: your PC keeps every game's files equal to its Default preset (csync watch)",
     "AI screenshot importer (coming soon)",
     "Cloud sync across your PCs (coming soon)",
   ],

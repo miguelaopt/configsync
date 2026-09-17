@@ -53,6 +53,7 @@ csync login http://localhost:3000    # paste a token from Settings → Companion
 csync scan --push                    # installed Steam/Epic games → your vault
 csync import cs2                     # CS2's config files → a new preset
 csync apply cs2 <preset-slug>        # preset → config files (backs up first)
+csync watch --install                # Pro: keep files equal to each game's Default preset
 ```
 
 Details in [docs/companion.md](docs/companion.md).

@@ -17,15 +17,45 @@ From a repo checkout, `pnpm csync <command>` works without installing.
 
 ## Commands
 
-| Command                                   | What it does                                                                    |
-| ----------------------------------------- | ------------------------------------------------------------------------------- |
-| `csync login <url>`                       | Verify a token against `GET /api/companion/me` and save it. Token can be piped. |
-| `csync scan [--push]`                     | List Steam and Epic games installed here; `--push` replaces this device's list. |
-| `csync games`                             | List catalog games and which of their files were found on this machine.         |
-| `csync import <game> [--name "…"]`        | Read the found files into a **new** preset. Prints the preset URL and warnings. |
-| `csync apply <game> <preset> [--dry-run]` | Write a preset into the files. Backs up first; `--dry-run` only prints changes. |
+| Command                                   | What it does                                                                                                     |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `csync login <url>`                       | Verify a token against `GET /api/companion/me` and save it. Token can be piped.                                  |
+| `csync scan [--push]`                     | List Steam and Epic games installed here; `--push` replaces this device's list.                                  |
+| `csync games`                             | List catalog games and which of their files were found on this machine.                                          |
+| `csync import <game> [--name "…"]`        | Read the found files into a **new** preset. Prints the preset URL and warnings.                                  |
+| `csync apply <game> <preset> [--dry-run]` | Write a preset into the files. Backs up first; `--dry-run` only prints changes.                                  |
+| `csync watch [--interval 30] [--once]`    | **Pro.** Keep every game's files equal to its Default preset (see below). `--install` / `--uninstall` autostart. |
+| `csync launch <game> -- <command…>`       | Apply the game's Default preset, then run the command. For Steam launch options and Heroic wrappers.             |
 
 `<game>` is a catalog id (`cs2`, `rocket-league`); `<preset>` is the slug in the preset's URL.
+
+## Background sync (`csync watch`, Pro)
+
+Every 30 s the daemon asks the vault for the **Default** preset of each catalog game you own,
+with a fingerprint of its content. When the fingerprint differs from what this machine last
+wrote (`~/.config/csync/state.json`) it applies the preset — **only while the game is
+closed**. Games read their config at start-up and rewrite it on exit, so writing while a game
+runs would be lost; instead the daemon logs `waiting: <game> is running` and applies as soon as
+the process is gone. Process names come from the catalog (`processNames`).
+
+Change the Default from your phone; the PC follows. Switch the Default from "Casual" to
+"Tournament" and every PC running `csync watch` has the tournament files before the next
+launch. Every write still goes through the same backup as `csync apply`.
+
+`csync watch --install` starts it with your session: a systemd user unit on Linux
+(`journalctl --user -u csync-watch -f` for logs), a Startup-folder script on Windows.
+`--uninstall` removes it. Free accounts get "Auto-switch is a Pro feature" and exit code 2.
+
+## Launch wrapper (`csync launch`)
+
+For the moment you press Play, the poll can be late. `csync launch <game> -- <command…>`
+applies the Default preset and then runs the command, so the files are right when the game
+reads them. If the vault is unreachable it says so and launches anyway — it never blocks a game.
+
+- **Steam** → game → Properties → Launch Options: `csync launch cs2 -- %command%`
+- **Heroic** → game → Settings → Advanced → Wrapper: `csync launch rocket-league --`
+
+`csync games` prints the exact line for each game it finds.
 
 ## Config
 
