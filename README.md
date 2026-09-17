@@ -6,6 +6,7 @@ Save, organize, compare, copy and export the settings you use for any game — m
 
 - **Any game.** Add a completely custom game; nothing is hard-coded per title.
 - **Real menus from the catalog.** Counter-Strike 2 and Rocket League come with their actual settings menus, names and options.
+- **Free and Pro.** Free keeps 3 active games and 10 snapshots per preset; Pro is 2.99 €/month or 24.99 € once. Self-hosting has no plans — everything is unlocked.
 - **Companion CLI.** `csync` scans your installed games, imports their config files as presets and applies presets back — with backups.
 - **Presets.** Multiple setups per game (Main, Competitive, Laptop…). Duplicate, compare, archive, set default.
 - **Generic settings.** Toggles, numbers, sliders, dropdowns, keybinds, colors, resolutions and more.
@@ -63,6 +64,7 @@ Details in [docs/companion.md](docs/companion.md).
 - [Import/export format](docs/import-export.md) — the stable JSON schema
 - [Game catalog](docs/catalog.md) — adding a game with its real menu and config-file mappings
 - [Companion CLI](docs/companion.md) — scan, import and apply from your gaming PC
+- [Billing](docs/billing.md) — Paddle setup for the Free/Pro plans
 - [AI providers](docs/architecture/ai-providers.md) — the optional screenshot assistant
 - [Decisions](docs/decisions/) — why things are the way they are
 - [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Code of conduct](CODE_OF_CONDUCT.md)

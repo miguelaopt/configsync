@@ -11,6 +11,13 @@ env:
   BETTER_AUTH_URL: http://localhost:3100
   NEXT_PUBLIC_APP_URL: http://localhost:3100
   NEXT_TELEMETRY_DISABLED: 1
+  # Plans on, so the e2e walkthrough exercises the Free limit; no network calls are made.
+  PADDLE_API_KEY: ci-dummy
+  PADDLE_WEBHOOK_SECRET: ci-dummy
+  PADDLE_PRICE_MONTHLY: pri_ci_monthly
+  PADDLE_PRICE_LIFETIME: pri_ci_lifetime
+  NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: test_ci
+  NEXT_PUBLIC_PADDLE_ENV: sandbox
 
 jobs:
   check:

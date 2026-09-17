@@ -45,6 +45,8 @@ docs/           you are here
 ```
 users ─┬─ profiles (username, avatar, preferences)
        ├─ attachments (bytea: cover images)
+       ├─ plans (Paddle customer/subscription ids, status, period end — read by getPlan)
+       ├─ billing_events (every accepted webhook, by Paddle event id)
        ├─ companion_tokens (name, sha256 of the token, last_used_at)
        ├─ device_games (device, source, app_id, name — what `csync scan --push` found)
        └─ games ─── presets ─┬─ categories ─── settings
@@ -77,6 +79,16 @@ users ─┬─ profiles (username, avatar, preferences)
 ## Presets and history
 
 Every meaningful save (`lib/data/revisions.ts`) snapshots the preset as a `PresetDoc` — the same shape used by export. Restore = import that snapshot over the preset. The last 50 snapshots are kept per preset.
+
+## Plans
+
+`lib/billing/plan.ts` → `getPlan(userId)` is the only answer to "is this user Pro?". It derives
+the plan at read time from the `plans` row (`resolvePlan`), so a canceled subscription expires
+on its own. Free's two limits live in `lib/billing/limits.ts` and are enforced in the data layer:
+`createGame`/un-archive count active games, `createRevision` prunes snapshots. The Paddle webhook
+(`app/api/billing/paddle`) is the only writer of `plans`; it verifies the HMAC signature and
+records every event id for idempotency. With no `PADDLE_*` configured, `billingEnabled` is
+false, everyone is Pro and the billing UI is hidden. Details: [billing.md](../billing.md).
 
 ## Catalog and game config files
 
