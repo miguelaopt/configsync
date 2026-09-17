@@ -8,6 +8,7 @@ import {
 } from "@/lib/catalog";
 import { exportFileSchema } from "@/lib/import-export/schema";
 import { buildExportFile } from "@/lib/import-export/serialize";
+import { presetFingerprint } from "@/lib/import-export/fingerprint";
 
 describe("catalog", () => {
   it("contains cs2 and rocket-league", () => {
@@ -36,6 +37,7 @@ describe("catalog", () => {
       name: "Test Game",
       platforms: [],
       tags: [],
+      processNames: ["test.exe"],
       files: [
         {
           id: "video",
@@ -66,6 +68,7 @@ describe("catalog", () => {
     expect(doc).not.toHaveProperty("files");
     expect(doc).not.toHaveProperty("id");
     expect(doc).not.toHaveProperty("steamAppId");
+    expect(doc).not.toHaveProperty("processNames");
     expect(doc).not.toHaveProperty("epicAppName");
     expect(doc.presets[0]!.categories[0]!.settings[0]).not.toHaveProperty("source");
     expect(exportFileSchema.safeParse(buildExportFile([doc], "game")).success).toBe(true);
@@ -90,5 +93,22 @@ describe("catalog", () => {
     const camera = rl.presets[0]!.categories.find((c) => c.name === "Camera")!;
     expect(camera.settings.every((s) => !s.source)).toBe(true);
     expect(rl.files.map((f) => f.id)).toEqual(["video", "input"]);
+  });
+});
+
+describe("presetFingerprint", () => {
+  const base = CATALOG[0]!.presets[0]!;
+  it("is 16 hex chars, stable across key order, and changes with a value", () => {
+    const a = presetFingerprint(base);
+    expect(a).toMatch(/^[0-9a-f]{16}$/);
+    // Rebuild the object with keys in a different order: same content, same hash.
+    const reordered = Object.fromEntries(Object.entries(base).reverse()) as typeof base;
+    expect(presetFingerprint(reordered)).toBe(a);
+    const changed = structuredClone(base);
+    changed.categories[0]!.settings[0]!.value = "something-else";
+    expect(presetFingerprint(changed)).not.toBe(a);
+  });
+  it("every catalog game declares processNames", () => {
+    for (const g of CATALOG) expect(g.processNames.length).toBeGreaterThan(0);
   });
 });

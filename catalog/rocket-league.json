@@ -3,6 +3,7 @@
   "name": "Rocket League",
   "steamAppId": 252950,
   "epicAppName": "Sugar",
+  "processNames": ["RocketLeague.exe"],
   "platforms": ["PC"],
   "tags": ["sports", "cars", "competitive"],
   "accentColor": "#6fa8ff",

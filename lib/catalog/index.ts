@@ -24,7 +24,15 @@ export function getCatalogGame(id: string): CatalogGame | null {
 
 /** The catalog entry as a plain GameDoc: catalog-only fields removed, catalogId set. */
 export function catalogToGameDoc(game: CatalogGame): GameDoc {
-  const { id, files: _files, steamAppId: _s, epicAppName: _e, presets, ...rest } = game;
+  const {
+    id,
+    files: _f,
+    steamAppId: _s,
+    epicAppName: _e,
+    processNames: _p,
+    presets,
+    ...rest
+  } = game;
   return {
     ...rest,
     catalogId: id,
@@ -53,6 +61,7 @@ export function publicCatalog() {
     epicAppName: g.epicAppName ?? null,
     settingCount: g.presets[0]!.categories.reduce((n, c) => n + c.settings.length, 0),
     files: g.files,
+    processNames: g.processNames,
   }));
 }
 export type PublicCatalogEntry = ReturnType<typeof publicCatalog>[number];

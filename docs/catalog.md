@@ -18,6 +18,9 @@ The catalog ships two games: Counter-Strike 2 (`cs2`) and Rocket League (`rocket
    name, so renaming a setting in the vault silently drops it from file export.
 4. **Files are patched, never generated.** Only keys with a `source` are touched; everything else
    in the user's file stays byte-for-byte.
+5. **`processNames` is how the companion knows the game is running** and must not be written to.
+   List every executable name across launchers and OSes, without paths. Linux truncates names
+   to 15 characters in `/proc`; the companion handles that.
 
 ## Layout
 
@@ -26,6 +29,7 @@ The catalog ships two games: Counter-Strike 2 (`cs2`) and Rocket League (`rocket
   "id": "cs2", // stable, url-safe: [a-z0-9-]
   "steamAppId": 730, // optional; matches `csync scan` and Steam suggestions
   "epicAppName": "Sugar", // optional; Epic/Legendary app name
+  "processNames": ["cs2", "cs2.exe"], // executable names as a process list shows them, all OSes mixed
   "files": [
     {
       "id": "video", // referenced by `source.file`

@@ -1,12 +1,17 @@
 #!/usr/bin/env node
-import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { Writable } from "node:stream";
 import { api } from "../lib/api.mjs";
 import { loadConfig, saveConfig } from "../lib/config.mjs";
-import { resolveFilePath } from "../lib/paths.mjs";
 import { scanEpic, scanSteam } from "../lib/scan.mjs";
+import { applyPreset, readFiles } from "../lib/apply.mjs";
+import { loadState } from "../lib/state.mjs";
+import { isRunning, runningProcessNames } from "../lib/procs.mjs";
+import { decide } from "../lib/sync.mjs";
+import * as autostart from "../lib/autostart.mjs";
+import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 const HELP = `csync — ConfigSync companion
 
@@ -15,10 +20,16 @@ const HELP = `csync — ConfigSync companion
   csync import <game> [--name "…"]        read the game's config files into a new preset (game: cs2, rocket-league…)
   csync apply <game> <preset> [--dry-run] write a preset into the game's config files (backs up first)
   csync games                             list catalog games and whether their files were found here
+  csync watch [--interval 30] [--once]    keep every game's files equal to its Default preset (Pro); --install / --uninstall autostart
+  csync launch <game> -- <command…>       apply the game's Default preset, then run the command (Steam launch options)
 
 Close the game before import/apply. Steam Cloud may restore old files for some games.`;
 
-const [cmd, ...rest] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const dashdash = argv.indexOf("--");
+/** Everything after `--` is the command `launch` runs, untouched. */
+const tail = dashdash >= 0 ? argv.slice(dashdash + 1) : [];
+const [cmd, ...rest] = dashdash >= 0 ? argv.slice(0, dashdash) : argv;
 const flag = (name) => rest.includes(`--${name}`);
 const opt = (name) => {
   const i = rest.indexOf(`--${name}`);
@@ -75,27 +86,9 @@ async function scan() {
 async function catalogGame(c, id) {
   const { games } = await api(c).get("/catalog");
   const g = games.find((x) => x.id === id);
-  if (!g) {
-    console.error(`Unknown game "${id ?? ""}". Known: ${games.map((x) => x.id).join(", ")}`);
-    process.exit(2);
-  }
+  if (!g)
+    throw new Error(`Unknown game "${id ?? ""}". Known: ${games.map((x) => x.id).join(", ")}`);
   return g;
-}
-
-function readFiles(g) {
-  const files = {};
-  const found = [];
-  for (const f of g.files) {
-    const hit = resolveFilePath(f, g);
-    if (!hit) {
-      console.log(`  ${f.id}: not found on this machine`);
-      continue;
-    }
-    files[f.id] = readFileSync(hit.path, "utf8");
-    found.push({ id: f.id, path: hit.path });
-    console.log(`  ${f.id}: ${hit.path}`);
-  }
-  return { files, found };
 }
 
 async function games() {
@@ -103,7 +96,8 @@ async function games() {
   const { games } = await api(c).get("/catalog");
   for (const g of games) {
     console.log(`${g.id} — ${g.name}`);
-    readFiles(g);
+    const { found } = readFiles(g);
+    if (found.length) console.log(`  Steam launch options: csync launch ${g.id} -- %command%`);
   }
 }
 
@@ -138,27 +132,99 @@ async function apply() {
   if (!presetSlug) return console.error("Usage: csync apply <game> <preset-slug> [--dry-run]");
   const g = await catalogGame(c, gameId);
   console.log(`Reading current ${g.name} files:`);
-  const { files, found } = readFiles(g);
-  const r = await api(c).post("/apply", { catalogId: g.id, presetSlug, files });
-  for (const [id, keys] of Object.entries(r.changed))
-    console.log(
-      `\n${id}: ${Object.entries(keys)
-        .map(([k, v]) => `${k}=${v}`)
-        .join(", ")}`,
-    );
-  for (const s of r.skipped) console.log(`Skipped — ${s}`);
-  if (flag("dry-run")) return console.log("\nDry run: nothing written.");
-  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  for (const { id, path } of found) {
-    if (!r.files[id]) continue;
-    copyFileSync(path, `${path}.bak-${stamp}`);
-    writeFileSync(path, r.files[id]);
-    console.log(`Wrote ${path} (backup: ${path}.bak-${stamp})`);
-  }
-  console.log("\nDone. If the game was open, close it and apply again.");
+  await applyPreset(c, g, presetSlug, { dryRun: flag("dry-run") });
+  console.log(
+    flag("dry-run")
+      ? "\nDry run: nothing written."
+      : "\nDone. If the game was open, close it and apply again.",
+  );
 }
 
-const commands = { login, scan, games, import: importCmd, apply };
+const ts = () => new Date().toISOString().slice(11, 19);
+const log = (m) => console.log(`${ts()} ${m}`);
+
+/** One pass over every catalog game: apply what changed, wait for running games, skip the rest. */
+async function tick(c, catalog, state, waiting) {
+  let sync;
+  try {
+    sync = await api(c).get("/sync");
+  } catch (e) {
+    if (/Pro feature/.test(e.message)) {
+      console.error(e.message);
+      process.exit(2);
+    }
+    log(`vault unreachable (${e.message}); retrying next tick`);
+    return;
+  }
+  const running = await runningProcessNames();
+  for (const target of sync.games) {
+    const game = catalog.find((g) => g.id === target.catalogId);
+    if (!game || game.files.length === 0) continue;
+    const { found } = readFiles(game, { log: () => {} });
+    if (found.length === 0) continue; // not installed here
+    const remote = { presetSlug: target.presetSlug, version: target.version };
+    const verdict = decide({
+      remote,
+      applied: state.applied[game.id] ?? null,
+      running: isRunning(game, running),
+    });
+    if (verdict === "skip") continue;
+    if (verdict === "wait") {
+      if (!waiting.has(game.id))
+        log(`waiting: ${game.name} is running; will apply "${target.presetName}" when it closes`);
+      waiting.add(game.id);
+      continue;
+    }
+    try {
+      await applyPreset(c, game, target.presetSlug, { log: () => {}, version: target.version });
+      state.applied[game.id] = remote;
+      waiting.delete(game.id);
+      log(`applied "${target.presetName}" to ${game.name}`);
+    } catch (e) {
+      log(`failed to apply to ${game.name}: ${e.message}`);
+    }
+  }
+}
+
+async function watch() {
+  const me = fileURLToPath(import.meta.url);
+  if (flag("install")) return console.log(autostart.install(process.execPath, me));
+  if (flag("uninstall")) return console.log(autostart.uninstall());
+  const c = need();
+  const interval = Math.max(5, Number(opt("interval") ?? 30)) * 1000;
+  const { games: catalog } = await api(c).get("/catalog");
+  const state = loadState();
+  const waiting = new Set();
+  log(`watching ${catalog.length} catalog games every ${interval / 1000}s as "${c.device}"`);
+  for (;;) {
+    await tick(c, catalog, state, waiting);
+    if (flag("once")) break;
+    await new Promise((r) => setTimeout(r, interval));
+  }
+}
+
+async function launch() {
+  const c = need();
+  const gameId = args[0];
+  if (!gameId || tail.length === 0)
+    return console.error("Usage: csync launch <game> -- <command…>");
+  try {
+    const g = await catalogGame(c, gameId);
+    const target = await api(c).get(`/default?game=${encodeURIComponent(g.id)}`);
+    await applyPreset(c, g, target.presetSlug, { log: () => {}, version: target.version });
+    console.log(`csync: applied "${target.presetName}" to ${g.name}`);
+  } catch (e) {
+    console.error(`csync: could not apply (${e.message}); launching anyway`);
+  }
+  const child = spawn(tail[0], tail.slice(1), { stdio: "inherit" });
+  child.on("error", (e) => {
+    console.error(`csync: could not start ${tail[0]}: ${e.message}`);
+    process.exit(1);
+  });
+  child.on("exit", (code) => process.exit(code ?? 0));
+}
+
+const commands = { login, scan, games, import: importCmd, apply, watch, launch };
 if (!cmd || !commands[cmd]) {
   console.log(HELP);
   process.exit(cmd ? 2 : 0);

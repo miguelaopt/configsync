@@ -40,6 +40,8 @@ export const catalogGameSchema = gameDocSchema.extend({
   steamAppId: z.number().int().positive().optional(),
   epicAppName: z.string().optional(),
   files: z.array(catalogFileSchema).default([]),
+  /** Executable names as a process list shows them (no paths), any platform. */
+  processNames: z.array(z.string().min(1)).default([]),
   presets: z.array(catalogPresetSchema).min(1),
 });
 export type CatalogGame = z.infer<typeof catalogGameSchema>;

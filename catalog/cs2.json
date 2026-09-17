@@ -2,6 +2,7 @@
   "id": "cs2",
   "name": "Counter-Strike 2",
   "steamAppId": 730,
+  "processNames": ["cs2", "cs2.exe"],
   "platforms": ["PC"],
   "tags": ["fps", "competitive", "valve"],
   "accentColor": "#e9b44c",

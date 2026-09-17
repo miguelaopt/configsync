@@ -8,6 +8,7 @@ import type { PublicCatalogEntry } from "@/lib/catalog";
 import type { CopyPayload, CopyFormat } from "@/lib/copy/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip } from "@/components/ui/tooltip";
 import { CopyMenu } from "@/components/app/copy-menu";
 import { PresetActionsMenu } from "./preset-actions";
 import { HistoryDialog, type RevisionSummary } from "./history-dialog";
@@ -47,7 +48,15 @@ export function PresetHeader({
             ) : null}
           </h1>
           <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[13px] text-ink-2">
-            {preset.isDefault ? <Badge variant="accent">Default</Badge> : null}
+            {preset.isDefault ? (
+              game.catalogId ? (
+                <Tooltip content="Applied by csync watch on your PCs">
+                  <Badge variant="accent">Default</Badge>
+                </Tooltip>
+              ) : (
+                <Badge variant="accent">Default</Badge>
+              )
+            ) : null}
             {preset.isArchived ? <Badge variant="bad">Archived</Badge> : null}
             {preset.tags.map((t) => (
               <Badge key={t} variant="outline">

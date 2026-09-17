@@ -6,6 +6,7 @@ import { importFile } from "@/lib/data/import";
 import { getGameBySlug } from "@/lib/data/games";
 import { getPresetBySlug, getPresetFull, toPresetDoc } from "@/lib/data/presets";
 import { readGameConfig, writeGameConfig, type ConfigFiles } from "@/lib/game-configs";
+import { presetFingerprint } from "@/lib/import-export/fingerprint";
 import { uniqueSlug } from "@/lib/utils/slug";
 import { AppError } from "./errors";
 
@@ -110,4 +111,46 @@ export async function patchConfigFiles(
   }
   const preset = toPresetDoc(await getPresetFull(userId, presetId));
   return writeGameConfig(entry, preset, input.files);
+}
+
+export type SyncTarget = {
+  catalogId: string;
+  gameSlug: string;
+  presetSlug: string;
+  presetName: string;
+  version: string;
+};
+
+/** The Default preset of one catalog game, with a content fingerprint; null when none. */
+export async function defaultPresetFor(
+  userId: string,
+  catalogId: string,
+): Promise<SyncTarget | null> {
+  const game = await findGameByCatalogId(userId, catalogId);
+  if (!game) return null;
+  const row = await db.query.presets.findFirst({
+    where: and(
+      eq(schema.presets.gameId, game.id),
+      eq(schema.presets.isDefault, true),
+      eq(schema.presets.isArchived, false),
+    ),
+    columns: { id: true, slug: true, name: true },
+  });
+  if (!row) return null;
+  const full = await getPresetFull(userId, row.id);
+  return {
+    catalogId,
+    gameSlug: game.slug,
+    presetSlug: row.slug,
+    presetName: row.name,
+    version: presetFingerprint(toPresetDoc(full)),
+  };
+}
+
+/** Every catalog game the user owns that has a Default preset. */
+export async function listSyncTargets(userId: string): Promise<SyncTarget[]> {
+  const ids = await listOwnedCatalogIds(userId);
+  // ponytail: one full-preset load per catalog game per poll; cache by max(updated_at) if it ever matters.
+  const targets = await Promise.all(ids.map((id) => defaultPresetFor(userId, id)));
+  return targets.filter((t): t is SyncTarget => t !== null);
 }
