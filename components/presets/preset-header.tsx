@@ -23,6 +23,8 @@ type Props = {
   settingCount: number;
   revisions: RevisionSummary[];
   catalogEntry?: PublicCatalogEntry | null;
+  /** Public URL of this preset when the profile is public; null when the profile is private. */
+  publicUrl?: string | null;
 };
 
 export function PresetHeader({
@@ -34,6 +36,7 @@ export function PresetHeader({
   settingCount,
   revisions,
   catalogEntry,
+  publicUrl,
 }: Props) {
   const router = useRouter();
   const [history, setHistory] = React.useState(false);
@@ -58,6 +61,15 @@ export function PresetHeader({
               )
             ) : null}
             {preset.isArchived ? <Badge variant="bad">Archived</Badge> : null}
+            {preset.visibility === "public" ? (
+              <Tooltip
+                content={
+                  publicUrl ? publicUrl : "Turn on your public profile in Settings to share this"
+                }
+              >
+                <Badge variant="good">Public</Badge>
+              </Tooltip>
+            ) : null}
             {preset.tags.map((t) => (
               <Badge key={t} variant="outline">
                 {t}

@@ -211,6 +211,30 @@ test.describe("library flow", () => {
     await page.waitForURL("**/games/counter-strike-2/imported-*");
     await expect(page.getByLabel("Resolution width")).toHaveValue("1280");
 
+    // --- Public profile -----------------------------------------------------
+    await page.goto("/games/test-arena/main-setup");
+    await page.getByRole("button", { name: "Actions for Main Setup" }).click();
+    await page.getByRole("menuitem", { name: "Make public" }).click();
+    await expect(page.getByText("Preset is public")).toBeVisible();
+    await page.goto("/settings");
+    const username = await page.getByLabel("Username").inputValue();
+    await page.getByLabel("Public profile").click();
+    await page.getByLabel("Bio").fill("Settings I actually use.");
+    await page.locator("#link-0").fill("https://twitch.tv/e2e-player");
+    await page.getByRole("button", { name: "Save profile" }).click();
+    await expect(page.getByText("Profile saved")).toBeVisible();
+    const anon = await context.browser()!.newContext({ baseURL: new URL(page.url()).origin });
+    const pub = await anon.newPage();
+    await pub.goto(`/p/${username}`);
+    await expect(pub.getByRole("heading", { name: "E2E Player" })).toBeVisible();
+    await expect(pub.getByRole("link", { name: "Twitch" })).toBeVisible();
+    await pub.getByRole("link", { name: "Main Setup" }).click();
+    await expect(pub.getByRole("heading", { name: "Main Setup" })).toBeVisible();
+    await expect(pub.getByText("Sensitivity")).toBeVisible();
+    const privateRes = await pub.goto(`/p/${username}/test-arena/main-setup-copy`);
+    expect(privateRes?.status()).toBe(404);
+    await anon.close();
+
     // --- Archive + delete ---------------------------------------------------
     await page.goto("/games/imported-arena");
     await page.getByRole("button", { name: "Game actions" }).click();

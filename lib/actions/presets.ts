@@ -45,6 +45,14 @@ export async function setPresetFavoriteAction(presetId: string, value: boolean) 
   });
 }
 
+export async function setPresetVisibilityAction(presetId: string, value: boolean) {
+  return runAction(flagSchema, { presetId, value }, async (v, userId) => {
+    await data.setPresetFlags(userId, v.presetId, { visibility: v.value ? "public" : "private" });
+    revalidatePath("/", "layout");
+    return null;
+  });
+}
+
 export async function setPresetArchivedAction(presetId: string, value: boolean) {
   return runAction(flagSchema, { presetId, value }, async (v, userId) => {
     await data.setPresetFlags(userId, v.presetId, { isArchived: v.value });

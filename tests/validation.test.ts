@@ -34,3 +34,23 @@ describe("profileInputSchema", () => {
     expect(profileInputSchema.safeParse({ username: "ab" }).success).toBe(false);
   });
 });
+
+describe("profileInputSchema public fields", () => {
+  const base = { username: "someone", displayName: "Some One" };
+  it("accepts six https links, a bio and the switch", () => {
+    const links = Array.from({ length: 6 }, (_, i) => `https://example.com/${i}`);
+    const r = profileInputSchema.safeParse({ ...base, isPublic: true, bio: "hi", links });
+    expect(r.success).toBe(true);
+    if (r.success) expect(r.data.links).toHaveLength(6);
+  });
+  it("rejects a seventh link and http://", () => {
+    const seven = Array.from({ length: 7 }, (_, i) => `https://example.com/${i}`);
+    expect(profileInputSchema.safeParse({ ...base, links: seven }).success).toBe(false);
+    expect(profileInputSchema.safeParse({ ...base, links: ["http://x.com"] }).success).toBe(false);
+  });
+  it("defaults to private with no links", () => {
+    const r = profileInputSchema.safeParse(base);
+    expect(r.success && r.data.isPublic).toBe(false);
+    expect(r.success && r.data.links).toEqual([]);
+  });
+});

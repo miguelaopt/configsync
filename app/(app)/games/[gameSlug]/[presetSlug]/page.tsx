@@ -70,6 +70,9 @@ export default async function PresetPage({
           settingCount={settingCount}
           revisions={revisions}
           catalogEntry={catalogEntry}
+          publicUrl={
+            profile?.isPublic ? `/p/${profile.username}/${game.slug}/${preset.slug}` : null
+          }
         />
         <PresetEditor
           game={game}
