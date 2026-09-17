@@ -6,5 +6,6 @@ export const SITE = {
   repoUrl:
     process.env.NEXT_PUBLIC_REPO_URL || "https://github.com/gamesettings-vault/gamesettings-vault",
   docsImportExport: "docs/import-export.md",
+  docsCompanion: "docs/companion.md",
   version: "0.1.0",
 };
