@@ -2,7 +2,7 @@
   "name": "csync",
   "version": "0.1.0",
   "description": "ConfigSync companion: scan installed games, import and apply config files.",
-  "license": "MIT",
+  "license": "FSL-1.1-MIT",
   "type": "module",
   "bin": {
     "csync": "./bin/csync.mjs"

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Your game settings. One place. Save, organize, compare, copy and export settings for any game.",
-  "license": "MIT",
+  "license": "FSL-1.1-MIT",
   "packageManager": "pnpm@12.4.1",
   "engines": {
     "node": ">=20.12"

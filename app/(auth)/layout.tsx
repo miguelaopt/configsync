@@ -13,7 +13,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="w-full max-w-sm">{children}</div>
       </main>
       <footer className="px-4 py-6 text-center text-xs text-ink-3">
-        Open source · self-hostable · your data stays yours.
+        Source-available · self-hostable · your data stays yours.
       </footer>
     </div>
   );

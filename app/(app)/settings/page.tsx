@@ -46,7 +46,7 @@ export default async function SettingsPage() {
           <DeleteAccount />
         </Section>
         <p className="text-xs text-ink-3">
-          ConfigSync {SITE.version} · open source under the MIT license ·{" "}
+          ConfigSync {SITE.version} · source-available under the FSL ·{" "}
           <a
             href={SITE.repoUrl}
             className="underline underline-offset-4 hover:text-ink"

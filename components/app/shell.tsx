@@ -99,7 +99,7 @@ export function AppShell({ user, username, children }: ShellProps) {
             ))}
           </ul>
           <p className="mt-auto px-2.5 text-[11px] leading-relaxed text-ink-3">
-            Open source · self-hostable.
+            Source-available · self-hostable.
             <br />
             Your data is yours to export.
           </p>

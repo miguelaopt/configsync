@@ -71,8 +71,8 @@ Details in [docs/companion.md](docs/companion.md).
 
 Next.js (App Router, Server Actions) · React · TypeScript strict · Tailwind CSS v4 · Radix primitives · Drizzle ORM · PostgreSQL · better-auth · Zod · Vitest · Playwright · pnpm · Docker.
 
-Every dependency is open source. There is no proprietary backend.
+Every dependency is open source. Self-hosting unlocks every feature; the hosted service sells convenience, not code.
 
 ## License
 
-[MIT](LICENSE)
+[FSL-1.1-MIT](LICENSE) — source-available. Use it, modify it, self-host it for yourself; don't resell it as a service. Each version becomes MIT two years after release. See [ADR 0006](docs/decisions/0006-license-and-plans.md).
