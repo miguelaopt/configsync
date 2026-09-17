@@ -179,6 +179,12 @@ test.describe("library flow", () => {
     await expect(page.getByRole("heading", { name: "Video" })).toBeVisible();
     await expect(page.getByText("Multisampling Anti-Aliasing Mode")).toBeVisible();
 
+    // --- Catalog entry already owned shows disabled -------------------------
+    await page.goto("/games");
+    await page.getByRole("button", { name: "Add game" }).first().click();
+    await expect(page.getByRole("button", { name: /Counter-Strike 2/ })).toBeDisabled();
+    await page.keyboard.press("Escape");
+
     // --- Archive + delete ---------------------------------------------------
     await page.goto("/games/imported-arena");
     await page.getByRole("button", { name: "Game actions" }).click();

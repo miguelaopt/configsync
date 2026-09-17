@@ -1,8 +1,10 @@
 import "server-only";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNotNull } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { catalogToGameDoc, getCatalogGame } from "@/lib/catalog";
 import { importFile } from "@/lib/data/import";
+import { getGameBySlug } from "@/lib/data/games";
+import { uniqueSlug } from "@/lib/utils/slug";
 import { AppError } from "./errors";
 
 export async function findGameByCatalogId(userId: string, catalogId: string) {
@@ -15,10 +17,36 @@ export async function findGameByCatalogId(userId: string, catalogId: string) {
   });
 }
 
-/** Creates the game + its Default preset from the catalog. Always creates; callers decide whether to reuse. */
+/** Catalog ids of games this user already owns, for graying out the picker. */
+export async function listOwnedCatalogIds(userId: string): Promise<string[]> {
+  const rows = await db
+    .select({ catalogId: schema.games.catalogId })
+    .from(schema.games)
+    .where(
+      and(
+        eq(schema.games.userId, userId),
+        isNotNull(schema.games.catalogId),
+        eq(schema.games.isArchived, false),
+      ),
+    );
+  return rows.map((r) => r.catalogId!);
+}
+
+const alreadyHaveIt = (name: string) =>
+  new AppError(`You already have "${name}". Open it from your library.`);
+
+/** Creates the game + its Default preset from the catalog. Refuses if the user already has it. */
 export async function createGameFromCatalog(userId: string, catalogId: string) {
   const entry = getCatalogGame(catalogId);
   if (!entry) throw new AppError("That game isn't in the catalog.");
+
+  // Check before acting: importFile merges into a same-slug game instead of creating one,
+  // which would otherwise commit a duplicate Default preset before we could refuse.
+  const already =
+    (await findGameByCatalogId(userId, catalogId)) ??
+    (await getGameBySlug(userId, uniqueSlug(entry.name, [])));
+  if (already) throw alreadyHaveIt(entry.name);
+
   const doc = catalogToGameDoc(entry);
   const outcome = await importFile(userId, {
     format: "gamesettings-vault",
@@ -27,7 +55,8 @@ export async function createGameFromCatalog(userId: string, catalogId: string) {
     games: [doc],
   });
   const created = outcome.createdGames[0];
-  if (!created) throw new AppError(`You already have "${entry.name}". Open it from your library.`);
+  // Last line of defence, in case of a race between the check above and this import.
+  if (!created) throw alreadyHaveIt(entry.name);
   await db.update(schema.games).set({ catalogId }).where(eq(schema.games.id, created.id));
   return created;
 }

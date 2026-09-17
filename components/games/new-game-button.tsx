@@ -10,11 +10,13 @@ export function NewGameButton({
   variant = "primary",
   size,
   catalog,
+  owned,
 }: {
   autoOpen?: boolean;
   variant?: ButtonProps["variant"];
   size?: ButtonProps["size"];
   catalog?: PublicCatalogEntry[];
+  owned?: string[];
 }) {
   const [open, setOpen] = React.useState(autoOpen);
   return (
@@ -22,7 +24,7 @@ export function NewGameButton({
       <Button variant={variant} size={size} onClick={() => setOpen(true)}>
         <Plus /> Add game
       </Button>
-      <GameDialog open={open} onOpenChange={setOpen} catalog={catalog} />
+      <GameDialog open={open} onOpenChange={setOpen} catalog={catalog} owned={owned} />
     </>
   );
 }

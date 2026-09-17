@@ -32,10 +32,11 @@ type Props = {
   onOpenChange: (open: boolean) => void;
   game?: Game | null;
   catalog?: PublicCatalogEntry[];
+  owned?: string[];
 };
 
 /** Create/edit a game. Values stay in the form when a save fails. */
-export function GameDialog({ open, onOpenChange, game, catalog }: Props) {
+export function GameDialog({ open, onOpenChange, game, catalog, owned }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -49,7 +50,11 @@ export function GameDialog({ open, onOpenChange, game, catalog }: Props) {
         {!game && catalog?.length ? (
           <div className="mb-5 flex flex-col gap-2">
             <p className="text-[13px] font-medium text-ink">From the catalog</p>
-            <CatalogPicker entries={catalog} onDone={() => onOpenChange(false)} />
+            <CatalogPicker
+              entries={catalog}
+              owned={owned ?? []}
+              onDone={() => onOpenChange(false)}
+            />
             <p className="text-xs text-ink-3">Or create any game by hand below.</p>
           </div>
         ) : null}

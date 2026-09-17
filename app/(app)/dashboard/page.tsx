@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Download, Layers, Search, Star, Upload } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { getDashboardData } from "@/lib/data/dashboard";
+import { listOwnedCatalogIds } from "@/lib/data/catalog";
 import { publicCatalog } from "@/lib/catalog";
 import { Page, SectionTitle } from "@/components/app/page-header";
 import { GameCover } from "@/components/games/game-cover";
@@ -19,6 +20,7 @@ export default async function DashboardPage() {
   const user = await requireUser();
   const data = await getDashboardData(user.id);
   const catalog = publicCatalog();
+  const owned = await listOwnedCatalogIds(user.id);
   const firstName = user.name.split(" ")[0] || "there";
   const empty = data.totals.games === 0;
 
@@ -34,7 +36,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <NewGameButton catalog={catalog} />
+          <NewGameButton catalog={catalog} owned={owned} />
           <Button asChild variant="secondary">
             <Link href="/import">
               <Upload /> Import
@@ -53,7 +55,7 @@ export default async function DashboardPage() {
           description="Add a game, create a preset like “Main Setup”, then add categories and settings that mirror the game's own menu."
           action={
             <>
-              <NewGameButton catalog={catalog} />
+              <NewGameButton catalog={catalog} owned={owned} />
               <Button asChild variant="secondary">
                 <Link href="/import">Import a JSON file</Link>
               </Button>
