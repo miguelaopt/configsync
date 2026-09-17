@@ -1,0 +1,12 @@
+"config"
+{
+	"bindings"
+	{
+		"p"		"toggleconsole"
+		"`"		"<unbound>"
+	}
+	"analogbindings"
+	{
+		"MOUSE_X"		"yaw"
+	}
+}
