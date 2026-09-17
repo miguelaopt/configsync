@@ -18,12 +18,15 @@ const ICONS: Record<LinkIcon, React.ComponentType<{ className?: string }>> = {
   globe: Globe,
 };
 
-/** Social links on a public profile. Only https URLs reach this component. */
+const HTTPS = /^https:\/\/\S+$/;
+
+/** Social links on a public profile. Validated at save and read time; filtered here again so the component is safe on its own. */
 export function ProfileLinks({ links }: { links: string[] }) {
-  if (links.length === 0) return null;
+  const safe = links.filter((l) => HTTPS.test(l));
+  if (safe.length === 0) return null;
   return (
     <ul className="flex flex-wrap gap-2">
-      {links.map((url) => {
+      {safe.map((url) => {
         const { icon, label } = linkMeta(url);
         const Icon = ICONS[icon];
         return (
