@@ -16,6 +16,10 @@ const schema = z.object({
   GITHUB_CLIENT_SECRET: z.string().optional(),
   SMTP_URL: z.string().optional(),
   EMAIL_FROM: z.string().default("ConfigSync <noreply@localhost>"),
+  PADDLE_API_KEY: z.string().optional(),
+  PADDLE_WEBHOOK_SECRET: z.string().optional(),
+  PADDLE_PRICE_MONTHLY: z.string().optional(),
+  PADDLE_PRICE_LIFETIME: z.string().optional(),
 });
 
 function load() {
@@ -24,6 +28,10 @@ function load() {
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID || undefined,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET || undefined,
     SMTP_URL: process.env.SMTP_URL || undefined,
+    PADDLE_API_KEY: process.env.PADDLE_API_KEY || undefined,
+    PADDLE_WEBHOOK_SECRET: process.env.PADDLE_WEBHOOK_SECRET || undefined,
+    PADDLE_PRICE_MONTHLY: process.env.PADDLE_PRICE_MONTHLY || undefined,
+    PADDLE_PRICE_LIFETIME: process.env.PADDLE_PRICE_LIFETIME || undefined,
   });
   if (!parsed.success) {
     const issues = parsed.error.issues.map((i) => `  - ${i.path.join(".")}: ${i.message}`);
@@ -34,3 +42,5 @@ function load() {
 
 export const env = load();
 export const githubOAuthEnabled = Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET);
+/** No Paddle configured ⇒ no plans: every account is Pro (self-hosting). */
+export const billingEnabled = Boolean(env.PADDLE_API_KEY && env.PADDLE_WEBHOOK_SECRET);
