@@ -1,5 +1,5 @@
 /**
- * Database schema — GameSettings Vault.
+ * Database schema — ConfigSync.
  *
  * Hierarchy: user → games → presets → categories → settings.
  * Settings are generic (typed value stored as JSON); no game-specific columns exist.
@@ -367,6 +367,40 @@ export const deviceGames = pgTable(
 
 export type CompanionToken = typeof companionTokens.$inferSelect;
 export type DeviceGame = typeof deviceGames.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// Billing (written only by the Paddle webhook — see lib/billing)
+// ---------------------------------------------------------------------------
+
+export const planSource = pgEnum("plan_source", ["subscription", "lifetime", "manual"]);
+
+export const plans = pgTable("plans", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  source: planSource("source").notNull(),
+  paddleCustomerId: text("paddle_customer_id"),
+  paddleSubscriptionId: text("paddle_subscription_id"),
+  /** Paddle's status string as received: active, trialing, past_due, paused, canceled. */
+  subscriptionStatus: text("subscription_status"),
+  /** Pro lasts until here when the subscription is canceled. */
+  currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+/** Every webhook we accepted, keyed by Paddle's event id so retries are no-ops. */
+export const billingEvents = pgTable("billing_events", {
+  id: text("id").primaryKey(),
+  eventType: text("event_type").notNull(),
+  userId: text("user_id"),
+  payload: jsonb("payload").notNull(),
+  receivedAt: timestamp("received_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type PlanRowSelect = typeof plans.$inferSelect;
 
 // ---------------------------------------------------------------------------
 // Relations

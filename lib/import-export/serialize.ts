@@ -9,7 +9,7 @@ export function buildExportFile(games: GameDoc[], kind: ExportFile["kind"]): Exp
     version: FORMAT_VERSION,
     kind,
     exportedAt: new Date().toISOString(),
-    app: { name: "GameSettings Vault", version: APP_VERSION },
+    app: { name: "ConfigSync", version: APP_VERSION },
     games,
   };
 }

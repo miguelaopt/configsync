@@ -1,5 +1,5 @@
 /**
- * GameSettings Vault interchange format — version 1.
+ * ConfigSync interchange format — version 1.
  *
  * This is the shape of every export file, revision snapshot and import.
  * Documented in docs/import-export.md. Keep it backwards compatible: add optional

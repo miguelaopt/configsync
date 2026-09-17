@@ -22,6 +22,8 @@ pnpm test:e2e     # Playwright; needs Postgres running and browsers installed:
 - **Accessibility.** Keyboard reachable, labelled controls, visible focus, no color-only meaning. Use the primitives in `components/ui`.
 - **Errors are for humans.** No raw database codes in the UI. Keep user input on screen when a save fails.
 
+By contributing you agree your changes are licensed under the repository's FSL-1.1-MIT terms.
+
 ## Workflow
 
 1. Branch from `main`.

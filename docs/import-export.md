@@ -16,7 +16,7 @@ Every export file, revision snapshot and import uses the same JSON document. It 
   "version": 1,
   "kind": "library", // "library" | "game" | "preset"
   "exportedAt": "2026-09-12T10:00:00.000Z",
-  "app": { "name": "GameSettings Vault", "version": "0.1.0" },
+  "app": { "name": "ConfigSync", "version": "0.1.0" },
   "games": [
     {
       "name": "Orbital Strike",

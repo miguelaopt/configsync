@@ -2,6 +2,7 @@ import "server-only";
 import { and, asc, count, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { db, schema, type Tx } from "@/lib/db";
 import { uniqueSlug } from "@/lib/utils/slug";
+import { assertCanAddGame } from "@/lib/billing/plan";
 import { notFound } from "./errors";
 import type { GameInput } from "@/lib/validation";
 
@@ -77,6 +78,7 @@ async function takenGameSlugs(userId: string, tx: Tx | typeof db = db) {
 }
 
 export async function createGame(userId: string, input: GameInput, tx: Tx | typeof db = db) {
+  await assertCanAddGame(userId, tx);
   const slug = uniqueSlug(input.name, await takenGameSlugs(userId, tx));
   const [game] = await tx
     .insert(games)
@@ -105,6 +107,7 @@ export async function setGameFlags(
   gameId: string,
   flags: Partial<Pick<schema.Game, "isFavorite" | "isArchived">>,
 ) {
+  if (flags.isArchived === false) await assertCanAddGame(userId); // un-archiving takes a slot
   const [game] = await db
     .update(games)
     .set(flags)

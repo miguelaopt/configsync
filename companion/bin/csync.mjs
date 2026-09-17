@@ -8,13 +8,13 @@ import { loadConfig, saveConfig } from "../lib/config.mjs";
 import { resolveFilePath } from "../lib/paths.mjs";
 import { scanEpic, scanSteam } from "../lib/scan.mjs";
 
-const HELP = `gsv — GameSettings Vault companion
+const HELP = `csync — ConfigSync companion
 
-  gsv login <url>                       pair this machine with your vault (paste a token from Settings → Companion)
-  gsv scan [--push]                     list installed Steam/Epic games; --push sends them to the vault
-  gsv import <game> [--name "…"]        read the game's config files into a new preset (game: cs2, rocket-league…)
-  gsv apply <game> <preset> [--dry-run] write a preset into the game's config files (backs up first)
-  gsv games                             list catalog games and whether their files were found here
+  csync login <url>                       pair this machine with your vault (paste a token from Settings → Companion)
+  csync scan [--push]                     list installed Steam/Epic games; --push sends them to the vault
+  csync import <game> [--name "…"]        read the game's config files into a new preset (game: cs2, rocket-league…)
+  csync apply <game> <preset> [--dry-run] write a preset into the game's config files (backs up first)
+  csync games                             list catalog games and whether their files were found here
 
 Close the game before import/apply. Steam Cloud may restore old files for some games.`;
 
@@ -29,13 +29,13 @@ const args = rest.filter((a, i) => !a.startsWith("--") && !(i > 0 && rest[i - 1]
 function need() {
   const c = loadConfig();
   if (!c) {
-    console.error("Not logged in. Run: gsv login <url>");
+    console.error("Not logged in. Run: csync login <url>");
     process.exit(2);
   }
   return c;
 }
 
-/** Interactive prompt on a terminal; piped stdin (`echo $TOKEN | gsv login …`) is read to EOF. */
+/** Interactive prompt on a terminal; piped stdin (`echo $TOKEN | csync login …`) is read to EOF. */
 async function askToken(url) {
   if (!stdin.isTTY) {
     let s = "";
@@ -54,7 +54,7 @@ async function askToken(url) {
 
 async function login() {
   const url = args[0];
-  if (!url) return console.error("Usage: gsv login <url>");
+  if (!url) return console.error("Usage: csync login <url>");
   const token = await askToken(url);
   if (!token) return console.error("No token given.");
   const me = await api({ url, token }).get("/me");
@@ -135,7 +135,7 @@ async function importCmd() {
 async function apply() {
   const c = need();
   const [gameId, presetSlug] = args;
-  if (!presetSlug) return console.error("Usage: gsv apply <game> <preset-slug> [--dry-run]");
+  if (!presetSlug) return console.error("Usage: csync apply <game> <preset-slug> [--dry-run]");
   const g = await catalogGame(c, gameId);
   console.log(`Reading current ${g.name} files:`);
   const { files, found } = readFiles(g);

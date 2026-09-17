@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { createGameFromCatalogAction } from "@/lib/actions/catalog";
 import type { PublicCatalogEntry } from "@/lib/catalog";
 import { Spinner } from "@/components/ui/spinner";
+import { toastError } from "@/components/ui/toaster";
 import { plural } from "@/lib/utils/format";
 
 /** One row per catalog game; clicking creates it with the real menu structure and opens it. */
@@ -23,7 +24,7 @@ export function CatalogPicker({
     setPendingId(id);
     void createGameFromCatalogAction(id).then((result) => {
       setPendingId(null);
-      if (!result.ok) return toast.error(result.error);
+      if (!result.ok) return toastError(result.error);
       toast.success("Game added with its real settings menu");
       onDone();
       router.push(`/games/${result.data.slug}`);

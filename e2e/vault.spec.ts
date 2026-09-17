@@ -140,7 +140,7 @@ test.describe("library flow", () => {
     await page.goto("/export");
     await page.getByRole("link", { name: "Download" }).first().click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toMatch(/gamesettings-vault-library-.*\.json/);
+    expect(download.suggestedFilename()).toMatch(/configsync-library-.*\.json/);
     const path = await download.path();
     const fs = await import("node:fs");
     const exported = JSON.parse(fs.readFileSync(path!, "utf8")) as {
@@ -184,6 +184,20 @@ test.describe("library flow", () => {
     await page.getByRole("button", { name: "Add game" }).first().click();
     await expect(page.getByRole("button", { name: /Counter-Strike 2/ })).toBeDisabled();
     await page.keyboard.press("Escape");
+
+    // --- Free limit: a 4th active game is refused with a way out ------------
+    await page.goto("/games");
+    await page.getByRole("button", { name: "Add game" }).first().click();
+    const fourth = page.getByRole("dialog", { name: "Add a game" });
+    await fourth.getByLabel("Name").fill("Fourth Game");
+    await fourth.getByRole("button", { name: "Add game" }).click();
+    await expect(page.getByText("Free keeps up to 3 active games")).toBeVisible();
+    await expect(page.getByRole("link", { name: "See plans" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await page.goto("/games");
+    await expect(page.getByText("Fourth Game")).toHaveCount(0);
+    await page.goto("/pricing");
+    await expect(page.getByRole("heading", { name: "Pro" })).toBeVisible();
 
     // --- Import a real config file as a preset -------------------------------
     await page.goto("/import?tab=files");

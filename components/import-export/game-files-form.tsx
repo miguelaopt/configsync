@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { importGameConfigAction, previewGameConfigAction } from "@/lib/actions/catalog";
 import type { PublicCatalogEntry } from "@/lib/catalog";
 import { Button } from "@/components/ui/button";
+import { toastError } from "@/components/ui/toaster";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -69,7 +70,7 @@ export function GameFilesForm({ catalog }: { catalog: PublicCatalogEntry[] }) {
         name: name || undefined,
       });
       if (!r.ok) {
-        toast.error(r.error);
+        toastError(r.error);
         return;
       }
       toast.success("Preset imported from your game files");

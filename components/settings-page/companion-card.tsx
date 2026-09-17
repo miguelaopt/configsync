@@ -45,7 +45,7 @@ export function CompanionCard({
     <div className="flex flex-col gap-6 text-[13px]">
       <div className="rounded-sm border border-line p-3">
         <p className="text-ink">Install the companion on your gaming PC:</p>
-        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`git clone ${SITE.repoUrl} && cd gamesettings-vault/companion && npm i -g .\ngsv login ${appUrl}\ngsv scan --push\ngsv import cs2`}</pre>
+        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`git clone ${SITE.repoUrl} && cd configsync/companion && npm i -g .\ngsv login ${appUrl}\ngsv scan --push\ngsv import cs2`}</pre>
         <p className="mt-2 text-ink-3">
           It reads your game config files and never writes without a backup. Docs:{" "}
           <a

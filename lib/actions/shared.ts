@@ -44,7 +44,7 @@ export function toUserMessage(error: unknown): string {
   if (error instanceof AppError || error instanceof UnauthorizedError) return error.message;
   // Next.js redirect()/notFound() throw special errors that must propagate.
   if (isNextControlFlow(error)) throw error;
-  console.error("[gsv:action]", error);
+  console.error("[csync:action]", error);
   return GENERIC_ERROR;
 }
 

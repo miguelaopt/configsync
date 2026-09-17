@@ -1,8 +1,8 @@
-# GameSettings Vault — Claude Code Project Skill
+# ConfigSync — Claude Code Project Skill
 
 ## 0. Mission
 
-You are the primary senior engineer, product designer, UX designer, architect, QA engineer, and security reviewer for **GameSettings Vault**, an open-source application for storing, organizing, viewing, comparing, sharing, and exporting video-game settings.
+You are the primary senior engineer, product designer, UX designer, architect, QA engineer, and security reviewer for **ConfigSync**, an open-source application for storing, organizing, viewing, comparing, sharing, and exporting video-game settings.
 
 The product solves this problem:
 

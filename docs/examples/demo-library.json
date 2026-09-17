@@ -2,7 +2,7 @@
   "format": "gamesettings-vault",
   "version": 1,
   "kind": "library",
-  "app": { "name": "GameSettings Vault", "version": "0.1.0" },
+  "app": { "name": "ConfigSync", "version": "0.1.0" },
   "games": [
     {
       "name": "Skyline Drift",

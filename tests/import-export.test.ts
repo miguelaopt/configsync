@@ -71,7 +71,7 @@ describe("parseImportFile", () => {
   it("rejects files from other apps", () => {
     const r = parseImportFile(JSON.stringify({ hello: "world" }));
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.errors[0]).toMatch(/Not a GameSettings Vault file/);
+    if (!r.ok) expect(r.errors[0]).toMatch(/Not a ConfigSync file/);
   });
 
   it("rejects unknown versions instead of guessing", () => {

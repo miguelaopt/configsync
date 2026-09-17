@@ -4,23 +4,27 @@ import { db, schema } from "@/lib/db";
 import { notFound } from "./errors";
 import { getPresetFull, insertCategoriesFromDocs, toPresetDoc } from "./presets";
 import { presetDocSchema, type PresetDoc } from "@/lib/import-export/schema";
+import { getPlan } from "@/lib/billing/plan";
+import { limitsFor } from "@/lib/billing/limits";
 
 const { revisions, categories } = schema;
-const KEEP_PER_PRESET = 50;
+/** Display cap for the history dialog; retention itself is a plan limit (lib/billing/limits). */
+const LIST_MAX = 200;
 
 /** Snapshots the current preset state. Called after meaningful saves. */
 export async function createRevision(userId: string, presetId: string, note?: string | null) {
   const preset = await getPresetFull(userId, presetId);
   const snapshot = toPresetDoc(preset);
+  const keep = limitsFor((await getPlan(userId)).plan).revisions;
   await db.transaction(async (tx) => {
     await tx.insert(revisions).values({ presetId, userId, snapshot, note: note ?? null });
-    // ponytail: keep the last N snapshots; a retention policy can replace this later.
+    if (keep === Infinity) return; // Pro keeps everything
     const stale = await tx
       .select({ id: revisions.id })
       .from(revisions)
       .where(eq(revisions.presetId, presetId))
       .orderBy(desc(revisions.createdAt))
-      .offset(KEEP_PER_PRESET);
+      .offset(keep);
     if (stale.length > 0) {
       await tx.delete(revisions).where(
         inArray(
@@ -46,7 +50,7 @@ export async function listRevisions(userId: string, presetId: string) {
     .from(revisions)
     .where(and(eq(revisions.userId, userId), eq(revisions.presetId, presetId)))
     .orderBy(desc(revisions.createdAt))
-    .limit(KEEP_PER_PRESET);
+    .limit(LIST_MAX);
   return rows.map((r) => ({ ...r, settingCount: Number(r.settingCount) }));
 }
 

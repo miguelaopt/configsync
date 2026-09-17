@@ -1,5 +1,22 @@
 "use client";
-import { Toaster as Sonner } from "sonner";
+import { Toaster as Sonner, toast } from "sonner";
+
+/** Error toast; limit errors get a "See plans" action so the way out is one click. */
+export function toastError(message: string) {
+  if (message.includes("upgrade to Pro"))
+    toast.error(message, {
+      duration: 6000,
+      action: (
+        <a
+          href="/pricing"
+          className="ml-auto h-7 rounded-xs bg-raised px-2 text-xs leading-7 font-medium text-ink hover:bg-line"
+        >
+          See plans
+        </a>
+      ),
+    });
+  else toast.error(message);
+}
 
 export function Toaster() {
   return (

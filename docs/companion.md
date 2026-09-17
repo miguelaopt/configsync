@@ -1,35 +1,35 @@
-# Companion CLI (`gsv`)
+# Companion CLI (`csync`)
 
-`gsv` runs on the gaming PC. It lists installed games, reads a game's config files into the vault
+`csync` runs on the gaming PC. It lists installed games, reads a game's config files into the vault
 as a new preset, and writes a preset back into those files. Plain Node ≥ 20, no dependencies,
 source in [`companion/`](../companion/).
 
 ## Install
 
 ```sh
-git clone <repo> && cd gamesettings-vault/companion && npm i -g .
-gsv login https://your-vault.example      # paste a token from Settings → Companion
-gsv scan --push
-gsv import cs2
+git clone <repo> && cd configsync/companion && npm i -g .
+csync login https://your-vault.example      # paste a token from Settings → Companion
+csync scan --push
+csync import cs2
 ```
 
-From a repo checkout, `pnpm gsv <command>` works without installing.
+From a repo checkout, `pnpm csync <command>` works without installing.
 
 ## Commands
 
-| Command                                 | What it does                                                                    |
-| --------------------------------------- | ------------------------------------------------------------------------------- |
-| `gsv login <url>`                       | Verify a token against `GET /api/companion/me` and save it. Token can be piped. |
-| `gsv scan [--push]`                     | List Steam and Epic games installed here; `--push` replaces this device's list. |
-| `gsv games`                             | List catalog games and which of their files were found on this machine.         |
-| `gsv import <game> [--name "…"]`        | Read the found files into a **new** preset. Prints the preset URL and warnings. |
-| `gsv apply <game> <preset> [--dry-run]` | Write a preset into the files. Backs up first; `--dry-run` only prints changes. |
+| Command                                   | What it does                                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------- |
+| `csync login <url>`                       | Verify a token against `GET /api/companion/me` and save it. Token can be piped. |
+| `csync scan [--push]`                     | List Steam and Epic games installed here; `--push` replaces this device's list. |
+| `csync games`                             | List catalog games and which of their files were found on this machine.         |
+| `csync import <game> [--name "…"]`        | Read the found files into a **new** preset. Prints the preset URL and warnings. |
+| `csync apply <game> <preset> [--dry-run]` | Write a preset into the files. Backs up first; `--dry-run` only prints changes. |
 
 `<game>` is a catalog id (`cs2`, `rocket-league`); `<preset>` is the slug in the preset's URL.
 
 ## Config
 
-`~/.config/gsv/config.json` (`$XDG_CONFIG_HOME/gsv/config.json`; `%APPDATA%\gsv\config.json` on
+`~/.config/csync/config.json` (`$XDG_CONFIG_HOME/csync/config.json`; `%APPDATA%\csync\config.json` on
 Windows), mode 600: `{ "url", "token", "device" }`. `device` defaults to the hostname and names
 this machine in Settings → Companion and in the imported preset name.
 
@@ -62,14 +62,14 @@ Extra Steam library folders come from `steamapps/libraryfolders.vdf`. Installed 
 
 Settings → Companion. A token is `gsv_` + 32 random bytes, shown once; the server stores only its
 SHA-256. Revoking deletes it immediately — the CLI then fails with "Invalid or revoked companion
-token" until you `gsv login` again. Use one token per machine so you can revoke them separately.
+token" until you `csync login` again. Use one token per machine so you can revoke them separately.
 
 ## Troubleshooting
 
 | Symptom                                      | Fix                                                                                              |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `<file>: not found on this machine`          | Run the game once so it writes its config; check `gsv games` for the path it expects.            |
+| `<file>: not found on this machine`          | Run the game once so it writes its config; check `csync games` for the path it expects.          |
 | Rocket League files not found under Heroic   | Set the game's Wine prefix in Heroic (it lands in `GamesConfig/<app>.json` as `winePrefix`).     |
 | Wrong Steam account                          | The most recently used `userdata/<uid>` wins; launch Steam with the right account and try again. |
-| `Not logged in`                              | `gsv login <url>` — the config file is per user and per machine.                                 |
+| `Not logged in`                              | `csync login <url>` — the config file is per user and per machine.                               |
 | Applied change gone after launching the game | Steam Cloud restored the old file — see Safety.                                                  |

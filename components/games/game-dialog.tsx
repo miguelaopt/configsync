@@ -7,6 +7,7 @@ import { createGameAction, updateGameAction } from "@/lib/actions/games";
 import type { Game } from "@/lib/db/schema";
 import type { PublicCatalogEntry } from "@/lib/catalog";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import { toastError } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input, Textarea } from "@/components/ui/input";
@@ -100,7 +101,7 @@ function GameForm({ game, onDone }: { game?: Game | null; onDone: () => void }) 
       const result = game ? await updateGameAction(game.id, input) : await createGameAction(input);
       if (!result.ok) {
         setErrors(result.fieldErrors ?? {});
-        toast.error(result.error);
+        toastError(result.error);
         return;
       }
       toast.success(game ? "Game updated" : "Game added");
