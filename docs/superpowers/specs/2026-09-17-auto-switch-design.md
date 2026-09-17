@@ -105,13 +105,13 @@ print the server's sentence and exit 2.
 
 ### `csync launch <game> -- <command…>`
 
-Runs one apply for `<game>` (Default preset via `/sync` if Pro, else the game's Default via a
-new query param `GET /api/companion/sync?game=cs2` — **no**: keep one path. `launch` calls
-`GET /api/companion/default?game=<catalogId>` → `{ presetSlug, version }`, Free-accessible,
-because the manual apply is Free.) Then `spawn(command[0], command.slice(1), { stdio:
-"inherit" })` and exits with the child's code. Any failure to apply is logged and the game
-still launches — never block a game because the vault is down. `csync games` prints under
-each found game: `Steam launch options: csync launch cs2 -- %command%`.
+Applies the game's Default preset, then runs the command. The Default is fetched from
+`GET /api/companion/default?game=<catalogId>` → `{ presetSlug, version }` (Free — manual apply
+is a Free feature; only the multi-game `/sync` poll is Pro). Then
+`spawn(command[0], command.slice(1), { stdio: "inherit" })` and exit with the child's code.
+Any failure to apply is logged and the game still launches — never block a game because the
+vault is down. `csync games` prints under each found game:
+`Steam launch options: csync launch cs2 -- %command%`.
 
 ### `csync watch --install` / `--uninstall`
 
