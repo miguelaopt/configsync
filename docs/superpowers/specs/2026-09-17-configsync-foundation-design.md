@@ -134,9 +134,10 @@ current_billing_period.ends_at`, customer + subscription ids. Lifetime always wi
      subscription state.
 5. Respond 200 with `{ ok: true }`. Anything thrown → 500 so Paddle retries.
 
-`resolvePlan(row, now)`: `lifetime` or `manual` → pro; subscription with status `active` or
-`trialing` → pro; `past_due` or `canceled` → pro while `current_period_end > now`; otherwise
-free.
+`resolvePlan(row, now)`: `lifetime` or `manual` → pro; subscription with status `active`,
+`trialing` or `past_due` → pro (Paddle retries the payment and ends a failed dunning with
+`subscription.canceled`, which carries the cutoff); `canceled` → pro while
+`current_period_end > now`; otherwise (`paused`, unknown) free.
 
 ### Manage subscription
 
