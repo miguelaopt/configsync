@@ -30,7 +30,10 @@ export function companionRoute<S extends z.ZodType | null, T>(
       if (error instanceof UnauthorizedError)
         return NextResponse.json({ error: error.message }, { status: 401 });
       if (error instanceof AppError)
-        return NextResponse.json({ error: error.message }, { status: 404 });
+        return NextResponse.json(
+          { error: error.message },
+          { status: error.code === "forbidden" ? 403 : 404 },
+        );
       console.error("[csync:companion]", error);
       return NextResponse.json({ error: "Something went wrong on the server." }, { status: 500 });
     }
