@@ -6,6 +6,7 @@ import { Download, Gamepad2, LayoutDashboard, Search, Settings, Upload } from "l
 import { cn } from "@/lib/utils/cn";
 import { Logo } from "./logo";
 import { Kbd } from "@/components/ui/kbd";
+import { Badge } from "@/components/ui/badge";
 import { CommandPalette } from "./command-palette";
 import { UserMenu } from "./user-menu";
 
@@ -27,10 +28,12 @@ const MOBILE_NAV = [
 type ShellProps = {
   user: { name: string; email: string; image?: string | null };
   username: string;
+  /** null when billing is off (self-host) — no badge either way. */
+  plan?: "free" | "pro" | null;
   children: React.ReactNode;
 };
 
-export function AppShell({ user, username, children }: ShellProps) {
+export function AppShell({ user, username, plan, children }: ShellProps) {
   const pathname = usePathname();
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
@@ -67,6 +70,7 @@ export function AppShell({ user, username, children }: ShellProps) {
         >
           <Search className="size-5" />
         </button>
+        {plan === "pro" ? <Badge variant="accent">Pro</Badge> : null}
         <UserMenu user={user} username={username} />
       </header>
 

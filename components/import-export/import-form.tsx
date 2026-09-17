@@ -7,6 +7,7 @@ import { CheckCircle2, FileJson, TriangleAlert, Upload, XCircle } from "lucide-r
 import { parseImportFile, summarizeFile, type ParseResult } from "@/lib/import-export/parse";
 import { importAction } from "@/lib/actions/import";
 import { Button } from "@/components/ui/button";
+import { toastError } from "@/components/ui/toaster";
 import { Textarea } from "@/components/ui/input";
 import {
   Select,
@@ -70,7 +71,7 @@ export function ImportForm({
     startTransition(async () => {
       const result = await importAction({ text, targetGameId: target === "new" ? null : target });
       if (!result.ok) {
-        toast.error(result.error.split("\n")[0]);
+        toastError(result.error.split("\n")[0] ?? result.error);
         return;
       }
       setOutcome(result.data);

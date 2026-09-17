@@ -8,7 +8,9 @@ import { ChangePasswordForm, DeleteAccount } from "@/components/settings-page/ac
 import { CompanionCard } from "@/components/settings-page/companion-card";
 import { listCompanionTokens } from "@/lib/data/companion-tokens";
 import { listDevices } from "@/lib/data/devices";
-import { env } from "@/lib/env";
+import { billingEnabled, env } from "@/lib/env";
+import { getPlan } from "@/lib/billing/plan";
+import { PlanCard } from "@/components/settings-page/plan-card";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -21,7 +23,15 @@ export default async function SettingsPage() {
     where: and(eq(schema.accounts.userId, user.id), eq(schema.accounts.providerId, "credential")),
     columns: { id: true },
   });
-  const [tokens, devices] = await Promise.all([listCompanionTokens(user.id), listDevices(user.id)]);
+  const [tokens, devices, plan] = await Promise.all([
+    listCompanionTokens(user.id),
+    listDevices(user.id),
+    getPlan(user.id),
+  ]);
+  const prices =
+    env.PADDLE_PRICE_MONTHLY && env.PADDLE_PRICE_LIFETIME
+      ? { monthly: env.PADDLE_PRICE_MONTHLY, lifetime: env.PADDLE_PRICE_LIFETIME }
+      : null;
 
   return (
     <Page size="lg">
@@ -30,6 +40,11 @@ export default async function SettingsPage() {
         description="Your profile, how the app looks, and your account."
       />
       <div className="flex flex-col gap-10">
+        {billingEnabled ? (
+          <Section id="plan" title="Plan">
+            <PlanCard info={plan} email={user.email} userId={user.id} prices={prices} />
+          </Section>
+        ) : null}
         <Section id="profile" title="Profile">
           <ProfileForm profile={profile} email={user.email} />
         </Section>
