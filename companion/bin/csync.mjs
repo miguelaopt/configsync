@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { Writable } from "node:stream";
 import { api } from "../lib/api.mjs";
 import { loadConfig, saveConfig } from "../lib/config.mjs";
-import { resolveFilePath } from "../lib/paths.mjs";
 import { scanEpic, scanSteam } from "../lib/scan.mjs";
+import { applyPreset, readFiles } from "../lib/apply.mjs";
 
 const HELP = `csync — ConfigSync companion
 
@@ -82,22 +81,6 @@ async function catalogGame(c, id) {
   return g;
 }
 
-function readFiles(g) {
-  const files = {};
-  const found = [];
-  for (const f of g.files) {
-    const hit = resolveFilePath(f, g);
-    if (!hit) {
-      console.log(`  ${f.id}: not found on this machine`);
-      continue;
-    }
-    files[f.id] = readFileSync(hit.path, "utf8");
-    found.push({ id: f.id, path: hit.path });
-    console.log(`  ${f.id}: ${hit.path}`);
-  }
-  return { files, found };
-}
-
 async function games() {
   const c = need();
   const { games } = await api(c).get("/catalog");
@@ -138,24 +121,12 @@ async function apply() {
   if (!presetSlug) return console.error("Usage: csync apply <game> <preset-slug> [--dry-run]");
   const g = await catalogGame(c, gameId);
   console.log(`Reading current ${g.name} files:`);
-  const { files, found } = readFiles(g);
-  const r = await api(c).post("/apply", { catalogId: g.id, presetSlug, files });
-  for (const [id, keys] of Object.entries(r.changed))
-    console.log(
-      `\n${id}: ${Object.entries(keys)
-        .map(([k, v]) => `${k}=${v}`)
-        .join(", ")}`,
-    );
-  for (const s of r.skipped) console.log(`Skipped — ${s}`);
-  if (flag("dry-run")) return console.log("\nDry run: nothing written.");
-  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  for (const { id, path } of found) {
-    if (!r.files[id]) continue;
-    copyFileSync(path, `${path}.bak-${stamp}`);
-    writeFileSync(path, r.files[id]);
-    console.log(`Wrote ${path} (backup: ${path}.bak-${stamp})`);
-  }
-  console.log("\nDone. If the game was open, close it and apply again.");
+  await applyPreset(c, g, presetSlug, { dryRun: flag("dry-run") });
+  console.log(
+    flag("dry-run")
+      ? "\nDry run: nothing written."
+      : "\nDone. If the game was open, close it and apply again.",
+  );
 }
 
 const commands = { login, scan, games, import: importCmd, apply };
