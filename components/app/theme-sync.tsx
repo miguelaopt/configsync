@@ -8,8 +8,8 @@ export function ThemeSync({ preferences }: { preferences: UserPreferences }) {
   const density = preferences.density ?? "comfortable";
   useLayoutEffect(() => {
     try {
-      localStorage.setItem("gsv-theme", theme);
-      localStorage.setItem("gsv-density", density);
+      localStorage.setItem("csync-theme", theme);
+      localStorage.setItem("csync-density", density);
     } catch {
       /* private mode */
     }

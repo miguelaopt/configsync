@@ -32,7 +32,7 @@ export function parseImportFile(raw: string): ParseResult {
   if (obj.format !== FORMAT_ID) {
     return {
       ok: false,
-      errors: [`Not a GameSettings Vault file (missing "format": "${FORMAT_ID}").`],
+      errors: [`Not a ConfigSync file (missing "format": "${FORMAT_ID}").`],
     };
   }
   if (obj.version !== FORMAT_VERSION) {

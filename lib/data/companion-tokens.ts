@@ -31,7 +31,7 @@ export async function revokeCompanionToken(userId: string, id: string) {
 
 /** Resolves a bearer token to its user and stamps last_used_at; null when unknown. */
 export async function userIdForToken(token: string) {
-  if (!token.startsWith("gsv_")) return null;
+  if (!token.startsWith("csync_")) return null;
   const [row] = await db
     .update(companionTokens)
     .set({ lastUsedAt: new Date() })

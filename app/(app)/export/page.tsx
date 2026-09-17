@@ -64,7 +64,7 @@ export default async function ExportPage() {
       </ul>
       <p className="mt-6 text-xs leading-relaxed text-ink-3">
         Exports never include your password or session. JSON files can be imported back into any
-        GameSettings Vault instance, including one you host yourself.
+        ConfigSync instance, including one you host yourself.
       </p>
     </Page>
   );

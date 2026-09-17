@@ -161,7 +161,7 @@ export function ImportForm({
       >
         <FileJson className="size-7 text-ink-3" aria-hidden />
         <p className="text-[13px] text-ink-2">
-          Drop a GameSettings Vault{" "}
+          Drop a ConfigSync{" "}
           <code className="rounded-xs bg-raised px-1 py-0.5 font-mono text-xs">.json</code> file
           here
         </p>

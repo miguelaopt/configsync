@@ -140,7 +140,7 @@ test.describe("library flow", () => {
     await page.goto("/export");
     await page.getByRole("link", { name: "Download" }).first().click();
     const download = await downloadPromise;
-    expect(download.suggestedFilename()).toMatch(/gamesettings-vault-library-.*\.json/);
+    expect(download.suggestedFilename()).toMatch(/configsync-library-.*\.json/);
     const path = await download.path();
     const fs = await import("node:fs");
     const exported = JSON.parse(fs.readFileSync(path!, "utf8")) as {

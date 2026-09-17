@@ -3,7 +3,7 @@
 @import "@fontsource/barlow-semi-condensed/600.css";
 
 /* ---------------------------------------------------------------------------
-   GameSettings Vault design tokens
+   ConfigSync design tokens
    Dark-first. Surfaces stack ground → surface → raised. One accent (vault amber),
    overridable per game via --accent on a container.
 --------------------------------------------------------------------------- */

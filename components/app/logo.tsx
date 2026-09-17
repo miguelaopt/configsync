@@ -16,7 +16,7 @@ export function Logo({ className, compact = false }: { className?: string; compa
       </svg>
       {!compact ? (
         <span className="font-display text-[17px] leading-none font-semibold tracking-tight">
-          GameSettings <span className="text-accent">Vault</span>
+          Config<span className="text-accent">Sync</span>
         </span>
       ) : null}
     </span>

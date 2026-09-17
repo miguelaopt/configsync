@@ -15,7 +15,7 @@ const schema = z.object({
   GITHUB_CLIENT_ID: z.string().optional(),
   GITHUB_CLIENT_SECRET: z.string().optional(),
   SMTP_URL: z.string().optional(),
-  EMAIL_FROM: z.string().default("GameSettings Vault <noreply@localhost>"),
+  EMAIL_FROM: z.string().default("ConfigSync <noreply@localhost>"),
 });
 
 function load() {

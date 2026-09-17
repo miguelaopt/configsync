@@ -24,8 +24,8 @@ export default async function ImportPage({ searchParams }: { searchParams: Searc
         title="Import"
         description={
           <>
-            Bring in a JSON file exported from GameSettings Vault — yours or a friend’s — or read a
-            game’s own config files. The JSON format is open and documented in{" "}
+            Bring in a JSON file exported from ConfigSync — yours or a friend’s — or read a game’s
+            own config files. The JSON format is open and documented in{" "}
             <Link
               href={`${SITE.repoUrl}/blob/main/${SITE.docsImportExport}`}
               className="text-ink underline underline-offset-4"

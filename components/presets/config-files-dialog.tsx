@@ -40,7 +40,7 @@ export function ConfigFilesDialog({ open, onOpenChange, presetId, entry }: Props
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         title="Game config files"
-        description="Upload the files the game has now and get them back with this preset’s values. Replace the originals while the game is closed — or let the companion do it: gsv apply."
+        description="Upload the files the game has now and get them back with this preset’s values. Replace the originals while the game is closed — or let the companion do it: csync apply."
       >
         <div className="flex flex-col gap-4">
           {entry.files.map((f) => (

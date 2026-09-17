@@ -7,7 +7,7 @@ import { sendEmail } from "@/lib/email";
 import { createProfileForUser } from "@/lib/auth/profile";
 
 export const auth = betterAuth({
-  appName: "GameSettings Vault",
+  appName: "ConfigSync",
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
@@ -29,7 +29,7 @@ export const auth = betterAuth({
       // Not awaited on purpose: keeps response timing independent of the mail server.
       void sendEmail({
         to: user.email,
-        subject: "Reset your GameSettings Vault password",
+        subject: "Reset your ConfigSync password",
         text: `Someone requested a password reset for your account.\n\nReset it here (valid for 1 hour):\n${url}\n\nIf this wasn't you, you can ignore this email.`,
       });
     },
@@ -61,7 +61,7 @@ export const auth = betterAuth({
     },
   },
   advanced: {
-    cookiePrefix: "gsv",
+    cookiePrefix: "csync",
     useSecureCookies: env.NODE_ENV === "production",
   },
   databaseHooks: {

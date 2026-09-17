@@ -24,7 +24,7 @@ The catalog ships two games: Counter-Strike 2 (`cs2`) and Rocket League (`rocket
 ```jsonc
 {
   "id": "cs2", // stable, url-safe: [a-z0-9-]
-  "steamAppId": 730, // optional; matches `gsv scan` and Steam suggestions
+  "steamAppId": 730, // optional; matches `csync scan` and Steam suggestions
   "epicAppName": "Sugar", // optional; Epic/Legendary app name
   "files": [
     {
@@ -79,4 +79,4 @@ League repeats keys across `[SystemSettingsBucketN]` sections; only the first
   points at a declared file and that the game round-trips through the export schema.
 - Put a trimmed copy of each real file (personal bindings removed) in `tests/fixtures/` and add a
   read → write → read round-trip to `tests/game-configs.test.ts`.
-- `pnpm gsv games` shows whether the companion finds the files on your machine.
+- `pnpm csync games` shows whether the companion finds the files on your machine.

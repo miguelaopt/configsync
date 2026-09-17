@@ -10,7 +10,7 @@ const AUTH_PAGES = ["/sign-in", "/sign-up"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const hasSession = Boolean(getSessionCookie(request, { cookiePrefix: "gsv" }));
+  const hasSession = Boolean(getSessionCookie(request, { cookiePrefix: "csync" }));
 
   if (PROTECTED.some((p) => pathname === p || pathname.startsWith(`${p}/`)) && !hasSession) {
     const url = new URL("/sign-in", request.url);

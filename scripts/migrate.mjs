@@ -18,7 +18,7 @@ if (!url) {
 const sql = postgres(url, { max: 1 });
 try {
   await migrate(drizzle(sql), { migrationsFolder: "./drizzle" });
-  console.log("[gsv] migrations applied");
+  console.log("[csync] migrations applied");
 } finally {
   await sql.end();
 }

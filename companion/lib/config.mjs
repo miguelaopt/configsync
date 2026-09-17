@@ -7,7 +7,7 @@ export function configPath() {
     process.platform === "win32"
       ? (process.env.APPDATA ?? join(homedir(), "AppData", "Roaming"))
       : (process.env.XDG_CONFIG_HOME ?? join(homedir(), ".config"));
-  return join(base, "gsv", "config.json");
+  return join(base, "csync", "config.json");
 }
 
 /** `{ url, token, device }` or null when never logged in. Device defaults to the hostname. */
@@ -18,7 +18,7 @@ export function loadConfig() {
   try {
     c = JSON.parse(readFileSync(p, "utf8"));
   } catch {
-    throw new Error(`${p} is not valid JSON. Delete it and run gsv login again.`);
+    throw new Error(`${p} is not valid JSON. Delete it and run csync login again.`);
   }
   return { device: hostname(), ...c };
 }

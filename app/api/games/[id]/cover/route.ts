@@ -25,7 +25,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   } catch (error) {
     if (error instanceof AppError)
       return NextResponse.json({ error: error.message }, { status: 400 });
-    console.error("[gsv:cover]", error);
+    console.error("[csync:cover]", error);
     return NextResponse.json({ error: "Couldn't save that image. Try again." }, { status: 500 });
   }
 }

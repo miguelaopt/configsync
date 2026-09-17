@@ -1,4 +1,4 @@
-# GameSettings Vault
+# ConfigSync
 
 Your game settings. One place.
 
@@ -6,7 +6,7 @@ Save, organize, compare, copy and export the settings you use for any game — m
 
 - **Any game.** Add a completely custom game; nothing is hard-coded per title.
 - **Real menus from the catalog.** Counter-Strike 2 and Rocket League come with their actual settings menus, names and options.
-- **Companion CLI.** `gsv` scans your installed games, imports their config files as presets and applies presets back — with backups.
+- **Companion CLI.** `csync` scans your installed games, imports their config files as presets and applies presets back — with backups.
 - **Presets.** Multiple setups per game (Main, Competitive, Laptop…). Duplicate, compare, archive, set default.
 - **Generic settings.** Toggles, numbers, sliders, dropdowns, keybinds, colors, resolutions and more.
 - **Copy anything.** One setting, a category or a whole preset — as plain text, Markdown or JSON.
@@ -21,7 +21,7 @@ Save, organize, compare, copy and export the settings you use for any game — m
 Requirements: Node 20.12+, pnpm 12, Docker (for Postgres).
 
 ```bash
-git clone https://github.com/<you>/gamesettings-vault && cd gamesettings-vault
+git clone https://github.com/miguelaopt/configsync && cd configsync
 cp .env.example .env               # set BETTER_AUTH_SECRET (openssl rand -base64 32)
 pnpm install
 docker compose up -d db            # Postgres 16 on localhost:5432
@@ -47,11 +47,11 @@ pnpm dev                           # http://localhost:3000
 ## Companion
 
 ```sh
-cd companion && npm i -g .        # or `pnpm gsv …` from this checkout
-gsv login http://localhost:3000    # paste a token from Settings → Companion
-gsv scan --push                    # installed Steam/Epic games → your vault
-gsv import cs2                     # CS2's config files → a new preset
-gsv apply cs2 <preset-slug>        # preset → config files (backs up first)
+cd companion && npm i -g .        # or `pnpm csync …` from this checkout
+csync login http://localhost:3000    # paste a token from Settings → Companion
+csync scan --push                    # installed Steam/Epic games → your vault
+csync import cs2                     # CS2's config files → a new preset
+csync apply cs2 <preset-slug>        # preset → config files (backs up first)
 ```
 
 Details in [docs/companion.md](docs/companion.md).

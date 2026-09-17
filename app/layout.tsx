@@ -7,10 +7,10 @@ import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "GameSettings Vault", template: "%s · GameSettings Vault" },
+  title: { default: "ConfigSync", template: "%s · ConfigSync" },
   description:
     "Your game settings. One place. Save, organize, compare, copy and export settings for any game — open source and self-hostable.",
-  applicationName: "GameSettings Vault",
+  applicationName: "ConfigSync",
 };
 
 export const viewport: Viewport = {
@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 };
 
 // Applies the saved theme before first paint so light-theme users don't see a dark flash.
-const themeScript = `try{var t=localStorage.getItem("gsv-theme")||"dark";if(t==="system"){t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}if(t==="light"){document.documentElement.dataset.theme="light"}var d=localStorage.getItem("gsv-density");if(d==="compact"){document.documentElement.dataset.density=d}}catch(e){}`;
+const themeScript = `try{var t=localStorage.getItem("csync-theme")||"dark";if(t==="system"){t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}if(t==="light"){document.documentElement.dataset.theme="light"}var d=localStorage.getItem("csync-density");if(d==="compact"){document.documentElement.dataset.density=d}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
-        <Script id="gsv-theme" strategy="beforeInteractive">
+        <Script id="csync-theme" strategy="beforeInteractive">
           {themeScript}
         </Script>
         <TooltipProvider>{children}</TooltipProvider>

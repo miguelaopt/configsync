@@ -46,11 +46,7 @@ export function AppShell({ user, username, children }: ShellProps) {
 
       {/* Top bar */}
       <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-line bg-ground/95 px-3 backdrop-blur-sm sm:px-4 lg:pl-4">
-        <Link
-          href="/dashboard"
-          className="rounded-sm text-ink"
-          aria-label="GameSettings Vault home"
-        >
+        <Link href="/dashboard" className="rounded-sm text-ink" aria-label="ConfigSync home">
           <Logo compact className="sm:hidden" />
           <Logo className="hidden sm:inline-flex" />
         </Link>

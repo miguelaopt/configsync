@@ -46,7 +46,7 @@ export default async function SettingsPage() {
           <DeleteAccount />
         </Section>
         <p className="text-xs text-ink-3">
-          GameSettings Vault {SITE.version} · open source under the MIT license ·{" "}
+          ConfigSync {SITE.version} · open source under the MIT license ·{" "}
           <a
             href={SITE.repoUrl}
             className="underline underline-offset-4 hover:text-ink"

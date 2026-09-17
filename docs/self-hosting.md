@@ -1,6 +1,6 @@
 # Self-hosting
 
-GameSettings Vault is a single Next.js server plus a PostgreSQL database. Nothing else is required.
+ConfigSync is a single Next.js server plus a PostgreSQL database. Nothing else is required.
 
 ## Option A — Docker Compose (recommended)
 

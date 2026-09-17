@@ -3,8 +3,8 @@ export async function register() {
     const { runMigrations } = await import("@/lib/db/migrate");
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error("DATABASE_URL is required to run migrations");
-    console.log("[gsv] applying database migrations…");
+    console.log("[csync] applying database migrations…");
     await runMigrations(url);
-    console.log("[gsv] migrations applied");
+    console.log("[csync] migrations applied");
   }
 }

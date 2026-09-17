@@ -5,7 +5,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="flex h-14 items-center px-4 sm:px-6">
-        <Link href="/" aria-label="GameSettings Vault home" className="rounded-sm">
+        <Link href="/" aria-label="ConfigSync home" className="rounded-sm">
           <Logo />
         </Link>
       </header>

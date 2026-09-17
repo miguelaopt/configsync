@@ -33,7 +33,7 @@ lib/
   providers/    optional AI provider contracts (no implementation shipped); Steam store search
   validation/   Zod schemas for action input
 catalog/        game templates (JSON, data only)
-companion/      the gsv CLI: plain Node ESM, no dependencies, its own node --test suite
+companion/      the csync CLI: plain Node ESM, no dependencies, its own node --test suite
 drizzle/        generated SQL migrations
 scripts/        migrate, seed, reset
 tests/ e2e/     unit and Playwright tests
@@ -46,7 +46,7 @@ docs/           you are here
 users ─┬─ profiles (username, avatar, preferences)
        ├─ attachments (bytea: cover images)
        ├─ companion_tokens (name, sha256 of the token, last_used_at)
-       ├─ device_games (device, source, app_id, name — what `gsv scan --push` found)
+       ├─ device_games (device, source, app_id, name — what `csync scan --push` found)
        └─ games ─── presets ─┬─ categories ─── settings
           (catalog_id)       └─ revisions (JSON snapshot of the preset)
 ```
@@ -70,7 +70,7 @@ users ─┬─ profiles (username, avatar, preferences)
 
 **Files:** cover upload and downloads are route handlers (`app/api/*`) because actions are capped at 2 MB bodies and can't stream.
 
-**Companion:** `app/api/companion/*` are JSON route handlers for the CLI. `companionRoute()` (`lib/api/companion.ts`) resolves `Authorization: Bearer gsv_…` to a user through the token's SHA-256, validates the body with Zod and maps `UnauthorizedError`/`AppError` to 401/404. The routes call the same `lib/data` functions as the web UI (`importConfigFiles`, `patchConfigFiles`), so the browser import tab and `gsv import` are one code path.
+**Companion:** `app/api/companion/*` are JSON route handlers for the CLI. `companionRoute()` (`lib/api/companion.ts`) resolves `Authorization: Bearer gsv_…` to a user through the token's SHA-256, validates the body with Zod and maps `UnauthorizedError`/`AppError` to 401/404. The routes call the same `lib/data` functions as the web UI (`importConfigFiles`, `patchConfigFiles`), so the browser import tab and `csync import` are one code path.
 
 **Auth routes:** `/api/auth/[...all]` is better-auth. `proxy.ts` does an optimistic cookie check to redirect unauthenticated users; real verification is `requireUser()` on every page and action.
 
@@ -90,14 +90,14 @@ One Zod schema ([`lib/import-export/schema.ts`](../../lib/import-export/schema.t
 
 - **Authorization**: server-side only, one `WHERE user_id = ?` per query. Clients never receive ids they can't act on.
 - **Input**: every action and route handler validates with Zod; sizes are bounded (names ≤120, notes ≤5 000, options ≤200, etc.).
-- **Sessions**: HttpOnly cookies with the `gsv` prefix, `Secure` in production, 30-day expiry with daily refresh, 5-minute cookie cache. Password reset revokes all sessions.
+- **Sessions**: HttpOnly cookies with the `csync` prefix, `Secure` in production, 30-day expiry with daily refresh, 5-minute cookie cache. Password reset revokes all sessions.
 - **Rate limits**: better-auth's built-in limiter — 60 req/min per IP overall, tighter on sign-in (10), sign-up (5) and reset (3).
 - **CSRF**: better-auth checks `Origin` against `BETTER_AUTH_URL`; server actions carry Next's action id and are same-origin by construction.
 - **Uploads**: raw body ≤2 MB, image type sniffed from bytes, stored in Postgres and served through `/api/attachments/:id` with an ownership check.
 - **XSS**: React escaping; `coverUrl` must be `https:`; no `dangerouslySetInnerHTML`.
 - **Headers**: `nosniff`, `X-Frame-Options: DENY`, strict referrer and permissions policies (`next.config.ts`).
 - **Secrets**: `lib/env.ts` is `server-only`; only `NEXT_PUBLIC_*` reaches the browser.
-- **Logging**: errors are logged with a `[gsv:*]` prefix and never include credentials, tokens or setting values.
+- **Logging**: errors are logged with a `[csync:*]` prefix and never include credentials, tokens or setting values.
 
 ## Offline / local-first direction
 

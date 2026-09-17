@@ -4,6 +4,6 @@ import { createHash, randomBytes } from "node:crypto";
 export const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
 
 export function generateToken() {
-  const token = `gsv_${randomBytes(32).toString("base64url")}`;
+  const token = `csync_${randomBytes(32).toString("base64url")}`;
   return { token, hash: hashToken(token) };
 }

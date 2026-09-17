@@ -1,5 +1,5 @@
 /**
- * Database schema — GameSettings Vault.
+ * Database schema — ConfigSync.
  *
  * Hierarchy: user → games → presets → categories → settings.
  * Settings are generic (typed value stored as JSON); no game-specific columns exist.

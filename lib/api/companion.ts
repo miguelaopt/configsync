@@ -31,7 +31,7 @@ export function companionRoute<S extends z.ZodType | null, T>(
         return NextResponse.json({ error: error.message }, { status: 401 });
       if (error instanceof AppError)
         return NextResponse.json({ error: error.message }, { status: 404 });
-      console.error("[gsv:companion]", error);
+      console.error("[csync:companion]", error);
       return NextResponse.json({ error: "Something went wrong on the server." }, { status: 500 });
     }
   };

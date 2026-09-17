@@ -37,7 +37,7 @@ export async function GET(req: Request) {
     const stamp = new Date().toISOString().slice(0, 10);
     const base =
       scope === "library"
-        ? `gamesettings-vault-library-${stamp}`
+        ? `configsync-library-${stamp}`
         : scope === "game"
           ? `${slugify(games[0]!.name)}-${stamp}`
           : `${slugify(games[0]!.name)}-${slugify(games[0]!.presets[0]?.name ?? "preset")}-${stamp}`;
@@ -60,7 +60,7 @@ export async function GET(req: Request) {
   } catch (error) {
     if (error instanceof AppError)
       return NextResponse.json({ error: error.message }, { status: 404 });
-    console.error("[gsv:export]", error);
+    console.error("[csync:export]", error);
     return NextResponse.json({ error: "Export failed. Try again." }, { status: 500 });
   }
 }
