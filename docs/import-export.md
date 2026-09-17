@@ -24,6 +24,7 @@ Every export file, revision snapshot and import uses the same JSON document. It 
       "tags": ["fps"],
       "accentColor": "#4f8cff", // optional, #rrggbb
       "coverUrl": null, // optional https URL (uploaded covers are not exported)
+      "catalogId": null, // optional; set when the game was added from the catalog (e.g. "cs2")
       "notes": null,
       "presets": [
         {

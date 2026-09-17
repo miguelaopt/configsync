@@ -24,11 +24,16 @@ lib/
   db/           Drizzle schema, connection, migrator
   auth/         better-auth config, session helpers, profile creation
   import-export/ interchange schema (Zod), parser, serializers (JSON/MD/CSV)
+  catalog/      loader + schema for catalog/*.json (games with real menus and file mappings)
+  game-configs/ Valve KeyValues and INI codecs; readGameConfig/writeGameConfig through the catalog
+  api/          shared route-handler wrapper for the companion endpoints
   settings/     the generic setting type system
   copy/         clipboard formatting
   compare/      preset diff
-  providers/    optional AI provider contracts (no implementation shipped)
+  providers/    optional AI provider contracts (no implementation shipped); Steam store search
   validation/   Zod schemas for action input
+catalog/        game templates (JSON, data only)
+companion/      the gsv CLI: plain Node ESM, no dependencies, its own node --test suite
 drizzle/        generated SQL migrations
 scripts/        migrate, seed, reset
 tests/ e2e/     unit and Playwright tests
@@ -40,8 +45,10 @@ docs/           you are here
 ```
 users ─┬─ profiles (username, avatar, preferences)
        ├─ attachments (bytea: cover images)
+       ├─ companion_tokens (name, sha256 of the token, last_used_at)
+       ├─ device_games (device, source, app_id, name — what `gsv scan --push` found)
        └─ games ─── presets ─┬─ categories ─── settings
-                             └─ revisions (JSON snapshot of the preset)
+          (catalog_id)       └─ revisions (JSON snapshot of the preset)
 ```
 
 - Every user-owned row carries `user_id`; deletes cascade from `users` down.
@@ -63,11 +70,17 @@ users ─┬─ profiles (username, avatar, preferences)
 
 **Files:** cover upload and downloads are route handlers (`app/api/*`) because actions are capped at 2 MB bodies and can't stream.
 
+**Companion:** `app/api/companion/*` are JSON route handlers for the CLI. `companionRoute()` (`lib/api/companion.ts`) resolves `Authorization: Bearer gsv_…` to a user through the token's SHA-256, validates the body with Zod and maps `UnauthorizedError`/`AppError` to 401/404. The routes call the same `lib/data` functions as the web UI (`importConfigFiles`, `patchConfigFiles`), so the browser import tab and `gsv import` are one code path.
+
 **Auth routes:** `/api/auth/[...all]` is better-auth. `proxy.ts` does an optimistic cookie check to redirect unauthenticated users; real verification is `requireUser()` on every page and action.
 
 ## Presets and history
 
 Every meaningful save (`lib/data/revisions.ts`) snapshots the preset as a `PresetDoc` — the same shape used by export. Restore = import that snapshot over the preset. The last 50 snapshots are kept per preset.
+
+## Catalog and game config files
+
+`catalog/*.json` are export documents plus catalog-only fields: launcher ids, the game's config `files` and a per-setting `source` that maps it to a key in one of those files. `lib/game-configs` turns files into a `PresetDoc` (`readGameConfig`) and patches a preset's values back into the user's original files (`writeGameConfig`) — files are never generated from scratch, and unmapped keys are untouched. `source` never leaves the server: it is stripped on import and is not part of the export format. Details: [catalog.md](../catalog.md), [companion.md](../companion.md).
 
 ## Import / export
 

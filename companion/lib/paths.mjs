@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { join, resolve, sep } from "node:path";
 import { parseVdf } from "./vdf.mjs";
 
 const home = homedir();
@@ -100,17 +100,23 @@ export function documentsFor(kind, game) {
 
 const ORDER = win ? ["steam-windows", "epic-windows"] : ["steam-linux", "epic-linux"];
 
-/** First platform whose placeholders resolve and whose file exists. */
+/**
+ * First platform whose placeholder resolves and whose file exists. Templates come from the
+ * server, so they must start with a placeholder and may not escape its directory.
+ */
 export function resolveFilePath(file, game) {
   for (const platform of ORDER) {
     const template = file.paths[platform];
     if (!template) continue;
-    const userdata = steamUserdata();
-    const documents = documentsFor(platform, game);
-    const path = template
-      .replace("{steam_userdata}", userdata ?? "\u0000")
-      .replace("{documents}", documents ?? "\u0000");
-    if (path.includes("\u0000")) continue;
+    const bases = {
+      "{steam_userdata}": steamUserdata(),
+      "{documents}": documentsFor(platform, game),
+    };
+    const placeholder = Object.keys(bases).find((k) => template.startsWith(k));
+    const base = placeholder && bases[placeholder];
+    if (!base) continue;
+    const path = resolve(base, template.slice(placeholder.length).replace(/^[\\/]+/, ""));
+    if (!path.startsWith(resolve(base) + sep)) continue;
     if (existsSync(path)) return { platform, path };
   }
   return null;

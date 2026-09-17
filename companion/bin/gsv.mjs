@@ -2,6 +2,7 @@
 import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
+import { Writable } from "node:stream";
 import { api } from "../lib/api.mjs";
 import { loadConfig, saveConfig } from "../lib/config.mjs";
 import { resolveFilePath } from "../lib/paths.mjs";
@@ -41,9 +42,13 @@ async function askToken(url) {
     for await (const chunk of stdin) s += chunk;
     return s.trim();
   }
-  const rl = createInterface({ input: stdin, output: stdout });
-  const token = (await rl.question(`Token from ${url}/settings#companion: `)).trim();
+  // Muted output: the token is a secret and should not land in the terminal scrollback.
+  stdout.write(`Token from ${url}/settings#companion (input hidden): `);
+  const muted = new Writable({ write: (_chunk, _enc, cb) => cb() });
+  const rl = createInterface({ input: stdin, output: muted, terminal: true });
+  const token = (await rl.question("")).trim();
   rl.close();
+  stdout.write("\n");
   return token;
 }
 

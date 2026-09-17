@@ -185,6 +185,18 @@ test.describe("library flow", () => {
     await expect(page.getByRole("button", { name: /Counter-Strike 2/ })).toBeDisabled();
     await page.keyboard.press("Escape");
 
+    // --- Import a real config file as a preset -------------------------------
+    await page.goto("/import?tab=files");
+    await expect(page.getByRole("tab", { name: "Game files" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await page.locator("#gf-video").setInputFiles("tests/fixtures/cs2_video.txt");
+    await expect(page.getByRole("status")).toContainText("will be created");
+    await page.getByRole("button", { name: "Import as preset" }).click();
+    await page.waitForURL("**/games/counter-strike-2/imported-*");
+    await expect(page.getByLabel("Resolution width")).toHaveValue("1280");
+
     // --- Archive + delete ---------------------------------------------------
     await page.goto("/games/imported-arena");
     await page.getByRole("button", { name: "Game actions" }).click();

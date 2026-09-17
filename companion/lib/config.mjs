@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir, hostname } from "node:os";
 import { dirname, join } from "node:path";
 
@@ -14,7 +14,12 @@ export function configPath() {
 export function loadConfig() {
   const p = configPath();
   if (!existsSync(p)) return null;
-  const c = JSON.parse(readFileSync(p, "utf8"));
+  let c;
+  try {
+    c = JSON.parse(readFileSync(p, "utf8"));
+  } catch {
+    throw new Error(`${p} is not valid JSON. Delete it and run gsv login again.`);
+  }
   return { device: hostname(), ...c };
 }
 
@@ -22,5 +27,6 @@ export function saveConfig(config) {
   const p = configPath();
   mkdirSync(dirname(p), { recursive: true });
   writeFileSync(p, JSON.stringify(config, null, 2) + "\n", { mode: 0o600 });
+  chmodSync(p, 0o600); // `mode` only applies when the file is created
   return p;
 }
