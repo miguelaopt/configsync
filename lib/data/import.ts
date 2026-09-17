@@ -11,6 +11,7 @@ const { games, presets } = schema;
 export type ImportOutcome = {
   createdGames: { id: string; slug: string; name: string }[];
   createdPresets: number;
+  createdPresetSlugs: string[];
   createdSettings: number;
 };
 
@@ -26,7 +27,12 @@ export async function importFile(
   opts: { targetGameId?: string | null } = {},
 ): Promise<ImportOutcome> {
   return db.transaction(async (tx) => {
-    const outcome: ImportOutcome = { createdGames: [], createdPresets: 0, createdSettings: 0 };
+    const outcome: ImportOutcome = {
+      createdGames: [],
+      createdPresets: 0,
+      createdPresetSlugs: [],
+      createdSettings: 0,
+    };
 
     for (const gameDoc of file.games) {
       let gameId: string;
@@ -101,6 +107,7 @@ async function importPresetsInto(
     if (!hasDefault && presetDoc.isDefault) hasDefault = true;
     await insertCategoriesFromDocs(tx, userId, created!.id, presetDoc.categories);
     outcome.createdPresets++;
+    outcome.createdPresetSlugs.push(slug);
     outcome.createdSettings += presetDoc.categories.reduce((n, c) => n + c.settings.length, 0);
   }
 }

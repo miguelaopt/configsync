@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GitCompare, Star } from "lucide-react";
 import type { Game, Preset } from "@/lib/db/schema";
+import type { PublicCatalogEntry } from "@/lib/catalog";
 import type { CopyPayload, CopyFormat } from "@/lib/copy/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ type Props = {
   copyFormat: CopyFormat;
   settingCount: number;
   revisions: RevisionSummary[];
+  catalogEntry?: PublicCatalogEntry | null;
 };
 
 export function PresetHeader({
@@ -30,6 +32,7 @@ export function PresetHeader({
   copyFormat,
   settingCount,
   revisions,
+  catalogEntry,
 }: Props) {
   const router = useRouter();
   const [history, setHistory] = React.useState(false);
@@ -87,6 +90,7 @@ export function PresetHeader({
             preset={preset}
             gameSlug={game.slug}
             siblings={siblings}
+            catalogEntry={catalogEntry}
             onShowHistory={() => setHistory(true)}
             onDeleted={() => router.push(`/games/${game.slug}`)}
             className="border border-line bg-raised"
