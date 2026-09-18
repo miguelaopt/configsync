@@ -11,7 +11,13 @@ import { plural, timeAgo } from "@/lib/utils/format";
 import { SITE } from "@/lib/site";
 
 type Token = { id: string; name: string; createdAt: Date; lastUsedAt: Date | null };
-type Device = { device: string; games: number; seenAt: Date | null };
+type Device = {
+  id: string;
+  name: string;
+  platform: string | null;
+  lastSeenAt: Date;
+  games: number;
+};
 
 /** Personal access tokens for the companion CLI, plus the devices it has scanned. */
 export function CompanionCard({
@@ -113,9 +119,8 @@ export function CompanionCard({
           <p className="font-medium text-ink">Devices</p>
           <ul className="mt-1 text-ink-2">
             {devices.map((d) => (
-              <li key={d.device}>
-                {d.device} — {plural(d.games, "game")}, scanned{" "}
-                {d.seenAt ? timeAgo(d.seenAt) : "never"}
+              <li key={d.id}>
+                {d.name} — {plural(d.games, "game")}, seen {timeAgo(d.lastSeenAt)}
               </li>
             ))}
           </ul>

@@ -119,23 +119,48 @@ export type SyncTarget = {
   presetSlug: string;
   presetName: string;
   version: string;
+  /** "device" when a per-PC choice applied, else the game's Default. */
+  source: "device" | "default";
 };
 
-/** The Default preset of one catalog game, with a content fingerprint; null when none. */
+/** The preset a device chose for this game, unless it has been archived meanwhile. */
+async function overrideFor(userId: string, device: string, gameId: string) {
+  const [row] = await db
+    .select({ id: schema.presets.id, slug: schema.presets.slug, name: schema.presets.name })
+    .from(schema.devicePresets)
+    .innerJoin(schema.devices, eq(schema.devices.id, schema.devicePresets.deviceId))
+    .innerJoin(schema.presets, eq(schema.presets.id, schema.devicePresets.presetId))
+    .where(
+      and(
+        eq(schema.devices.userId, userId),
+        eq(schema.devices.name, device),
+        eq(schema.devicePresets.gameId, gameId),
+        eq(schema.presets.isArchived, false),
+      ),
+    )
+    .limit(1);
+  return row ?? null;
+}
+
+/** What one catalog game should have on `device` (its choice, else the Default), with a content fingerprint. */
 export async function defaultPresetFor(
   userId: string,
   catalogId: string,
+  device?: string | null,
 ): Promise<SyncTarget | null> {
   const game = await findGameByCatalogId(userId, catalogId);
   if (!game) return null;
-  const row = await db.query.presets.findFirst({
-    where: and(
-      eq(schema.presets.gameId, game.id),
-      eq(schema.presets.isDefault, true),
-      eq(schema.presets.isArchived, false),
-    ),
-    columns: { id: true, slug: true, name: true },
-  });
+  const override = device ? await overrideFor(userId, device, game.id) : null;
+  const row =
+    override ??
+    (await db.query.presets.findFirst({
+      where: and(
+        eq(schema.presets.gameId, game.id),
+        eq(schema.presets.isDefault, true),
+        eq(schema.presets.isArchived, false),
+      ),
+      columns: { id: true, slug: true, name: true },
+    }));
   if (!row) return null;
   const full = await getPresetFull(userId, row.id);
   return {
@@ -144,13 +169,17 @@ export async function defaultPresetFor(
     presetSlug: row.slug,
     presetName: row.name,
     version: presetFingerprint(toPresetDoc(full)),
+    source: override ? "device" : "default",
   };
 }
 
-/** Every catalog game the user owns that has a Default preset. */
-export async function listSyncTargets(userId: string): Promise<SyncTarget[]> {
+/** Every catalog game the user owns that has a target on this device. */
+export async function listSyncTargets(
+  userId: string,
+  device?: string | null,
+): Promise<SyncTarget[]> {
   const ids = await listOwnedCatalogIds(userId);
   // ponytail: one full-preset load per catalog game per poll; cache by max(updated_at) if it ever matters.
-  const targets = await Promise.all(ids.map((id) => defaultPresetFor(userId, id)));
+  const targets = await Promise.all(ids.map((id) => defaultPresetFor(userId, id, device)));
   return targets.filter((t): t is SyncTarget => t !== null);
 }
