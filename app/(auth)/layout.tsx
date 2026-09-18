@@ -1,37 +1,51 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { Logo } from "@/components/app/logo";
-import { LegalLinks } from "@/components/marketing/legal";
-import { AuthSwitchLink } from "@/components/auth/auth-switch";
+import { Ribbon } from "@/components/auth/ribbon";
 
-/** Auth pages on the Nocturne stage: dot grid, top glow, minimal header, one centred card. */
+/**
+ * Auth pages: split screen. Left — brand, abstract ribbon, tagline. Right — the form on the
+ * plain Nocturne ground. Below lg the left panel is gone and a small brand row takes its place.
+ */
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="nocturne relative flex min-h-dvh flex-col overflow-x-hidden">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 [background-image:radial-gradient(rgb(233_233_237/0.045)_1px,transparent_1px)] [mask-image:linear-gradient(#000,transparent_900px)] [background-size:34px_34px]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute top-[-340px] left-1/2 h-[900px] w-[1500px] -translate-x-1/2 [background:radial-gradient(closest-side,rgb(145_132_217/0.22),rgb(122_110_190/0.08)_48%,transparent_76%)]"
-      />
-      <header className="relative flex h-16 items-center justify-between px-5 sm:px-8">
-        <Link href="/" aria-label="ConfigSync home" className="rounded-sm">
-          <Logo />
-        </Link>
-        <Suspense>
-          <AuthSwitchLink />
-        </Suspense>
-      </header>
-      <main className="relative flex flex-1 items-start justify-center px-4 py-8 sm:items-center sm:py-12">
-        <div className="w-full max-w-[420px] rounded-[14px] border border-line-strong bg-[linear-gradient(#1c1f30,#171a29)] p-6 shadow-dialog sm:p-8">
-          {children}
+    <div className="nocturne grid min-h-dvh lg:grid-cols-2">
+      <aside className="relative hidden overflow-hidden bg-[#0c0d14] lg:block">
+        <Ribbon />
+        <div className="relative flex h-full flex-col justify-between p-12 xl:p-16">
+          <Link href="/" aria-label="ConfigSync home" className="w-fit rounded-sm">
+            <Logo className="text-[20px] [&_svg]:size-7" />
+          </Link>
+          <p className="font-display text-[clamp(40px,4.2vw,64px)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
+            Your game settings.
+            <br />
+            <span className="bg-[linear-gradient(100deg,#f0ecff,#c9c0ff_45%,#9184d9)] bg-clip-text text-transparent">
+              Everywhere
+            </span>
+            <span className="text-accent">_</span>
+          </p>
         </div>
-      </main>
-      <footer className="relative flex flex-col gap-2 px-4 py-6 text-center text-xs text-ink-3">
-        <LegalLinks />
-      </footer>
+      </aside>
+      <div className="relative flex min-h-dvh flex-col">
+        <header className="flex h-16 items-center px-6 lg:hidden">
+          <Link href="/" aria-label="ConfigSync home" className="rounded-sm">
+            <Logo />
+          </Link>
+        </header>
+        <main className="flex flex-1 items-start justify-center px-6 py-8 sm:items-center sm:py-12">
+          <div className="w-full max-w-[560px]">{children}</div>
+        </main>
+        <footer className="flex justify-center gap-4 px-6 py-6 text-xs text-ink-3">
+          <Link href="/terms" className="hover:text-ink">
+            Terms
+          </Link>
+          <Link href="/privacy" className="hover:text-ink">
+            Privacy
+          </Link>
+          <a href="mailto:hello@configsync.app" className="hover:text-ink">
+            Contact
+          </a>
+        </footer>
+      </div>
     </div>
   );
 }
