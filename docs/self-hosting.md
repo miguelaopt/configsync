@@ -34,19 +34,19 @@ PORT=3000 node .next/standalone/server.js
 
 ## Environment variables
 
-| Variable               | Required | Notes                                                                                                              |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
-| `DATABASE_URL`         | yes      | `postgres://user:pass@host:5432/db`                                                                                |
-| `BETTER_AUTH_SECRET`   | yes      | ≥16 chars; signs session cookies. Changing it signs everyone out.                                                  |
-| `BETTER_AUTH_URL`      | yes      | Public origin of the app. Used for CSRF/origin checks and email links.                                             |
-| `NEXT_PUBLIC_APP_URL`  | yes      | Same value; available to the browser bundle.                                                                       |
-| `GITHUB_CLIENT_ID`     | no       | Enables "Continue with GitHub". Callback: `<URL>/api/auth/callback/github`                                         |
-| `GITHUB_CLIENT_SECRET` | no       |                                                                                                                    |
-| `SMTP_URL`             | no       | `smtp://user:pass@host:587`. Without it, password-reset links are printed to the server log.                       |
-| `EMAIL_FROM`           | no       | Sender for transactional mail.                                                                                     |
-| `RUN_MIGRATIONS`       | no       | `true` → apply `drizzle/*.sql` on startup (the Docker image sets this).                                            |
-| `AI_VISION_PROVIDER`   | no       | Reserved for the optional screenshot assistant. See [ai-providers](architecture/ai-providers.md).                  |
-| `PADDLE_*`             | no       | Six variables that turn on Free/Pro plans and Paddle checkout. Unset ⇒ everyone is Pro. See [billing](billing.md). |
+| Variable               | Required | Notes                                                                                                                                                       |
+| ---------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`         | yes      | `postgres://user:pass@host:5432/db`                                                                                                                         |
+| `BETTER_AUTH_SECRET`   | yes      | ≥16 chars; signs session cookies. Changing it signs everyone out.                                                                                           |
+| `BETTER_AUTH_URL`      | yes      | Public origin of the app. Used for CSRF/origin checks and email links.                                                                                      |
+| `NEXT_PUBLIC_APP_URL`  | yes      | Same value; available to the browser bundle.                                                                                                                |
+| `GITHUB_CLIENT_ID`     | no       | Enables "Continue with GitHub". Callback: `<URL>/api/auth/callback/github`                                                                                  |
+| `GITHUB_CLIENT_SECRET` | no       |                                                                                                                                                             |
+| `SMTP_URL`             | no       | `smtp://user:pass@host:587`. Without it, password-reset links are printed to the server log.                                                                |
+| `EMAIL_FROM`           | no       | Sender for transactional mail.                                                                                                                              |
+| `RUN_MIGRATIONS`       | no       | `true` → apply `drizzle/*.sql` on startup (the Docker image sets this).                                                                                     |
+| `AI_VISION_PROVIDER`   | no       | `anthropic` turns on the Pro screenshot importer; needs `AI_VISION_API_KEY` (optional `AI_VISION_MODEL`). See [ai-providers](architecture/ai-providers.md). |
+| `PADDLE_*`             | no       | Six variables that turn on Free/Pro plans and Paddle checkout. Unset ⇒ everyone is Pro. See [billing](billing.md).                                          |
 
 `lib/env.ts` validates these at startup and fails with a readable message if something is missing.
 
@@ -73,6 +73,6 @@ docker compose --profile app up -d --build   # migrations run at boot
 | ------------- | -------------------- | ------------ |
 | GitHub OAuth  | Social sign-in       | off          |
 | SMTP          | Password-reset email | off (logged) |
-| AI vision API | Screenshot assistant | off          |
+| AI vision API | Screenshot importer  | off          |
 
 There is no telemetry and no analytics.

@@ -67,7 +67,7 @@ Details in [docs/companion.md](docs/companion.md).
 - [Game catalog](docs/catalog.md) — adding a game with its real menu and config-file mappings
 - [Companion CLI](docs/companion.md) — scan, import and apply from your gaming PC
 - [Billing](docs/billing.md) — Paddle setup for the Free/Pro plans
-- [AI providers](docs/architecture/ai-providers.md) — the optional screenshot assistant
+- [AI providers](docs/architecture/ai-providers.md) — the Pro screenshot importer (optional)
 - [Decisions](docs/decisions/) — why things are the way they are
 - [Contributing](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Code of conduct](CODE_OF_CONDUCT.md)
 
