@@ -56,10 +56,8 @@ export function SignInForm({ githubEnabled }: { githubEnabled: boolean }) {
 
   return (
     <div>
-      <h1 className="font-display text-2xl">Sign in</h1>
-      <p className="mt-1 text-[13px] text-ink-2">
-        Welcome back. Your settings are where you left them.
-      </p>
+      <h1 className="font-display text-[26px] font-semibold tracking-tight">Welcome back</h1>
+      <p className="mt-1 text-[13px] text-ink-2">Your settings are where you left them.</p>
       <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
         <Field label="Email" htmlFor="email">
           <Input
@@ -155,8 +153,12 @@ export function SignUpForm({ githubEnabled }: { githubEnabled: boolean }) {
 
   return (
     <div>
-      <h1 className="font-display text-2xl">Create your vault</h1>
-      <p className="mt-1 text-[13px] text-ink-2">Free to start. Export everything, any time.</p>
+      <h1 className="font-display text-[26px] font-semibold tracking-tight">
+        Create your free account
+      </h1>
+      <p className="mt-1 text-[13px] text-ink-2">
+        Three games, the companion and a public profile — free. Export any time.
+      </p>
       <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
         <Field
           label="Name"
@@ -222,7 +224,18 @@ export function SignUpForm({ githubEnabled }: { githubEnabled: boolean }) {
           </Button>
         </>
       ) : null}
-      <p className="mt-6 text-center text-[13px] text-ink-2">
+      <p className="mt-5 text-center text-xs leading-relaxed text-ink-3">
+        By creating an account you agree to the{" "}
+        <Link href="/terms" className="text-ink-2 underline underline-offset-4 hover:text-ink">
+          Terms
+        </Link>{" "}
+        and the{" "}
+        <Link href="/privacy" className="text-ink-2 underline underline-offset-4 hover:text-ink">
+          Privacy policy
+        </Link>
+        .
+      </p>
+      <p className="mt-4 text-center text-[13px] text-ink-2">
         Already have an account?{" "}
         <Link href="/sign-in" className="text-ink underline underline-offset-4">
           Sign in

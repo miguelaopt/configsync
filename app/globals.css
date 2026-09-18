@@ -68,6 +68,61 @@
   --row-h: 2.5rem;
 }
 
+/* ---------------------------------------------------------------------------
+   Nocturne skin — the landing page's palette, applied by putting `.nocturne` on a subtree.
+   Every existing component keeps working because it only reads the tokens above.
+   Today: auth pages. Rolling it out to the app = adding the class to the root layout.
+--------------------------------------------------------------------------- */
+.nocturne {
+  --ground: #0f1019;
+  --surface: #171a28;
+  --raised: #1c1f30;
+  --overlay: #22263a;
+  --line: #2a2d42;
+  --line-strong: #3a3f61;
+  --hairline: rgb(42 45 66 / 0.8);
+  --ink: #e9e9ed;
+  --ink-2: #a9aac0;
+  --ink-3: #9296ae;
+  --accent: #9184d9;
+  --accent-ink: #f2f0ff;
+  --accent-soft: rgb(145 132 217 / 0.18);
+  --accent-text: #b5abfc;
+  --stage: #0f1019;
+  --shadow-dialog: 0 30px 70px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(233 233 237 / 0.05);
+  --shadow-menu: 0 12px 34px rgb(0 0 0 / 0.45), 0 0 0 1px rgb(145 132 217 / 0.16);
+  background: var(--ground);
+  color: var(--ink);
+  color-scheme: dark;
+}
+.nocturne h1,
+.nocturne h2,
+.nocturne h3,
+.nocturne .font-display {
+  font-family: var(--font-sans);
+  letter-spacing: -0.024em;
+}
+.nocturne [data-slot="button"][data-variant="primary"] {
+  background: linear-gradient(180deg, #6f61ba, #524889);
+  border: 1px solid rgb(181 171 252 / 0.5);
+  box-shadow: 0 10px 30px rgb(110 96 186 / 0.4);
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s,
+    filter 0.2s;
+}
+.nocturne [data-slot="button"][data-variant="primary"]:hover:not(:disabled) {
+  filter: none;
+  box-shadow: 0 12px 34px rgb(130 114 220 / 0.55);
+  transform: translateY(-1px);
+}
+.nocturne [data-slot="button"][data-variant="secondary"] {
+  background: rgb(28 31 48 / 0.7);
+}
+.nocturne [data-slot="input"]:focus {
+  box-shadow: 0 0 0 3px rgb(145 132 217 / 0.22);
+}
+
 @theme inline {
   --color-ground: var(--ground);
   --color-surface: var(--surface);
