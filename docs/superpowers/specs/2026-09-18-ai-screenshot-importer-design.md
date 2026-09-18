@@ -11,16 +11,16 @@ the feature does not appear (self-hosting keeps working).
 
 ## Product decisions
 
-| Decision      | Choice                                                                                                     |
-| ------------- | ---------------------------------------------------------------------------------------------------------- |
-| Entry point   | Preset page → actions menu → "Import from screenshot…". Proposals are matched to the preset's own settings. |
-| Plan          | Pro only, via `limitsFor(plan).aiScreenshots` (`free: 0`, `pro: 30` images per rolling 24 h).              |
-| Provider      | Anthropic (`@anthropic-ai/sdk`), model `claude-opus-5` by default, structured outputs, effort `low`.        |
-| Images        | 1–5 per run, PNG/JPEG/WebP. Client downsizes to ≤ 1568 px long edge WebP; server caps at 2 MB, sniffed.    |
-| Persistence   | The image is not stored. One `ai_requests` row per image (user, tokens, model) for the cap and cost view.   |
-| Matching      | By normalised name against the preset's settings. Unmatched proposals can be created as new settings.      |
-| Privacy       | Dialog states that the image is sent to Anthropic for analysis and not kept.                               |
-| Out of scope  | Offline OCR, attaching the screenshot to the preset, a Screenshot tab on `/import`, fuzzy matching.        |
+| Decision     | Choice                                                                                                      |
+| ------------ | ----------------------------------------------------------------------------------------------------------- |
+| Entry point  | Preset page → actions menu → "Import from screenshot…". Proposals are matched to the preset's own settings. |
+| Plan         | Pro only, via `limitsFor(plan).aiScreenshots` (`free: 0`, `pro: 30` images per rolling 24 h).               |
+| Provider     | Anthropic (`@anthropic-ai/sdk`), model `claude-opus-5` by default, structured outputs, effort `low`.        |
+| Images       | 1–5 per run, PNG/JPEG/WebP. Client downsizes to ≤ 1568 px long edge WebP; server caps at 2 MB, sniffed.     |
+| Persistence  | The image is not stored. One `ai_requests` row per image (user, tokens, model) for the cap and cost view.   |
+| Matching     | By normalised name against the preset's settings. Unmatched proposals can be created as new settings.       |
+| Privacy      | Dialog states that the image is sent to Anthropic for analysis and not kept.                                |
+| Out of scope | Offline OCR, attaching the screenshot to the preset, a Screenshot tab on `/import`, fuzzy matching.         |
 
 ## A. Configuration
 
@@ -44,25 +44,37 @@ shipped provider and the daily limit.
 Simplified to what ships. One interface, one implementation:
 
 ```ts
-export type ScreenshotImage = { bytes: Uint8Array; mimeType: "image/png" | "image/jpeg" | "image/webp" };
+export type ScreenshotImage = {
+  bytes: Uint8Array;
+  mimeType: "image/png" | "image/jpeg" | "image/webp";
+};
 
 export type ScreenshotHints = {
   gameName: string;
-  categories: { name: string; settings: { name: string; type: SettingTypeId; options?: string[]; unit?: string | null }[] }[];
+  categories: {
+    name: string;
+    settings: { name: string; type: SettingTypeId; options?: string[]; unit?: string | null }[];
+  }[];
 };
 
 /** What the model read. Values are the on-screen text; the core coerces them to setting types. */
 export type ProposedSetting = {
-  name: string;              // exact existing name when the label matches one, else the on-screen label
-  rawValue: string;          // "On", "1920x1080", "0.85", "High", "Mouse 4", …
-  category: string | null;   // heading seen on screen
-  type: SettingTypeId | null;// guess, only meaningful for names not in the hints
-  confidence: number;        // 0–1, clamped server-side
+  name: string; // exact existing name when the label matches one, else the on-screen label
+  rawValue: string; // "On", "1920x1080", "0.85", "High", "Mouse 4", …
+  category: string | null; // heading seen on screen
+  type: SettingTypeId | null; // guess, only meaningful for names not in the hints
+  confidence: number; // 0–1, clamped server-side
 };
 
 export interface ScreenshotParser {
   readonly id: string;
-  parse(image: ScreenshotImage, hints: ScreenshotHints): Promise<{ proposals: ProposedSetting[]; usage: { inputTokens: number; outputTokens: number; model: string } }>;
+  parse(
+    image: ScreenshotImage,
+    hints: ScreenshotHints,
+  ): Promise<{
+    proposals: ProposedSetting[];
+    usage: { inputTokens: number; outputTokens: number; model: string };
+  }>;
 }
 
 export function getScreenshotParser(): ScreenshotParser | null; // switch on env.AI_VISION_PROVIDER
@@ -97,11 +109,17 @@ export type ScreenshotRow = {
   def: SettingDefinition;
   /** Matched only — the value stored today, for side-by-side review. */
   current: SettingValue | null;
-  value: SettingValue | null;          // coerced and valid for `def`; null when unreadable
+  value: SettingValue | null; // coerced and valid for `def`; null when unreadable
 };
 
-export function buildHints(game: { name: string }, categories: CategoryWithSettings[]): ScreenshotHints;
-export function matchProposals(proposals: ProposedSetting[], categories: CategoryWithSettings[]): ScreenshotRow[];
+export function buildHints(
+  game: { name: string },
+  categories: CategoryWithSettings[],
+): ScreenshotHints;
+export function matchProposals(
+  proposals: ProposedSetting[],
+  categories: CategoryWithSettings[],
+): ScreenshotRow[];
 /** Rows from several images: same settingId keeps the higher confidence; unmatched rows dedupe by normalised name. */
 export function mergeRows(batches: ScreenshotRow[][]): ScreenshotRow[];
 ```
@@ -121,15 +139,15 @@ The module has no runtime server imports (`CategoryWithSettings` is a type impor
 `lib/settings/coerce.ts` — `coerceValue(def: SettingDefinition, raw: string): SettingValue | null`,
 then validated with `valueSchemaFor(def)`; invalid ⇒ `null`:
 
-| Type                                       | Rule                                                                                                                                 |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| boolean                                    | on/off, yes/no, true/false, enabled/disabled, 1/0 (case-insensitive); else null                                                      |
-| integer, decimal, slider, percentage       | first number in the string (strip `%`, units, spaces; exactly one `,` and no `.` ⇒ `,` is the decimal separator); integer type rejects non-integers                    |
-| dropdown, enum                             | option whose label or value equals the raw text case-insensitively; no options defined ⇒ raw text; no match ⇒ null                  |
-| multi_select                               | split on `,`, each part as above; any miss ⇒ null                                                                                     |
-| resolution                                 | `/(\d{3,5})\s*[x×*]\s*(\d{3,5})/` ⇒ `{ width, height }`                                                                               |
-| color                                      | hex with or without `#`, normalised to `#rrggbb`; else null                                                                           |
-| text, long_text, keybind, controller_binding, info | trimmed raw text                                                                                                             |
+| Type                                               | Rule                                                                                                                                                |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| boolean                                            | on/off, yes/no, true/false, enabled/disabled, 1/0 (case-insensitive); else null                                                                     |
+| integer, decimal, slider, percentage               | first number in the string (strip `%`, units, spaces; exactly one `,` and no `.` ⇒ `,` is the decimal separator); integer type rejects non-integers |
+| dropdown, enum                                     | option whose label or value equals the raw text case-insensitively; no options defined ⇒ raw text; no match ⇒ null                                  |
+| multi_select                                       | split on `,`, each part as above; any miss ⇒ null                                                                                                   |
+| resolution                                         | `/(\d{3,5})\s*[x×*]\s*(\d{3,5})/` ⇒ `{ width, height }`                                                                                             |
+| color                                              | hex with or without `#`, normalised to `#rrggbb`; else null                                                                                         |
+| text, long_text, keybind, controller_binding, info | trimmed raw text                                                                                                                                    |
 
 ## D. Data
 
@@ -184,17 +202,17 @@ after "Game config files…"; Free users see a `Pro` badge on the item.
    scaled to ≤ 1568 px long edge and exported as `image/webp` at 0.85 (falls back to the original
    file when the canvas export fails).
 3. **analysing**: spinner and "Reading N screenshot(s)…"; failures toast per image; if every
-   image fails the dialog returns to *pick*.
+   image fails the dialog returns to _pick_.
 4. **review**: two sections.
-   - *Matched* rows: checkbox · setting name (category muted) · "Now: <formatValue(current)>" ·
+   - _Matched_ rows: checkbox · setting name (category muted) · "Now: <formatValue(current)>" ·
      `SettingControl layout="row"` bound to the editable proposed value · confidence badge
      (`< 0.5` ⇒ `Badge variant="note"` "Check"). Pre-checked when `value != null`, confidence ≥ 0.5 and
      the value differs from the current one. `value == null` ⇒ the control is empty and the row shows
      "Read as “<rawValue>”" so the user can pick the value by hand.
-   - *Not in this preset*: checkbox (off) · name `Input` · type `Select` (from `SETTING_TYPES`) · category
+   - _Not in this preset_: checkbox (off) · name `Input` · type `Select` (from `SETTING_TYPES`) · category
      `Select` (the preset's categories; when there are none the section says "Add a category first"
      and stays disabled) · `SettingControl` for the value.
-   - Footer: "Apply N change(s)" (disabled at 0) and "Add more screenshots" (back to *pick*, keeping rows).
+   - Footer: "Apply N change(s)" (disabled at 0) and "Add more screenshots" (back to _pick_, keeping rows).
 5. Apply ⇒ `applyScreenshotAction`; success ⇒ toast "Applied N settings from your screenshots",
    `router.refresh()`, close.
 

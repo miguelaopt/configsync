@@ -27,24 +27,24 @@
 
 ## File map
 
-| File | Responsibility |
-| --- | --- |
-| `lib/env.ts` (modify) | `AI_VISION_*` variables, `screenshotAssistantEnabled` |
-| `lib/billing/limits.ts` (modify) | `aiScreenshots` cap and the two messages |
-| `lib/billing/public.ts` (modify) | Pricing copy |
-| `lib/settings/coerce.ts` (create) | `coerceValue(def, raw)` — on-screen text → typed, validated value |
-| `lib/providers/screenshot.ts` (rewrite) | Provider contract types + `getScreenshotParser()` switch |
-| `lib/providers/anthropic-vision.ts` (create) | `createAnthropicParser(client, model)`, prompt, error mapping |
-| `lib/ai/screenshot.ts` (create) | `buildHints`, `matchProposals`, `mergeRows`, `ScreenshotRow` (pure, browser-safe) |
-| `lib/db/schema.ts` + `drizzle/0004_ai_requests.sql` | `ai_requests` table |
-| `lib/data/ai.ts` (create) | `assertCanAnalyse`, `analyseScreenshot`, `applyScreenshotRows` |
-| `lib/data/settings.ts` (modify) | `tx` parameter on `getCategory`, `createSetting`, `updateSettingValues` |
-| `app/api/ai/screenshot/route.ts` (create) | `POST ?preset=<id>` raw image body → `{ rows }` |
-| `lib/actions/ai.ts` (create) | `applyScreenshotAction` |
-| `components/presets/screenshot-dialog.tsx` (create) | Pick → analysing → review → apply |
-| `components/presets/preset-actions.tsx`, `preset-header.tsx`, `app/(app)/games/[gameSlug]/[presetSlug]/page.tsx` (modify) | Menu item and prop plumbing |
-| `tests/coerce.test.ts`, `tests/screenshot-match.test.ts`, `tests/anthropic-vision.test.ts`, `tests/billing.test.ts` | Unit tests |
-| `.env.example`, `docs/architecture/ai-providers.md`, `docs/self-hosting.md` | Docs |
+| File                                                                                                                      | Responsibility                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `lib/env.ts` (modify)                                                                                                     | `AI_VISION_*` variables, `screenshotAssistantEnabled`                             |
+| `lib/billing/limits.ts` (modify)                                                                                          | `aiScreenshots` cap and the two messages                                          |
+| `lib/billing/public.ts` (modify)                                                                                          | Pricing copy                                                                      |
+| `lib/settings/coerce.ts` (create)                                                                                         | `coerceValue(def, raw)` — on-screen text → typed, validated value                 |
+| `lib/providers/screenshot.ts` (rewrite)                                                                                   | Provider contract types + `getScreenshotParser()` switch                          |
+| `lib/providers/anthropic-vision.ts` (create)                                                                              | `createAnthropicParser(client, model)`, prompt, error mapping                     |
+| `lib/ai/screenshot.ts` (create)                                                                                           | `buildHints`, `matchProposals`, `mergeRows`, `ScreenshotRow` (pure, browser-safe) |
+| `lib/db/schema.ts` + `drizzle/0004_ai_requests.sql`                                                                       | `ai_requests` table                                                               |
+| `lib/data/ai.ts` (create)                                                                                                 | `assertCanAnalyse`, `analyseScreenshot`, `applyScreenshotRows`                    |
+| `lib/data/settings.ts` (modify)                                                                                           | `tx` parameter on `getCategory`, `createSetting`, `updateSettingValues`           |
+| `app/api/ai/screenshot/route.ts` (create)                                                                                 | `POST ?preset=<id>` raw image body → `{ rows }`                                   |
+| `lib/actions/ai.ts` (create)                                                                                              | `applyScreenshotAction`                                                           |
+| `components/presets/screenshot-dialog.tsx` (create)                                                                       | Pick → analysing → review → apply                                                 |
+| `components/presets/preset-actions.tsx`, `preset-header.tsx`, `app/(app)/games/[gameSlug]/[presetSlug]/page.tsx` (modify) | Menu item and prop plumbing                                                       |
+| `tests/coerce.test.ts`, `tests/screenshot-match.test.ts`, `tests/anthropic-vision.test.ts`, `tests/billing.test.ts`       | Unit tests                                                                        |
+| `.env.example`, `docs/architecture/ai-providers.md`, `docs/self-hosting.md`                                               | Docs                                                                              |
 
 ---
 
@@ -63,6 +63,7 @@ git log --oneline -3   # expect: plan, spec, then the PR #4 merge
 ### Task 1: Environment, limits and pricing copy
 
 **Files:**
+
 - Modify: `lib/env.ts`
 - Modify: `lib/billing/limits.ts`
 - Modify: `lib/billing/public.ts:20`
@@ -70,6 +71,7 @@ git log --oneline -3   # expect: plan, spec, then the PR #4 merge
 - Test: `tests/billing.test.ts:22-27`
 
 **Interfaces:**
+
 - Produces: `env.AI_VISION_PROVIDER?: "anthropic"`, `env.AI_VISION_API_KEY?: string`, `env.AI_VISION_MODEL: string`, `screenshotAssistantEnabled: boolean` (from `@/lib/env`); `LIMITS[plan].aiScreenshots: number`, `AI_LIMIT_MESSAGE`, `AI_DAILY_MESSAGE` (from `@/lib/billing/limits`).
 
 - [ ] **Step 1: Update the limits test to expect the new field**
@@ -187,10 +189,12 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ### Task 2: Value coercion
 
 **Files:**
+
 - Create: `lib/settings/coerce.ts`
 - Test: `tests/coerce.test.ts`
 
 **Interfaces:**
+
 - Consumes: `valueSchemaFor(def)`, `SettingDefinition`, `SettingValue` from `@/lib/settings/types`.
 - Produces: `coerceValue(def: SettingDefinition, raw: string): SettingValue | null`.
 
@@ -239,7 +243,9 @@ describe("coerceValue", () => {
       "high",
       "low",
     ]);
-    expect(coerceValue(def("multi_select", { options: quality.options }), "High, Ultra")).toBeNull();
+    expect(
+      coerceValue(def("multi_select", { options: quality.options }), "High, Ultra"),
+    ).toBeNull();
   });
 
   it("reads resolutions and colours, keeps free text trimmed, rejects blanks", () => {
@@ -354,11 +360,13 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ### Task 3: Provider contract and matching core
 
 **Files:**
+
 - Rewrite: `lib/providers/screenshot.ts`
 - Create: `lib/ai/screenshot.ts`
 - Test: `tests/screenshot-match.test.ts`
 
 **Interfaces:**
+
 - Consumes: `coerceValue` (Task 2); `CategoryWithSettings` type from `@/lib/data/presets`.
 - Produces (from `@/lib/providers/screenshot`): `ScreenshotImage`, `ScreenshotHints`, `ProposedSetting`, `ParseResult`, `ScreenshotParser`, `getScreenshotParser()` (returns `null` until Task 4 wires the provider).
 - Produces (from `@/lib/ai/screenshot`): `ScreenshotRow`, `normalise`, `buildHints`, `matchProposals`, `mergeRows`.
@@ -440,8 +448,20 @@ import type { ProposedSetting } from "@/lib/providers/screenshot";
 
 type S = CategoryWithSettings["settings"][number];
 const setting = (id: string, name: string, type: S["type"], extra: Partial<S> = {}) =>
-  ({ id, name, type, value: null, options: null, min: null, max: null, step: null, unit: null, ...extra }) as S;
-const cat = (id: string, name: string, settings: S[]) => ({ id, name, settings }) as CategoryWithSettings;
+  ({
+    id,
+    name,
+    type,
+    value: null,
+    options: null,
+    min: null,
+    max: null,
+    step: null,
+    unit: null,
+    ...extra,
+  }) as S;
+const cat = (id: string, name: string, settings: S[]) =>
+  ({ id, name, settings }) as CategoryWithSettings;
 
 const categories = [
   cat("c1", "Video", [
@@ -463,7 +483,10 @@ const proposal = (over: Partial<ProposedSetting>): ProposedSetting => ({
 describe("matchProposals", () => {
   it("matches by normalised name, coerces to the setting's type and keeps preset order", () => {
     const rows = matchProposals(
-      [proposal({ name: "v sync", rawValue: "On" }), proposal({ name: "RESOLUTION", rawValue: "2560×1440" })],
+      [
+        proposal({ name: "v sync", rawValue: "On" }),
+        proposal({ name: "RESOLUTION", rawValue: "2560×1440" }),
+      ],
       categories,
     );
     expect(rows).toEqual([
@@ -479,8 +502,15 @@ describe("matchProposals", () => {
   });
 
   it("breaks name ties with the category heading and falls back to the first setting", () => {
-    expect(matchProposals([proposal({ name: "Brightness", category: "audio", rawValue: "50" })], categories)[0]!.settingId).toBe("s4");
-    expect(matchProposals([proposal({ name: "Brightness", rawValue: "50" })], categories)[0]!.settingId).toBe("s3");
+    expect(
+      matchProposals(
+        [proposal({ name: "Brightness", category: "audio", rawValue: "50" })],
+        categories,
+      )[0]!.settingId,
+    ).toBe("s4");
+    expect(
+      matchProposals([proposal({ name: "Brightness", rawValue: "50" })], categories)[0]!.settingId,
+    ).toBe("s3");
   });
 
   it("keeps unreadable values as null with the raw text, and unknown names as new rows", () => {
@@ -532,7 +562,10 @@ describe("mergeRows", () => {
   it("keeps the most confident duplicate across images and lists matched rows first", () => {
     const merged = mergeRows([
       [row({ name: "New thing" }), row({ settingId: "s1", value: 1, confidence: 0.4 })],
-      [row({ settingId: "s1", value: 2, confidence: 0.9 }), row({ name: "new  THING", confidence: 0.2 })],
+      [
+        row({ settingId: "s1", value: 2, confidence: 0.9 }),
+        row({ name: "new  THING", confidence: 0.2 }),
+      ],
     ]);
     expect(merged).toEqual([
       expect.objectContaining({ settingId: "s1", value: 2 }),
@@ -724,12 +757,14 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ### Task 4: Anthropic vision provider
 
 **Files:**
+
 - Create: `lib/providers/anthropic-vision.ts`
 - Modify: `lib/providers/screenshot.ts` (`getScreenshotParser`)
 - Modify: `package.json` (dependency)
 - Test: `tests/anthropic-vision.test.ts`
 
 **Interfaces:**
+
 - Consumes: contract types from Task 3; `env` from `@/lib/env`; `AppError` from `@/lib/data/errors`; `SETTING_TYPE_IDS` from `@/lib/settings/types`.
 - Produces: `createAnthropicParser(client: ParseClient, model: string): ScreenshotParser`, `renderHints(hints): string`, `ParseClient` type; `getScreenshotParser()` now returns the Anthropic parser when `env.AI_VISION_PROVIDER === "anthropic"`.
 
@@ -797,7 +832,13 @@ describe("createAnthropicParser", () => {
     const { client, parse } = clientWith({
       parsed_output: {
         settings: [
-          { name: "Resolution", value: "1920x1080", category: "Video", type: null, confidence: 0.95 },
+          {
+            name: "Resolution",
+            value: "1920x1080",
+            category: "Video",
+            type: null,
+            confidence: 0.95,
+          },
           { name: "Motion Blur", value: "Off", category: "Video", type: "boolean", confidence: 3 },
         ],
       },
@@ -805,12 +846,26 @@ describe("createAnthropicParser", () => {
     const result = await createAnthropicParser(client, "claude-opus-5").parse(image, hints);
     expect(result.usage).toEqual({ inputTokens: 1200, outputTokens: 80, model: "claude-opus-5" });
     expect(result.proposals).toEqual([
-      { name: "Resolution", rawValue: "1920x1080", category: "Video", type: null, confidence: 0.95 },
+      {
+        name: "Resolution",
+        rawValue: "1920x1080",
+        category: "Video",
+        type: null,
+        confidence: 0.95,
+      },
       { name: "Motion Blur", rawValue: "Off", category: "Video", type: "boolean", confidence: 1 },
     ]);
-    const req = parse.mock.calls[0]![0] as { model: string; messages: { content: { type: string; source?: { data: string; media_type: string }; text?: string }[] }[] };
+    const req = parse.mock.calls[0]![0] as {
+      model: string;
+      messages: {
+        content: { type: string; source?: { data: string; media_type: string }; text?: string }[];
+      }[];
+    };
     expect(req.model).toBe("claude-opus-5");
-    expect(req.messages[0]!.content[0]).toMatchObject({ type: "image", source: { media_type: "image/webp", data: Buffer.from([1, 2, 3]).toString("base64") } });
+    expect(req.messages[0]!.content[0]).toMatchObject({
+      type: "image",
+      source: { media_type: "image/webp", data: Buffer.from([1, 2, 3]).toString("base64") },
+    });
     expect(req.messages[0]!.content[1]!.text).toContain("Video › Resolution");
   });
 
@@ -822,14 +877,36 @@ describe("createAnthropicParser", () => {
   });
 
   it("turns SDK errors into user-safe messages", async () => {
-    const auth = Anthropic.APIError.generate(401, { error: { message: "bad key" } }, "bad key", new Headers());
-    const client = { messages: { parse: vi.fn(async () => { throw auth; }) } } as unknown as ParseClient;
+    const auth = Anthropic.APIError.generate(
+      401,
+      { error: { message: "bad key" } },
+      "bad key",
+      new Headers(),
+    );
+    const client = {
+      messages: {
+        parse: vi.fn(async () => {
+          throw auth;
+        }),
+      },
+    } as unknown as ParseClient;
     await expect(createAnthropicParser(client, "m").parse(image, hints)).rejects.toMatchObject({
       name: "AppError",
       message: expect.stringContaining("AI_VISION_API_KEY"),
     });
-    const busy = Anthropic.APIError.generate(429, { error: { message: "slow down" } }, "slow down", new Headers());
-    const client2 = { messages: { parse: vi.fn(async () => { throw busy; }) } } as unknown as ParseClient;
+    const busy = Anthropic.APIError.generate(
+      429,
+      { error: { message: "slow down" } },
+      "slow down",
+      new Headers(),
+    );
+    const client2 = {
+      messages: {
+        parse: vi.fn(async () => {
+          throw busy;
+        }),
+      },
+    } as unknown as ParseClient;
     await expect(createAnthropicParser(client2, "m").parse(image, hints)).rejects.toMatchObject({
       message: expect.stringContaining("busy"),
     });
@@ -1011,12 +1088,14 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ### Task 5: `ai_requests` table and the data layer
 
 **Files:**
+
 - Modify: `lib/db/schema.ts` (after `deviceGames`)
 - Create: `drizzle/0004_ai_requests.sql` (generated)
 - Modify: `lib/data/settings.ts:27-33` (`getCategory`), `:146-156` (`createSetting`), `:183-211` (`updateSettingValues`)
 - Create: `lib/data/ai.ts`
 
 **Interfaces:**
+
 - Consumes: `getScreenshotParser`, `buildHints`, `matchProposals`, `ScreenshotRow`; `getPlan`, `limitsFor`, messages (Task 1); `getPresetFull`, `getGameById`, `createRevision`.
 - Produces: `schema.aiRequests`; `assertCanAnalyse(userId)`, `analyseScreenshot(userId, presetId, image): Promise<{ rows: ScreenshotRow[] }>`, `applyScreenshotRows(userId, presetId, updates, creates): Promise<{ updated: number; created: number }>`, `ScreenshotCreate` type; `createSetting(userId, input, tx?)`, `updateSettingValues(userId, presetId, updates, tx?)`.
 
@@ -1220,10 +1299,12 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ### Task 6: Route handler and apply action
 
 **Files:**
+
 - Create: `app/api/ai/screenshot/route.ts`
 - Create: `lib/actions/ai.ts`
 
 **Interfaces:**
+
 - Consumes: `analyseScreenshot`, `applyScreenshotRows` (Task 5); `detectImageType` from `@/lib/data/attachments`; `getSession` from `@/lib/auth/session`; `runAction` from `./shared`.
 - Produces: `POST /api/ai/screenshot?preset=<uuid>` → `200 { rows: ScreenshotRow[] }` | `4xx/5xx { error }`; `applyScreenshotAction(raw): ActionResult<{ updated: number; created: number }>`.
 
@@ -1341,12 +1422,14 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ### Task 7: Review dialog and menu entry
 
 **Files:**
+
 - Create: `components/presets/screenshot-dialog.tsx`
 - Modify: `components/presets/preset-actions.tsx` (props, menu item, dialog)
 - Modify: `components/presets/preset-header.tsx` (prop passthrough)
 - Modify: `app/(app)/games/[gameSlug]/[presetSlug]/page.tsx` (build the `ai` prop)
 
 **Interfaces:**
+
 - Consumes: `mergeRows`, `ScreenshotRow`, `normalise` from `@/lib/ai/screenshot`; `applyScreenshotAction`; `SettingControl` (`components/settings/setting-control.tsx`: props `def, value, onChange, id, label, disabled?, layout?`); `formatValue`, `SETTING_TYPES`, `SETTING_TYPE_IDS`; `screenshotAssistantEnabled` from `@/lib/env`; `getPlan`.
 - Produces: `ScreenshotMenuProps = { enabled: boolean; pro: boolean; categories: { id: string; name: string }[] }` exported from `screenshot-dialog.tsx` and accepted as `ai?: ScreenshotMenuProps | null` by `PresetActionsMenu` and `PresetHeader`.
 
@@ -1436,7 +1519,8 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
     return {
       ...r,
       key: r.settingId ?? `new:${normalise(r.name)}`,
-      checked: r.settingId != null && r.value != null && r.confidence >= 0.5 && !same(r.value, r.current),
+      checked:
+        r.settingId != null && r.value != null && r.confidence >= 0.5 && !same(r.value, r.current),
       categoryId: guess?.id ?? categories[0]?.id ?? null,
     };
   };
@@ -1481,19 +1565,30 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
 
   const matched = rows.filter((r) => r.settingId);
   const fresh = rows.filter((r) => !r.settingId);
-  const selected = rows.filter((r) => r.checked && r.value != null && (r.settingId || r.categoryId));
+  const selected = rows.filter(
+    (r) => r.checked && r.value != null && (r.settingId || r.categoryId),
+  );
 
   const apply = () =>
     startTransition(async () => {
       const r = await applyScreenshotAction({
         presetId,
-        updates: selected.filter((r) => r.settingId).map((r) => ({ id: r.settingId!, value: r.value })),
+        updates: selected
+          .filter((r) => r.settingId)
+          .map((r) => ({ id: r.settingId!, value: r.value })),
         creates: selected
           .filter((r) => !r.settingId)
-          .map((r) => ({ categoryId: r.categoryId!, name: r.name, type: r.def.type, value: r.value })),
+          .map((r) => ({
+            categoryId: r.categoryId!,
+            name: r.name,
+            type: r.def.type,
+            value: r.value,
+          })),
       });
       if (!r.ok) return toastError(r.error);
-      toast.success(`Applied ${plural(r.data.updated + r.data.created, "setting")} from your screenshots`);
+      toast.success(
+        `Applied ${plural(r.data.updated + r.data.created, "setting")} from your screenshots`,
+      );
       router.refresh();
       close(false);
     });
@@ -1502,7 +1597,11 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
     <Dialog open={open} onOpenChange={close}>
       <DialogContent
         title="Import from screenshot"
-        description={phase === "review" ? "Tick what to apply. Nothing is saved until you press Apply." : PRIVACY}
+        description={
+          phase === "review"
+            ? "Tick what to apply. Nothing is saved until you press Apply."
+            : PRIVACY
+        }
         size={phase === "review" ? "lg" : "md"}
       >
         {!pro ? (
@@ -1517,7 +1616,8 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
           </div>
         ) : phase === "analysing" ? (
           <div className="flex items-center gap-2 py-6 text-[13px] text-ink-2" role="status">
-            <Loader2 className="size-4 animate-spin" /> Reading {plural(files.length, "screenshot")}…
+            <Loader2 className="size-4 animate-spin" /> Reading {plural(files.length, "screenshot")}
+            …
           </div>
         ) : phase === "pick" ? (
           <div className="flex flex-col gap-4">
@@ -1527,7 +1627,8 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
               accept="image/png,image/jpeg,image/webp"
               onChange={(e) => {
                 const list = Array.from(e.target.files ?? []);
-                if (list.length > MAX_FILES) toast.error(`Up to ${MAX_FILES} screenshots at a time.`);
+                if (list.length > MAX_FILES)
+                  toast.error(`Up to ${MAX_FILES} screenshots at a time.`);
                 setFiles(list.slice(0, MAX_FILES));
               }}
             />
@@ -1555,7 +1656,9 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
           <div className="flex flex-col gap-5">
             {matched.length ? (
               <section>
-                <h3 className="mb-1 text-xs font-medium tracking-wide text-ink-3 uppercase">In this preset</h3>
+                <h3 className="mb-1 text-xs font-medium tracking-wide text-ink-3 uppercase">
+                  In this preset
+                </h3>
                 <ul>
                   {matched.map((r) => (
                     <li
@@ -1577,7 +1680,9 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                           {r.category ? `${r.category} · ` : ""}Now: {formatValue(r.def, r.current)}
                         </div>
                         {r.value == null ? (
-                          <div className="text-xs text-note">Read as “{r.rawValue}” — pick the value by hand.</div>
+                          <div className="text-xs text-note">
+                            Read as “{r.rawValue}” — pick the value by hand.
+                          </div>
                         ) : null}
                       </div>
                       <div className="col-start-2 sm:col-start-3">
@@ -1598,9 +1703,13 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
 
             {fresh.length ? (
               <section>
-                <h3 className="mb-1 text-xs font-medium tracking-wide text-ink-3 uppercase">Not in this preset</h3>
+                <h3 className="mb-1 text-xs font-medium tracking-wide text-ink-3 uppercase">
+                  Not in this preset
+                </h3>
                 {categories.length === 0 ? (
-                  <p className="text-[13px] text-ink-2">Add a category to this preset first to create these.</p>
+                  <p className="text-[13px] text-ink-2">
+                    Add a category to this preset first to create these.
+                  </p>
                 ) : null}
                 <ul>
                   {fresh.map((r) => (
@@ -1623,7 +1732,13 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                         />
                         <Select
                           value={r.def.type}
-                          onValueChange={(t) => update(r.key, { def: { type: t as SettingTypeId }, value: null, checked: false })}
+                          onValueChange={(t) =>
+                            update(r.key, {
+                              def: { type: t as SettingTypeId },
+                              value: null,
+                              checked: false,
+                            })
+                          }
                         >
                           <SelectTrigger aria-label="Type">
                             <SelectValue />
@@ -1659,7 +1774,12 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                             def={r.def}
                             value={r.value}
                             layout="row"
-                            onChange={(v) => update(r.key, { value: v, checked: v != null && categories.length > 0 })}
+                            onChange={(v) =>
+                              update(r.key, {
+                                value: v,
+                                checked: v != null && categories.length > 0,
+                              })
+                            }
                           />
                           {r.value == null ? (
                             <div className="mt-1 text-xs text-note">Read as “{r.rawValue}”.</div>
@@ -1676,7 +1796,12 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
               <Button variant="secondary" onClick={() => setPhase("pick")}>
                 Add more screenshots
               </Button>
-              <Button variant="primary" onClick={apply} loading={pending} disabled={selected.length === 0}>
+              <Button
+                variant="primary"
+                onClick={apply}
+                loading={pending}
+                disabled={selected.length === 0}
+              >
                 Apply {plural(selected.length, "change")}
               </Button>
             </DialogFooter>
@@ -1710,7 +1835,9 @@ async function downscale(file: File): Promise<Blob> {
     canvas.height = Math.round(bitmap.height * scale);
     canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
     bitmap.close();
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/webp", 0.85),
+    );
     return blob && blob.size < file.size ? blob : file;
   } catch {
     return file;
@@ -1729,30 +1856,34 @@ In `components/presets/preset-actions.tsx`:
 - After the "Game config files…" item (still before the Archive item):
 
 ```tsx
-          {ai?.enabled ? (
-            <DropdownMenuItem onSelect={() => setScreenshot(true)}>
-              <ScanText /> Import from screenshot…
-              {!ai.pro ? (
-                <Badge variant="accent" className="ml-auto">
-                  Pro
-                </Badge>
-              ) : null}
-            </DropdownMenuItem>
-          ) : null}
+{
+  ai?.enabled ? (
+    <DropdownMenuItem onSelect={() => setScreenshot(true)}>
+      <ScanText /> Import from screenshot…
+      {!ai.pro ? (
+        <Badge variant="accent" className="ml-auto">
+          Pro
+        </Badge>
+      ) : null}
+    </DropdownMenuItem>
+  ) : null;
+}
 ```
 
 - After the `ConfigFilesDialog` block:
 
 ```tsx
-      {ai?.enabled ? (
-        <ScreenshotDialog
-          open={screenshot}
-          onOpenChange={setScreenshot}
-          presetId={preset.id}
-          pro={ai.pro}
-          categories={ai.categories}
-        />
-      ) : null}
+{
+  ai?.enabled ? (
+    <ScreenshotDialog
+      open={screenshot}
+      onOpenChange={setScreenshot}
+      presetId={preset.id}
+      pro={ai.pro}
+      categories={ai.categories}
+    />
+  ) : null;
+}
 ```
 
 - [ ] **Step 3: Pass it through `PresetHeader`**
@@ -1797,6 +1928,7 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ### Task 8: Docs, manual verification, PR
 
 **Files:**
+
 - Modify: `docs/architecture/ai-providers.md`
 - Modify: `docs/self-hosting.md:48` and the "off by default" table row
 - Modify: `README.md:70` (one-line description only if it still says "optional screenshot assistant" — make it "the Pro screenshot importer")
@@ -1822,11 +1954,12 @@ and an explicit Apply.
    per image for the daily cap and cost visibility.
 
 ## Configuration
-
 ```
-AI_VISION_PROVIDER=anthropic   # empty = disabled
+
+AI_VISION_PROVIDER=anthropic # empty = disabled
 AI_VISION_API_KEY=sk-ant-…
-AI_VISION_MODEL=claude-opus-5  # optional
+AI_VISION_MODEL=claude-opus-5 # optional
+
 ```
 
 Keys are read server-side only. The cap is `LIMITS.pro.aiScreenshots` (30 images per rolling
