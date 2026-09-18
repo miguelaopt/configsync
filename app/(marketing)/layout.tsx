@@ -4,7 +4,7 @@ import { LegalLinks } from "@/components/marketing/legal";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col bg-stage">
       <header className="flex h-14 items-center px-4 sm:px-6">
         <Link href="/" aria-label="ConfigSync home" className="rounded-sm">
           <Logo />
