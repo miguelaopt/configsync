@@ -1,0 +1,9 @@
+# Production reverse proxy: TLS from Let's Encrypt, www → apex. APP_DOMAIN comes from .env.
+{$APP_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:3000
+}
+
+www.{$APP_DOMAIN} {
+	redir https://{$APP_DOMAIN}{uri} permanent
+}
