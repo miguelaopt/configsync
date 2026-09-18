@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { getProfile, requireUser } from "@/lib/auth/session";
 import { getGameBySlug, listPresetsForGame, touchGameOpened } from "@/lib/data/games";
 import { exportGame } from "@/lib/data/export";
+import { getPlan } from "@/lib/billing/plan";
+import { deviceRowsForGame } from "@/lib/data/devices";
+import { DevicePresetsCard } from "@/components/games/device-presets-card";
 import { Page, PageHeader } from "@/components/app/page-header";
 import { GameHeader } from "@/components/games/game-header";
 import { PresetList } from "@/components/presets/preset-list";
@@ -24,12 +27,17 @@ export default async function GamePage({ params }: { params: Params<"gameSlug"> 
   const { gameSlug } = await params;
   const game = await getGameBySlug(user.id, gameSlug);
   if (!game) notFound();
-  const [presets, profile, doc] = await Promise.all([
+  const [presets, profile, doc, , { plan }] = await Promise.all([
     listPresetsForGame(user.id, game.id),
     getProfile(user.id),
     exportGame(user.id, game.id),
     touchGameOpened(user.id, game.id),
+    getPlan(user.id),
   ]);
+  const deviceRows =
+    game.catalogId && plan === "pro"
+      ? await deviceRowsForGame(user.id, { id: game.id, catalogId: game.catalogId })
+      : [];
 
   // Whole-game copy payload: one "category" per preset+category so the output stays readable.
   const copyPayload: CopyPayload = {
@@ -54,6 +62,15 @@ export default async function GamePage({ params }: { params: Params<"gameSlug"> 
           copyFormat={profile?.preferences.copyFormat ?? "plain"}
         />
         <PresetList presets={presets} gameId={game.id} gameSlug={game.slug} />
+        {deviceRows.length ? (
+          <DevicePresetsCard
+            gameId={game.id}
+            devices={deviceRows}
+            presets={presets
+              .filter((p) => !p.isArchived)
+              .map((p) => ({ id: p.id, name: p.name, isDefault: p.isDefault }))}
+          />
+        ) : null}
       </div>
     </Page>
   );
