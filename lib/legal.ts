@@ -10,7 +10,7 @@ export const LEGAL = {
   /** Country of establishment and governing law. */
   country: "Portugal",
   /** TODO: postal address required by EU e-commerce rules (can be a business address service). */
-  address: "TODO: street, postcode, city, Portugal",
+  address: "Praça das Palmeiras lt120, Viseu, Portugal",
   /** TODO: tax id (NIF). Leave empty to hide the line. */
   taxId: "",
   /** Contact for support, privacy requests and refunds. */
