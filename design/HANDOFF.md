@@ -13,6 +13,7 @@ settings — and it works. Every other section is the same rows at smaller scale
 Boldness is spent once, in the hero; everything else is quiet.
 
 ### Palette (dark, default)
+
 - Stage `#0e1115` — page ground, one step darker than the app (new token)
 - Ground `#12161c` — the app's ground; every demo panel sits on it
 - Raised `#1f252e` — rows, controls
@@ -27,6 +28,7 @@ deeper amber (`#7a4f08` = 7.1:1 on white; `#8a5a0a` = 5.9:1); button fills
 keep `#e9b44c` with `#1a1408` ink.
 
 ### Type
+
 - Barlow Semi Condensed 600 for headlines, 500 for row labels inside demos
   (condensed sans is what options menus are set in — that is why it stays)
 - Geist Sans body 16/1.55, measure ≤ 64ch
@@ -35,10 +37,12 @@ keep `#e9b44c` with `#1a1408` ink.
 - Hero h1 ~44 px desktop / 31 px mobile. Strong, not giant.
 
 ### Layout
+
 One left-aligned column. Text at 640 px, demos widen to 1040 px (own wrapper
 inside the layout's max-w-3xl). Nothing centred, no grid of equal cards.
 
 ### Hero
+
 ```
   Your settings. Every game. Every PC.
   Save them once. Keep presets per game, compare
@@ -61,6 +65,7 @@ inside the layout's max-w-3xl). Nothing centred, no grid of equal cards.
   │  Jump                     [Space]  [Mouse 4]                    │
   └─────────────────────────────────────────────────────────────────┘
 ```
+
 - Game tabs switch the menu: CS2 (mouse/video/keys) ↔ Rocket League (camera:
   FOV 110, Distance 270, Height 100, Stiffness 0.45, Angle −3.0, Deadzone 0.05;
   Powerslide [Shift]) ↔ "Add a game" (empty menu, one line inviting input).
@@ -73,6 +78,7 @@ inside the layout's max-w-3xl). Nothing centred, no grid of equal cards.
 - Page <title>: "Your game settings. One place."
 
 ### Sections (each demonstrates one real capability with the same row grammar)
+
 1. Hero — as above.
 2. Presets and history — one game, three presets; a list of saves
    (timestamp, what changed) with a Restore action. Set Default, Duplicate,
@@ -96,10 +102,11 @@ inside the layout's max-w-3xl). Nothing centred, no grid of equal cards.
    settings; only the companion, run by the user, touches game files; no
    analytics, no trackers; export any time; Paddle is merchant of record.
 10. Final CTA — Create a free account.
-Footer (Terms, Privacy, Refunds, Contact hello@configsync.app) comes from the
-layout. Cut any section that does not demonstrate something.
+    Footer (Terms, Privacy, Refunds, Contact hello@configsync.app) comes from the
+    layout. Cut any section that does not demonstrate something.
 
 ## Decisions already made (do not reopen)
+
 - Dark-first, keep. Light must still read.
 - Do NOT mention open source, source-available, GitHub or self-hosting.
 - Companion is shipped, not "coming soon".
@@ -113,6 +120,7 @@ layout. Cut any section that does not demonstrate something.
   header change as a rollout item in the handover.
 
 ## Must not appear
+
 Neon/RGB, purple-blue-pink gradients, glowing borders, black + electric blue,
 glassmorphism/blur, giant hero type, stock gaming imagery, 3-column
 icon-title-paragraph rows, rounded-card grids and pills, one giant dashboard
@@ -124,12 +132,14 @@ labels, "A · B · C" meta strings, "→" on links, one accent-coloured word in 
 headline.
 
 ## Writing
+
 Plain verbs, sentence case, active voice, short sentences, a little dry.
 Buttons say what happens: "Create a free account", "Sign in", "Restore",
 "Copy preset". Name things as a player would. Real copy from the facts only.
 Prices exactly: 2.99 €/month, 24.99 € once.
 
 ## Hard constraints
+
 - Next.js 16 App Router, React 19, Tailwind v4; tokens exposed as utilities
   (bg-ground, text-ink-2, border-line, text-accent, font-display, …).
 - Reuse Button (primary / secondary / ghost / link; sm / md / lg) and Logo from
@@ -144,6 +154,7 @@ Prices exactly: 2.99 €/month, 24.99 € once.
   No layout shift. Respect prefers-reduced-motion.
 
 ## Process
+
 1. Write the plan for direction A: palette, type roles and scale, layout with
    ASCII wireframes for the hero and one more section, alignment, principles.
 2. Review the plan against this document: for each part, ask whether any dark
