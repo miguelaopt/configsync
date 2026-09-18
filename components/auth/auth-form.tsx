@@ -6,6 +6,7 @@ import { authClient } from "@/lib/auth/client";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 
 function GithubIcon() {
   return (
@@ -34,6 +35,37 @@ function friendly(error: { code?: string; message?: string; status?: number } | 
   return FRIENDLY[error.code ?? ""] ?? error.message ?? "Something went wrong. Try again.";
 }
 
+/** Label with the required mark drawn by CSS, so the accessible name stays "Email", "Password"… */
+const Req = ({ children }: { children: React.ReactNode }) => (
+  <span className="after:ml-0.5 after:text-accent after:content-['*']">{children}</span>
+);
+
+function OrDivider() {
+  return (
+    <div className="my-6 flex items-center gap-4 text-[11px] font-medium tracking-[0.12em] text-ink-3">
+      <span className="h-px flex-1 bg-line" />
+      OR
+      <span className="h-px flex-1 bg-line" />
+    </div>
+  );
+}
+
+function GithubButton({ label, next }: { label: string; next: string }) {
+  return (
+    <Button
+      type="button"
+      variant="secondary"
+      size="lg"
+      className="h-12 w-full bg-[#2b2e42] hover:bg-[#343852]"
+      onClick={() => authClient.signIn.social({ provider: "github", callbackURL: next })}
+    >
+      <GithubIcon /> {label}
+    </Button>
+  );
+}
+
+const FIELD = "h-12 bg-[#151827] text-[15px] placeholder:text-ink-3";
+
 export function SignInForm({ githubEnabled }: { githubEnabled: boolean }) {
   const router = useRouter();
   const params = useSearchParams();
@@ -56,36 +88,30 @@ export function SignInForm({ githubEnabled }: { githubEnabled: boolean }) {
 
   return (
     <div>
-      <h1 className="font-display text-[26px] font-semibold tracking-tight">Welcome back</h1>
-      <p className="mt-1 text-[13px] text-ink-2">Your settings are where you left them.</p>
-      <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
-        <Field label="Email" htmlFor="email">
+      <h1 className="font-display text-[30px] font-semibold tracking-tight">Sign in</h1>
+      <form onSubmit={submit} className="mt-8 flex flex-col gap-5" noValidate>
+        <Field label={<Req>Email</Req>} htmlFor="email">
           <Input
             id="email"
             type="email"
+            placeholder="Email"
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             autoFocus
+            className={FIELD}
           />
         </Field>
-        <Field
-          label="Password"
-          htmlFor="password"
-          hint={
-            <Link href="/forgot-password" className="text-ink-2 hover:text-ink">
-              Forgot password?
-            </Link>
-          }
-        >
-          <Input
+        <Field label={<Req>Password</Req>} htmlFor="password">
+          <PasswordInput
             id="password"
-            type="password"
+            placeholder="Password"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className={FIELD}
           />
         </Field>
         {error ? (
@@ -96,33 +122,26 @@ export function SignInForm({ githubEnabled }: { githubEnabled: boolean }) {
             {error}
           </p>
         ) : null}
-        <Button type="submit" variant="primary" size="lg" loading={pending} className="mt-1">
+        <Button type="submit" variant="primary" size="lg" loading={pending} className="h-12 w-full">
           Sign in
         </Button>
       </form>
       {githubEnabled ? (
         <>
-          <div className="my-5 flex items-center gap-3 text-xs text-ink-3">
-            <span className="h-px flex-1 bg-line" /> or <span className="h-px flex-1 bg-line" />
-          </div>
-          <Button
-            type="button"
-            variant="secondary"
-            size="lg"
-            className="w-full"
-            onClick={() => authClient.signIn.social({ provider: "github", callbackURL: next })}
-          >
-            <GithubIcon /> Continue with GitHub
-          </Button>
+          <OrDivider />
+          <GithubButton label="Sign in with GitHub" next={next} />
         </>
       ) : null}
-      <p className="mt-6 text-center text-[13px] text-ink-2">
-        New here?{" "}
+      <p className="mt-8 flex items-center justify-center gap-4 text-[14px] text-ink-2">
+        <Link href="/forgot-password" className="hover:text-ink">
+          Forgot password?
+        </Link>
+        <span aria-hidden className="h-4 w-px bg-line-strong" />
         <Link
           href={`/sign-up${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`}
-          className="text-ink underline underline-offset-4"
+          className="hover:text-ink"
         >
-          Create an account
+          Sign up
         </Link>
       </p>
     </div>
@@ -153,47 +172,46 @@ export function SignUpForm({ githubEnabled }: { githubEnabled: boolean }) {
 
   return (
     <div>
-      <h1 className="font-display text-[26px] font-semibold tracking-tight">
-        Create your free account
-      </h1>
-      <p className="mt-1 text-[13px] text-ink-2">
+      <h1 className="font-display text-[30px] font-semibold tracking-tight">Sign up</h1>
+      <p className="mt-2 text-[14px] text-ink-2">
         Three games, the companion and a public profile — free. Export any time.
       </p>
-      <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
-        <Field
-          label="Name"
-          htmlFor="name"
-          hint="Shown in the app. Your username is picked from it and can be changed later."
-        >
+      <form onSubmit={submit} className="mt-8 flex flex-col gap-5" noValidate>
+        <Field label={<Req>Name</Req>} htmlFor="name">
           <Input
             id="name"
+            placeholder="Name"
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
             autoFocus
             maxLength={80}
+            className={FIELD}
           />
         </Field>
-        <Field label="Email" htmlFor="email">
+        <Field label={<Req>Email</Req>} htmlFor="email">
           <Input
             id="email"
             type="email"
+            placeholder="Email"
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className={FIELD}
           />
         </Field>
-        <Field label="Password" htmlFor="password" hint="At least 8 characters.">
-          <Input
+        <Field label={<Req>Password</Req>} htmlFor="password" hint="At least 8 characters.">
+          <PasswordInput
             id="password"
-            type="password"
+            placeholder="Password"
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={8}
+            className={FIELD}
           />
         </Field>
         {error ? (
@@ -204,27 +222,17 @@ export function SignUpForm({ githubEnabled }: { githubEnabled: boolean }) {
             {error}
           </p>
         ) : null}
-        <Button type="submit" variant="primary" size="lg" loading={pending} className="mt-1">
+        <Button type="submit" variant="primary" size="lg" loading={pending} className="h-12 w-full">
           Create account
         </Button>
       </form>
       {githubEnabled ? (
         <>
-          <div className="my-5 flex items-center gap-3 text-xs text-ink-3">
-            <span className="h-px flex-1 bg-line" /> or <span className="h-px flex-1 bg-line" />
-          </div>
-          <Button
-            type="button"
-            variant="secondary"
-            size="lg"
-            className="w-full"
-            onClick={() => authClient.signIn.social({ provider: "github", callbackURL: next })}
-          >
-            <GithubIcon /> Continue with GitHub
-          </Button>
+          <OrDivider />
+          <GithubButton label="Sign up with GitHub" next={next} />
         </>
       ) : null}
-      <p className="mt-5 text-center text-xs leading-relaxed text-ink-3">
+      <p className="mt-6 text-center text-xs leading-relaxed text-ink-3">
         By creating an account you agree to the{" "}
         <Link href="/terms" className="text-ink-2 underline underline-offset-4 hover:text-ink">
           Terms
@@ -235,9 +243,13 @@ export function SignUpForm({ githubEnabled }: { githubEnabled: boolean }) {
         </Link>
         .
       </p>
-      <p className="mt-4 text-center text-[13px] text-ink-2">
-        Already have an account?{" "}
-        <Link href="/sign-in" className="text-ink underline underline-offset-4">
+      <p className="mt-6 flex items-center justify-center gap-4 text-[14px] text-ink-2">
+        <span>Already have an account?</span>
+        <span aria-hidden className="h-4 w-px bg-line-strong" />
+        <Link
+          href={`/sign-in${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`}
+          className="hover:text-ink"
+        >
           Sign in
         </Link>
       </p>
@@ -267,7 +279,7 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div>
-        <h1 className="font-display text-2xl">Check your email</h1>
+        <h1 className="font-display text-[30px] font-semibold tracking-tight">Check your email</h1>
         <p className="mt-2 text-[13px] leading-relaxed text-ink-2">
           If an account exists for <span className="text-ink">{email}</span>, a reset link is on its
           way. It expires in one hour.
@@ -284,18 +296,20 @@ export function ForgotPasswordForm() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl">Reset your password</h1>
-      <p className="mt-1 text-[13px] text-ink-2">Enter your email and we’ll send a reset link.</p>
-      <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
-        <Field label="Email" htmlFor="email">
+      <h1 className="font-display text-[30px] font-semibold tracking-tight">Reset your password</h1>
+      <p className="mt-2 text-[14px] text-ink-2">Enter your email and we’ll send a reset link.</p>
+      <form onSubmit={submit} className="mt-8 flex flex-col gap-5" noValidate>
+        <Field label={<Req>Email</Req>} htmlFor="email">
           <Input
             id="email"
             type="email"
+            placeholder="Email"
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             autoFocus
+            className={FIELD}
           />
         </Field>
         {error ? (
@@ -306,7 +320,7 @@ export function ForgotPasswordForm() {
             {error}
           </p>
         ) : null}
-        <Button type="submit" variant="primary" size="lg" loading={pending}>
+        <Button type="submit" variant="primary" size="lg" loading={pending} className="h-12 w-full">
           Send reset link
         </Button>
       </form>
@@ -343,27 +357,31 @@ export function ResetPasswordForm() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl">Choose a new password</h1>
-      <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
-        <Field label="New password" htmlFor="password" hint="At least 8 characters.">
-          <Input
+      <h1 className="font-display text-[30px] font-semibold tracking-tight">
+        Choose a new password
+      </h1>
+      <form onSubmit={submit} className="mt-8 flex flex-col gap-5" noValidate>
+        <Field label={<Req>New password</Req>} htmlFor="password" hint="At least 8 characters.">
+          <PasswordInput
             id="password"
-            type="password"
+            placeholder="New password"
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             autoFocus
+            className={FIELD}
           />
         </Field>
-        <Field label="Confirm password" htmlFor="confirm">
-          <Input
+        <Field label={<Req>Confirm password</Req>} htmlFor="confirm">
+          <PasswordInput
             id="confirm"
-            type="password"
+            placeholder="Confirm password"
             autoComplete="new-password"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             required
+            className={FIELD}
           />
         </Field>
         {error ? (
@@ -374,7 +392,7 @@ export function ResetPasswordForm() {
             {error}
           </p>
         ) : null}
-        <Button type="submit" variant="primary" size="lg" loading={pending}>
+        <Button type="submit" variant="primary" size="lg" loading={pending} className="h-12 w-full">
           Update password
         </Button>
       </form>
