@@ -28,6 +28,7 @@
     "csync": "node companion/bin/csync.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.126.0",
     "@fontsource/barlow-semi-condensed": "^5.3.0",
     "better-auth": "^1.7.4",
     "class-variance-authority": "^0.7.1",

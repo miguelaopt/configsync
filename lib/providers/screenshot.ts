@@ -9,7 +9,10 @@
  * Providers are selected by AI_VISION_PROVIDER. See docs/architecture/ai-providers.md.
  */
 import "server-only";
+import Anthropic from "@anthropic-ai/sdk";
+import { env } from "@/lib/env";
 import type { SettingTypeId } from "@/lib/settings/types";
+import { createAnthropicParser } from "./anthropic-vision";
 
 export type ScreenshotImage = {
   bytes: Uint8Array;
@@ -53,6 +56,19 @@ export interface ScreenshotParser {
  * Resolves the configured parser, or null when AI is not configured so callers can hide
  * the feature instead of failing. Adding a provider = implement ScreenshotParser + a case here.
  */
+let parser: ScreenshotParser | null | undefined;
+
 export function getScreenshotParser(): ScreenshotParser | null {
-  return null;
+  if (parser !== undefined) return parser;
+  switch (env.AI_VISION_PROVIDER) {
+    case "anthropic":
+      parser = createAnthropicParser(
+        new Anthropic({ apiKey: env.AI_VISION_API_KEY, timeout: 60_000, maxRetries: 1 }),
+        env.AI_VISION_MODEL,
+      );
+      break;
+    default:
+      parser = null;
+  }
+  return parser;
 }
