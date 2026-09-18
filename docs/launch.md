@@ -156,7 +156,8 @@ local `.env` for development.
 - [ ] Developer tools → Notifications → destination `https://configsync.app/api/billing/paddle`,
       webhook, events `transaction.completed`, `subscription.activated`, `subscription.updated`,
       `subscription.canceled`, `subscription.past_due`, `subscription.paused`,
-      `subscription.resumed`. Copy the secret (`pdl_ntfset_…`).
+      `subscription.resumed`, `adjustment.created`, `adjustment.updated`. Copy the secret
+      (`pdl_ntfset_…`).
 - [ ] Checkout → Checkout settings → default payment link `https://configsync.app/pricing`.
 - [ ] `.env`:
 
@@ -180,13 +181,9 @@ Check — one real purchase:
 1. Private window, new account, `/pricing` → Monthly → pay with your own card.
 2. Header shows **Pro**; Settings → Plan shows the subscription; Paddle → Transactions shows it;
    `docker compose logs app | grep csync:billing` shows no warnings.
-3. Paddle → the transaction → Refund, and cancel the subscription immediately when asked.
-   `subscription.canceled` arrives and the account stays Pro until the period end that Paddle
-   reports (`resolvePlan`). Refunds themselves are **not** handled by the webhook yet, so to
-   honour the refund policy today run
-   `docker compose exec db psql -U gsv gsv -c "delete from plans where user_id = '<id>';"`
-   after refunding (see §10 for the proper fix).
-4. Repeat once for Lifetime if you want to see the `lifetime` source; refund and delete the row.
+3. Paddle → the transaction → Refund (full). `adjustment.created` with status `approved`
+   arrives and the account is Free within seconds — check the header badge.
+4. Repeat once for Lifetime if you want to see the `lifetime` source; refund it too.
 
 ## 7. Optional switches
 
@@ -246,9 +243,6 @@ gunzip -c ~/backups/gsv-<date>.sql.gz | docker compose exec -T db psql -U gsv gs
 
 ## 10. After launch
 
-- **First code follow-up:** handle Paddle refunds in `lib/billing/paddle.ts` — subscribe to
-  `adjustment.created` (action `refund`/`chargeback`) and downgrade the `plans` row, so the
-  refund policy's "Pro is switched off when the refund is issued" needs no manual SQL.
 - Watch `ai_requests` and the Paddle dashboard for the first weeks; adjust
   `LIMITS.pro.aiScreenshots` if the AI bill surprises you.
 - Roadmap: desktop tray app around `csync watch`; more catalog games (`docs/catalog.md`);

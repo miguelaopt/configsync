@@ -89,8 +89,7 @@ export default function TermsPage() {
         <p>
           We aim to keep the Service running but do not guarantee uninterrupted availability. We may
           change or discontinue features; if we ever discontinue the hosted Service we will give at
-          least 60 days’ notice and export remains available until then. The software is
-          source-available, so you can self-host it.
+          least 60 days’ notice and export remains available until then.
         </p>
       </Section>
 

@@ -89,6 +89,47 @@ describe("applyPaddleEvent", () => {
       current_billing_period: endsAt ? { ends_at: endsAt } : null,
     },
   });
+  const adjustment = (action: string, status: string, type = "full") => ({
+    event_id: "evt_adj",
+    event_type: "adjustment.created",
+    data: { id: "adj_1", action, status, type, customer_id: "ctm_1", subscription_id: "sub_1" },
+  });
+  it("an approved full refund or chargeback revokes Pro, even a lifetime licence", () => {
+    for (const source of ["lifetime", "subscription"] as const) {
+      const next = applyPaddleEvent(
+        row({ source, subscriptionStatus: "active", currentPeriodEnd: new Date("2099-01-01") }),
+        adjustment("refund", "approved"),
+        "u1",
+        LIFETIME,
+      );
+      expect(next).toMatchObject({ source: "subscription", subscriptionStatus: "canceled" });
+      expect(resolvePlan(next, now)).toBe("free");
+    }
+    expect(
+      resolvePlan(
+        applyPaddleEvent(
+          row({ source: "lifetime" }),
+          adjustment("chargeback", "approved"),
+          "u1",
+          LIFETIME,
+        ),
+        now,
+      ),
+    ).toBe("free");
+  });
+  it("pending or partial adjustments and manual grants change nothing", () => {
+    const current = row({ source: "lifetime" });
+    expect(
+      applyPaddleEvent(current, adjustment("refund", "pending_approval"), "u1", LIFETIME),
+    ).toBeNull();
+    expect(
+      applyPaddleEvent(current, adjustment("refund", "approved", "partial"), "u1", LIFETIME),
+    ).toBeNull();
+    expect(applyPaddleEvent(current, adjustment("credit", "approved"), "u1", LIFETIME)).toBeNull();
+    expect(
+      applyPaddleEvent(row({ source: "manual" }), adjustment("refund", "approved"), "u1", LIFETIME),
+    ).toBeNull();
+  });
   it("lifetime transaction sets source lifetime and keeps the customer id", () => {
     const next = applyPaddleEvent(
       null,

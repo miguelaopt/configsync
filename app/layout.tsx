@@ -9,7 +9,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: { default: "ConfigSync", template: "%s · ConfigSync" },
   description:
-    "Your game settings. One place. Save, organize, compare, copy and export settings for any game — open source and self-hostable.",
+    "Your game settings. One place. Save, organize, compare, copy and export settings for any game.",
   applicationName: "ConfigSync",
 };
 

@@ -19,7 +19,7 @@ const FORMATS = [
     format: "md",
     label: "Markdown",
     icon: FileText,
-    hint: "Readable in any notes app or on GitHub.",
+    hint: "Readable in any notes app or Markdown viewer.",
   },
   { format: "csv", label: "CSV", icon: Table, hint: "One row per setting, for spreadsheets." },
 ] as const;

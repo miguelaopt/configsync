@@ -53,6 +53,10 @@ export const paddleEventSchema = z.object({
   data: z.object({
     id: z.string(),
     status: z.string().optional(),
+    /** Adjustments only: refund | chargeback | chargeback_warning | chargeback_reverse | credit. */
+    action: z.string().optional(),
+    /** Adjustments only: full | partial. */
+    type: z.string().optional(),
     customer_id: z.string().nullish(),
     subscription_id: z.string().nullish(),
     custom_data: z.object({ userId: z.string().min(1).max(64).optional() }).nullish(),
@@ -62,7 +66,12 @@ export const paddleEventSchema = z.object({
 });
 export type PaddleEvent = z.infer<typeof paddleEventSchema>;
 
-/** Next plan row after one event; null = nothing to store. Lifetime is never downgraded. */
+const REVOKING_ACTIONS = new Set(["refund", "chargeback"]);
+
+/**
+ * Next plan row after one event; null = nothing to store. Lifetime is downgraded only by an
+ * approved full refund or chargeback; manual grants are never touched by Paddle.
+ */
 export function applyPaddleEvent(
   current: PlanRow | null,
   event: PaddleEvent,
@@ -70,6 +79,19 @@ export function applyPaddleEvent(
   lifetimePriceId: string,
 ): PlanRow | null {
   const d = event.data;
+  if (event.event_type.startsWith("adjustment.")) {
+    const revokes =
+      REVOKING_ACTIONS.has(d.action ?? "") && d.status === "approved" && d.type !== "partial";
+    if (!revokes || current?.source === "manual") return null;
+    return {
+      userId,
+      source: "subscription",
+      paddleCustomerId: d.customer_id ?? current?.paddleCustomerId ?? null,
+      paddleSubscriptionId: d.subscription_id ?? current?.paddleSubscriptionId ?? null,
+      subscriptionStatus: "canceled",
+      currentPeriodEnd: null, // canceled with no paid period left ⇒ free now
+    };
+  }
   if (event.event_type === "transaction.completed") {
     if (!lifetimePriceId || !d.items?.some((i) => i.price.id === lifetimePriceId)) return null;
     return {
