@@ -13,6 +13,7 @@ import {
   FileText,
   MoreHorizontal,
   Pencil,
+  ScanText,
   Star,
   Table,
   Trash2,
@@ -29,6 +30,7 @@ import {
   setPresetFavoriteAction,
   setPresetVisibilityAction,
 } from "@/lib/actions/presets";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/alert-dialog";
 import {
@@ -43,6 +45,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { PresetDialog } from "./preset-dialog";
 import { ConfigFilesDialog } from "./config-files-dialog";
+import { ScreenshotDialog, type ScreenshotMenuProps } from "./screenshot-dialog";
 import { cn } from "@/lib/utils/cn";
 
 type Props = {
@@ -51,6 +54,8 @@ type Props = {
   siblings?: { id: string; name: string }[];
   /** The game's catalog entry, when it has one; enables "Game config files…". */
   catalogEntry?: PublicCatalogEntry | null;
+  /** Screenshot importer availability; undefined hides the entry (list contexts). */
+  ai?: ScreenshotMenuProps | null;
   /** Called after delete when the current page is the preset itself. */
   onDeleted?: () => void;
   onShowHistory?: () => void;
@@ -62,6 +67,7 @@ export function PresetActionsMenu({
   gameSlug,
   siblings = [],
   catalogEntry,
+  ai,
   onDeleted,
   onShowHistory,
   className,
@@ -70,6 +76,7 @@ export function PresetActionsMenu({
   const [editing, setEditing] = React.useState(false);
   const [confirmDelete, setConfirmDelete] = React.useState(false);
   const [configFiles, setConfigFiles] = React.useState(false);
+  const [screenshot, setScreenshot] = React.useState(false);
 
   const run = async (p: Promise<{ ok: boolean; error?: string }>, msg: string) => {
     const r = await p;
@@ -174,6 +181,16 @@ export function PresetActionsMenu({
               <FileCog /> Game config files…
             </DropdownMenuItem>
           ) : null}
+          {ai?.enabled ? (
+            <DropdownMenuItem onSelect={() => setScreenshot(true)}>
+              <ScanText /> Import from screenshot…
+              {!ai.pro ? (
+                <Badge variant="accent" className="ml-auto">
+                  Pro
+                </Badge>
+              ) : null}
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuItem
             onSelect={() =>
               run(
@@ -205,6 +222,15 @@ export function PresetActionsMenu({
           onOpenChange={setConfigFiles}
           presetId={preset.id}
           entry={catalogEntry}
+        />
+      ) : null}
+      {ai?.enabled ? (
+        <ScreenshotDialog
+          open={screenshot}
+          onOpenChange={setScreenshot}
+          presetId={preset.id}
+          pro={ai.pro}
+          categories={ai.categories}
         />
       ) : null}
       <ConfirmDialog

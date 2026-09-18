@@ -29,6 +29,13 @@
       "when": 1789679272727,
       "tag": "0003_public_profile",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789696976201,
+      "tag": "0004_ai_requests",
+      "breakpoints": true
     }
   ]
 }

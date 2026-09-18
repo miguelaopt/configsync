@@ -12,6 +12,7 @@ import { Tooltip } from "@/components/ui/tooltip";
 import { CopyMenu } from "@/components/app/copy-menu";
 import { PresetActionsMenu } from "./preset-actions";
 import { HistoryDialog, type RevisionSummary } from "./history-dialog";
+import type { ScreenshotMenuProps } from "./screenshot-dialog";
 import { timeAgo } from "@/lib/utils/format";
 
 type Props = {
@@ -25,6 +26,8 @@ type Props = {
   catalogEntry?: PublicCatalogEntry | null;
   /** Public URL of this preset when the profile is public; null when the profile is private. */
   publicUrl?: string | null;
+  /** Screenshot importer availability for the actions menu. */
+  ai?: ScreenshotMenuProps | null;
 };
 
 export function PresetHeader({
@@ -37,6 +40,7 @@ export function PresetHeader({
   revisions,
   catalogEntry,
   publicUrl,
+  ai,
 }: Props) {
   const router = useRouter();
   const [history, setHistory] = React.useState(false);
@@ -112,6 +116,7 @@ export function PresetHeader({
             gameSlug={game.slug}
             siblings={siblings}
             catalogEntry={catalogEntry}
+            ai={ai}
             onShowHistory={() => setHistory(true)}
             onDeleted={() => router.push(`/games/${game.slug}`)}
             className="border border-line bg-raised"

@@ -369,6 +369,25 @@ export const deviceGames = pgTable(
   (t) => [uniqueIndex("device_games_uq").on(t.userId, t.device, t.source, t.appId)],
 );
 
+// ---------------------------------------------------------------------------
+// AI: one row per analysed screenshot (rolling daily cap + cost per user)
+// ---------------------------------------------------------------------------
+
+export const aiRequests = pgTable(
+  "ai_requests",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    model: text("model").notNull(),
+    inputTokens: integer("input_tokens").notNull(),
+    outputTokens: integer("output_tokens").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [index("ai_requests_user_created_idx").on(t.userId, t.createdAt)],
+);
+
 export type CompanionToken = typeof companionTokens.$inferSelect;
 export type DeviceGame = typeof deviceGames.$inferSelect;
 

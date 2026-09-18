@@ -24,8 +24,8 @@ async function nextPosition(
 // Categories
 // ----------------------------------------------------------------------------
 
-async function getCategory(userId: string, categoryId: string) {
-  const row = await db.query.categories.findFirst({
+async function getCategory(userId: string, categoryId: string, tx: Tx | typeof db = db) {
+  const row = await tx.query.categories.findFirst({
     where: and(eq(categories.userId, userId), eq(categories.id, categoryId)),
   });
   if (!row) throw notFound("category");
@@ -143,12 +143,12 @@ function assertValueValid(
   }
 }
 
-export async function createSetting(userId: string, input: SettingInput) {
-  const category = await getCategory(userId, input.categoryId);
+export async function createSetting(userId: string, input: SettingInput, tx: Tx | typeof db = db) {
+  const category = await getCategory(userId, input.categoryId, tx);
   assertValueValid(input, input.value);
   assertValueValid(input, input.defaultValue);
-  const next = await nextPosition(db, settings, eq(settings.categoryId, category.id));
-  const [row] = await db
+  const next = await nextPosition(tx, settings, eq(settings.categoryId, category.id));
+  const [row] = await tx
     .insert(settings)
     .values({ ...input, userId, presetId: category.presetId, position: next })
     .returning();
@@ -184,11 +184,12 @@ export async function updateSettingValues(
   userId: string,
   presetId: string,
   updates: { id: string; value?: SettingValue | null | undefined }[],
+  tx: Tx | typeof db = db,
 ) {
   if (updates.length === 0) return;
-  await getPresetById(userId, presetId);
+  await getPresetById(userId, presetId, tx);
   const ids = updates.map((u) => u.id);
-  const rows = await db
+  const rows = await tx
     .select()
     .from(settings)
     .where(
@@ -200,9 +201,10 @@ export async function updateSettingValues(
     if (!def) throw notFound("setting");
     assertValueValid(def, u.value);
   }
-  await db.transaction(async (tx) => {
+  // Inside an outer transaction this is a savepoint; standalone it is a transaction.
+  await tx.transaction(async (t) => {
     for (const u of updates) {
-      await tx
+      await t
         .update(settings)
         .set({ value: u.value ?? null })
         .where(and(eq(settings.id, u.id), eq(settings.userId, userId)));
