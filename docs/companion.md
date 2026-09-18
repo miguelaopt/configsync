@@ -17,15 +17,15 @@ From a repo checkout, `pnpm csync <command>` works without installing.
 
 ## Commands
 
-| Command                                   | What it does                                                                                                     |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `csync login <url>`                       | Verify a token against `GET /api/companion/me` and save it. Token can be piped.                                  |
-| `csync scan [--push]`                     | List Steam and Epic games installed here; `--push` replaces this device's list.                                  |
-| `csync games`                             | List catalog games and which of their files were found on this machine.                                          |
-| `csync import <game> [--name "…"]`        | Read the found files into a **new** preset. Prints the preset URL and warnings.                                  |
-| `csync apply <game> <preset> [--dry-run]` | Write a preset into the files. Backs up first; `--dry-run` only prints changes.                                  |
-| `csync watch [--interval 30] [--once]`    | **Pro.** Keep every game's files equal to its Default preset (see below). `--install` / `--uninstall` autostart. |
-| `csync launch <game> -- <command…>`       | Apply the game's Default preset, then run the command. For Steam launch options and Heroic wrappers.             |
+| Command                                   | What it does                                                                                                                                |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `csync login <url>`                       | Verify a token against `GET /api/companion/me` and save it. Token can be piped.                                                             |
+| `csync scan [--push]`                     | List Steam and Epic games installed here; `--push` replaces this device's list.                                                             |
+| `csync games`                             | List catalog games and which of their files were found on this machine.                                                                     |
+| `csync import <game> [--name "…"]`        | Read the found files into a **new** preset. Prints the preset URL and warnings.                                                             |
+| `csync apply <game> <preset> [--dry-run]` | Write a preset into the files. Backs up first; `--dry-run` only prints changes.                                                             |
+| `csync watch [--interval 30] [--once]`    | **Pro.** Keep every game's files equal to the preset chosen for this PC, or its Default (see below). `--install` / `--uninstall` autostart. |
+| `csync launch <game> -- <command…>`       | Apply the game's Default preset, then run the command. For Steam launch options and Heroic wrappers.                                        |
 
 `<game>` is a catalog id (`cs2`, `rocket-league`); `<preset>` is the slug in the preset's URL.
 
@@ -45,6 +45,21 @@ launch. Every write still goes through the same backup as `csync apply`.
 `csync watch --install` starts it with your session: a systemd user unit on Linux
 (`journalctl --user -u csync-watch -f` for logs), a Startup-folder script on Windows.
 `--uninstall` removes it. Free accounts get "Auto-switch is a Pro feature" and exit code 2.
+
+## Per-PC presets
+
+Every `csync watch` tick is a `POST /api/companion/sync` that names this machine (`device` in
+the config, the hostname by default), its platform and what it last applied per game. The vault
+answers with the preset **this PC** should have: the one chosen for it on the game page ("On
+your PCs"), otherwise the game's Default. Switch a laptop to a "Laptop" preset from your phone
+and only that machine changes; the desktop keeps the Default.
+
+The game page shows, per PC, what was last applied and when, whether an update is pending or
+waiting for the game to close, and whether the last write failed. Settings → Companion lists
+every PC that has talked to the vault, with a "Forget" button; a forgotten PC reappears the next
+time it syncs.
+
+`csync launch` asks for the same per-PC target, so Steam launch options honour the choice too.
 
 ## Launch wrapper (`csync launch`)
 
