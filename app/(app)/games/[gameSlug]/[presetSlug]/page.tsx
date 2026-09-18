@@ -4,6 +4,8 @@ import { getProfile, requireUser } from "@/lib/auth/session";
 import { getGameBySlug, listPresetsForGame } from "@/lib/data/games";
 import { getPresetBySlug, getPresetFull, toCategoryDocs } from "@/lib/data/presets";
 import { listRevisions } from "@/lib/data/revisions";
+import { getPlan } from "@/lib/billing/plan";
+import { screenshotAssistantEnabled } from "@/lib/env";
 import { publicCatalog } from "@/lib/catalog";
 import { Page, PageHeader } from "@/components/app/page-header";
 import { PresetHeader } from "@/components/presets/preset-header";
@@ -33,11 +35,12 @@ export default async function PresetPage({
   if (!game) notFound();
   const presetRow = await getPresetBySlug(user.id, game.id, presetSlug);
   if (!presetRow) notFound();
-  const [preset, siblings, profile, revisions] = await Promise.all([
+  const [preset, siblings, profile, revisions, { plan }] = await Promise.all([
     getPresetFull(user.id, presetRow.id),
     listPresetsForGame(user.id, game.id),
     getProfile(user.id),
     listRevisions(user.id, presetRow.id),
+    getPlan(user.id),
   ]);
   const { categories, ...presetOnly } = preset;
   const settingCount = categories.reduce((n, c) => n + c.settings.length, 0);
@@ -73,6 +76,11 @@ export default async function PresetPage({
           publicUrl={
             profile?.isPublic ? `/p/${profile.username}/${game.slug}/${preset.slug}` : null
           }
+          ai={{
+            enabled: screenshotAssistantEnabled,
+            pro: plan === "pro",
+            categories: categories.map((c) => ({ id: c.id, name: c.name })),
+          }}
         />
         <PresetEditor
           game={game}

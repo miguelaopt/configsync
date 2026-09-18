@@ -38,7 +38,9 @@ describe("coerceValue", () => {
       "high",
       "low",
     ]);
-    expect(coerceValue(def("multi_select", { options: quality.options }), "High, Ultra")).toBeNull();
+    expect(
+      coerceValue(def("multi_select", { options: quality.options }), "High, Ultra"),
+    ).toBeNull();
   });
 
   it("reads resolutions and colours, keeps free text trimmed, rejects blanks", () => {

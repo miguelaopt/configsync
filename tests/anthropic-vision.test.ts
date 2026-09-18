@@ -55,7 +55,13 @@ describe("createAnthropicParser", () => {
     const { client, parse } = clientWith({
       parsed_output: {
         settings: [
-          { name: "Resolution", value: "1920x1080", category: "Video", type: null, confidence: 0.95 },
+          {
+            name: "Resolution",
+            value: "1920x1080",
+            category: "Video",
+            type: null,
+            confidence: 0.95,
+          },
           { name: "Motion Blur", value: "Off", category: "Video", type: "boolean", confidence: 3 },
         ],
       },
@@ -63,7 +69,13 @@ describe("createAnthropicParser", () => {
     const result = await createAnthropicParser(client, "claude-opus-5").parse(image, hints);
     expect(result.usage).toEqual({ inputTokens: 1200, outputTokens: 80, model: "claude-opus-5" });
     expect(result.proposals).toEqual([
-      { name: "Resolution", rawValue: "1920x1080", category: "Video", type: null, confidence: 0.95 },
+      {
+        name: "Resolution",
+        rawValue: "1920x1080",
+        category: "Video",
+        type: null,
+        confidence: 0.95,
+      },
       { name: "Motion Blur", rawValue: "Off", category: "Video", type: "boolean", confidence: 1 },
     ]);
     const req = parse.mock.calls[0]![0] as {
@@ -94,7 +106,9 @@ describe("createAnthropicParser", () => {
       "bad key",
       new Headers(),
     );
-    await expect(createAnthropicParser(throwing(auth), "m").parse(image, hints)).rejects.toMatchObject({
+    await expect(
+      createAnthropicParser(throwing(auth), "m").parse(image, hints),
+    ).rejects.toMatchObject({
       name: "AppError",
       message: expect.stringContaining("AI_VISION_API_KEY"),
     });
@@ -104,7 +118,9 @@ describe("createAnthropicParser", () => {
       "slow down",
       new Headers(),
     );
-    await expect(createAnthropicParser(throwing(busy), "m").parse(image, hints)).rejects.toMatchObject({
+    await expect(
+      createAnthropicParser(throwing(busy), "m").parse(image, hints),
+    ).rejects.toMatchObject({
       message: expect.stringContaining("busy"),
     });
   });
