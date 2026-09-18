@@ -6,6 +6,15 @@
  */
 import { LEGAL } from "@/lib/legal";
 
+/** HTML-escape anything user-controlled before it lands in a template. */
+const esc = (s: string) =>
+  s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
 const ACCENT = "#b27a12"; // light-theme accent from globals.css
 const INK = "#151a21";
 const INK_2 = "#5b6674";
@@ -33,6 +42,8 @@ function button(href: string, label: string) {
 
 export function resetPasswordEmail({ url, name }: { url: string; name?: string | null }) {
   const hi = name ? `Hi ${name},` : "Hi,";
+  const safeHi = name ? `Hi ${esc(name)},` : "Hi,";
+  const safeUrl = esc(url);
   return {
     subject: `Reset your ${LEGAL.brand} password`,
     text: `${hi}
@@ -47,10 +58,10 @@ If this wasn't you, ignore this email — your password stays as it is.
 — ${LEGAL.brand} · ${LEGAL.email}`,
     html: frame(
       "Reset your password",
-      `<p style="margin:0 0 8px">${hi}</p>
+      `<p style="margin:0 0 8px">${safeHi}</p>
        <p style="margin:0">Someone asked to reset the password for your ${LEGAL.brand} account. The link works for <strong>1 hour</strong>.</p>
-       ${button(url, "Choose a new password")}
-       <p style="margin:0;color:${INK_2};font-size:13px">If this wasn’t you, ignore this email — your password stays as it is.<br>Button not working? Paste this into your browser:<br><span style="word-break:break-all">${url}</span></p>`,
+       ${button(safeUrl, "Choose a new password")}
+       <p style="margin:0;color:${INK_2};font-size:13px">If this wasn’t you, ignore this email — your password stays as it is.<br>Button not working? Paste this into your browser:<br><span style="word-break:break-all">${safeUrl}</span></p>`,
     ),
   };
 }
