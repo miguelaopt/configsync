@@ -14,6 +14,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Build-time placeholders: real values are injected at runtime.
 ENV DATABASE_URL=postgres://build:build@localhost:5432/build \
     BETTER_AUTH_SECRET=build-time-placeholder-secret
+# NEXT_PUBLIC_* are inlined into the browser bundle at build time, so they must be build args
+# (docker-compose passes them from .env). All of them are public by design.
+ARG NEXT_PUBLIC_APP_URL NEXT_PUBLIC_REPO_URL NEXT_PUBLIC_PADDLE_CLIENT_TOKEN NEXT_PUBLIC_PADDLE_ENV
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL NEXT_PUBLIC_REPO_URL=$NEXT_PUBLIC_REPO_URL \
+    NEXT_PUBLIC_PADDLE_CLIENT_TOKEN=$NEXT_PUBLIC_PADDLE_CLIENT_TOKEN NEXT_PUBLIC_PADDLE_ENV=$NEXT_PUBLIC_PADDLE_ENV
 RUN pnpm build
 
 FROM node:22-alpine AS runner

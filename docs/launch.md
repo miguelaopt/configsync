@@ -131,8 +131,9 @@ signing in and the footer links work.
 - [ ] resend.com → free account → Domains → add `configsync.app` → add the DNS records it shows
       (TXT for SPF/DKIM, MX for bounces) at the registrar → wait for "Verified".
 - [ ] API keys → create one (sending only).
-- [ ] `.env`: `SMTP_URL=smtp://resend:<api key>@smtp.resend.com:587`
-- [ ] `docker compose --profile app --profile proxy up -d`
+- [ ] `.env`: `SMTP_URL=smtp://resend:<api key>@smtp.resend.com:587` (the key is the password;
+      the user is literally `resend`)
+- [ ] `docker compose --profile app --profile proxy up -d` (recreates the container with the new env)
 
 Check: Forgot password → the email arrives (spam folder counts as a failure — check DKIM).
 Any other SMTP provider works the same way (Postmark, Brevo, Mailgun); only `SMTP_URL` changes.
@@ -168,8 +169,9 @@ NEXT_PUBLIC_PADDLE_CLIENT_TOKEN=live_…
 NEXT_PUBLIC_PADDLE_ENV=production
 ```
 
-- [ ] `docker compose --profile app --profile proxy up -d --build` (the `NEXT_PUBLIC_*` values
-      are baked in at build time, hence `--build`).
+- [ ] `docker compose --profile app --profile proxy up -d --build` — the `NEXT_PUBLIC_*` values
+      are baked into the browser bundle at build time, so any change to them needs `--build`.
+      Server-side variables (`SMTP_URL`, `PADDLE_API_KEY`, …) only need `up -d`.
 - [ ] From now on every account is **Free** unless it paid. Give yourself Pro by hand
       (`docs/billing.md` → "Granting Pro by hand").
 
