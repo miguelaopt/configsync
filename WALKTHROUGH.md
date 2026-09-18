@@ -219,7 +219,9 @@ installed package) works well — the PR descriptions of #5 and #6 list what was
 
 ## 4. Deploying to a server
 
-Nothing is deployed yet. The path of least resistance:
+Nothing is deployed yet. The complete, ordered procedure for `configsync.app` (domain, Hetzner,
+Caddy, legal pages, email, Paddle live, backups) is **`docs/launch.md`**; this section is the
+short version.
 
 **Prerequisites**
 
@@ -227,8 +229,8 @@ Nothing is deployed yet. The path of least resistance:
    `getcsync.com` were unregistered on 2026-09-19; `.gg` is the expensive one). Point an `A`
    record at the server.
 2. A small VPS (2 vCPU / 2–4 GB is plenty) with Docker + Compose and ports 80/443 open.
-3. Pages Paddle's live review requires: `/terms`, `/privacy`, a refund policy. They do not
-   exist yet — see §5.
+3. Pages Paddle's live review requires: `/terms`, `/privacy`, `/refunds` exist; fill the
+   business details in `lib/legal.ts` first.
 
 **Steps**
 
@@ -278,8 +280,8 @@ Option B (Node without Docker) is in `docs/self-hosting.md`.
 **Before launch (blocked on the domain)**
 
 - Pick and register the domain; DNS; VPS; deploy as in §4.
-- Legal pages: `/terms`, `/privacy`, refund policy (Paddle reviews them). Marketing-layout
-  routes under `app/(marketing)/`; plain text is fine.
+- Legal pages exist (`/terms`, `/privacy`, `/refunds`); fill `lib/legal.ts` (address, NIF) and
+  read them once on the live site.
 - Paddle **live** account: product, prices, keys, webhook, one real test purchase + refund.
 - Transactional email provider for password reset (`SMTP_URL`).
 - Landing page redesign (Miguel is doing this himself; nothing in the PRs touches
