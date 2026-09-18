@@ -73,7 +73,9 @@ export function getScreenshotParser(): ScreenshotParser | null; // switch on env
 
 `lib/providers/anthropic-vision.ts` (server-only):
 
-- `new Anthropic({ apiKey: env.AI_VISION_API_KEY, timeout: 60_000, maxRetries: 1 })`, created once.
+- `createAnthropicParser(client, model)` takes the SDK client and model so tests can pass a fake;
+  `getScreenshotParser()` builds `new Anthropic({ apiKey: env.AI_VISION_API_KEY, timeout: 60_000, maxRetries: 1 })`
+  once and memoises the parser. The provider file itself never imports `env`.
 - `client.messages.parse({ model: env.AI_VISION_MODEL, max_tokens: 8000, output_config: { effort: "low", format: zodOutputFormat(outputSchema) }, system, messages: [{ role: "user", content: [image block (base64), text block] }] })`.
 - `outputSchema = z.object({ settings: z.array(z.object({ name: z.string(), value: z.string(), category: z.string().nullable(), type: z.enum(SETTING_TYPE_IDS).nullable(), confidence: z.number() })) })` — plain types only (the structured-output JSON-schema subset); clamp confidence to [0, 1] after parsing.
 - System prompt (static): reads screenshots of video-game settings menus; lists only settings whose current value is visible; uses the exact name from the provided list when the on-screen label is that setting (synonyms and abbreviations count), otherwise the on-screen label; copies values as displayed (do not convert units or invent precision); skips rows that are cut off or unreadable; `type` only for names not in the list; confidence reflects legibility and name certainty.
@@ -91,8 +93,11 @@ export type ScreenshotRow = {
   rawValue: string;
   /** Existing setting this row updates, or null when it would be created. */
   settingId: string | null;
-  type: SettingTypeId;                 // the matched setting's type, else the guess, else "text"
-  value: SettingValue | null;          // coerced and valid for `type`; null when unreadable
+  /** Matched: the setting's own definition (type, min, max, step, options, unit). New: `{ type: guess ?? "text" }`. */
+  def: SettingDefinition;
+  /** Matched only — the value stored today, for side-by-side review. */
+  current: SettingValue | null;
+  value: SettingValue | null;          // coerced and valid for `def`; null when unreadable
 };
 
 export function buildHints(game: { name: string }, categories: CategoryWithSettings[]): ScreenshotHints;
@@ -111,6 +116,7 @@ The module has no runtime server imports (`CategoryWithSettings` is a type impor
 - Rows are ordered as in the preset (category position, setting position); unmatched rows follow
   in the order the model returned them.
 - Matched rows use the setting's own definition for coercion; unmatched rows use `{ type: guess ?? "text" }`.
+- `matchProposals` ends by running its rows through `mergeRows`, so a model that repeats a row is deduped server-side too.
 
 `lib/settings/coerce.ts` — `coerceValue(def: SettingDefinition, raw: string): SettingValue | null`,
 then validated with `valueSchemaFor(def)`; invalid ⇒ `null`:
@@ -128,7 +134,7 @@ then validated with `valueSchemaFor(def)`; invalid ⇒ `null`:
 ## D. Data
 
 `lib/billing/limits.ts`: `LIMITS` gains `aiScreenshots: { free: 0, pro: 30 }` and
-`AI_LIMIT_MESSAGE = "Screenshot import is a Pro feature."` / `AI_DAILY_MESSAGE = "You've analysed 30 screenshots in the last 24 hours. Try again later."`.
+`AI_LIMIT_MESSAGE = "Screenshot import is a Pro feature — upgrade to Pro to use it."` (contains "upgrade to Pro" so `toastError` adds its "See plans" action) / `AI_DAILY_MESSAGE = "You've analysed 30 screenshots in the last 24 hours. Try again later."`.
 
 `lib/db/schema.ts`: table `ai_requests` — `id uuid pk`, `user_id` (fk users, cascade),
 `model text`, `input_tokens int`, `output_tokens int`, `created_at timestamptz default now()`,
@@ -138,14 +144,14 @@ index on `(user_id, created_at)`. Migration `0004_ai_requests`.
 
 - `assertCanAnalyse(userId)` — `getPlan` → limit; `0` ⇒ `AppError(AI_LIMIT_MESSAGE, "forbidden")`;
   else count rows in the last 24 h ⇒ `AppError(AI_DAILY_MESSAGE, "forbidden")` at the cap.
-- `recordAiRequest(userId, usage)` — inserts one row.
-- `analyseScreenshot(userId, presetId, image)` — `assertCanAnalyse`; `getPresetFull` (ownership) and
-  the game name; `getScreenshotParser()` (null ⇒ `AppError("Screenshot import isn't configured on this server.")`);
-  `parse(image, buildHints(...))`; `recordAiRequest`; returns `{ rows: matchProposals(...) }`.
+- `analyseScreenshot(userId, presetId, image)` — `getScreenshotParser()` (null ⇒ `AppError("Screenshot import isn't configured on this server.")`);
+  `assertCanAnalyse`; `getPresetFull` (ownership) and the game name; `parse(image, buildHints(...))`;
+  inserts one `ai_requests` row from `usage`; returns `{ rows: matchProposals(...) }`.
   The cap is checked before the call and the row written after; a burst can overshoot by a few
   images — acceptable (`ponytail:` comment, upgrade path = reserve the row first).
-- `applyScreenshotRows(userId, presetId, updates, creates)` — `updateSettingValues` (validates every
-  value), then `createSetting` for each create, then `createRevision(userId, presetId, "Imported from screenshot")`.
+- `applyScreenshotRows(userId, presetId, updates, creates)` — refuses a `categoryId` that is not in
+  this preset; then `updateSettingValues` (validates every value), `createSetting` for each create,
+  then `createRevision(userId, presetId, "Imported from screenshot")`.
   Runs inside one `db.transaction`: `updateSettingValues`, `createSetting`, `getCategory` and
   `nextPosition` take an optional `tx` (default `db`), the same pattern as `getPresetById`.
 
@@ -156,7 +162,8 @@ upload route): session required; `content-length` and body ≤ 2 MB else 413; `d
 must return png/jpeg/webp else 400; `analyseScreenshot`; `AppError` ⇒ 400 with the message
 (403 when `kind === "forbidden"`); other errors logged as `[csync:ai]` ⇒ 500. Response:
 `{ rows: ScreenshotRow[] }`. One image per request; the client runs up to 5 in parallel and
-merges the results with `mergeRows`.
+merges the results with `mergeRows`. Because each row carries `def` and `current`, the dialog only
+needs the preset's category list (`{ id, name }[]`) from the page, not the full settings.
 
 `lib/actions/ai.ts` — `applyScreenshotAction({ presetId, updates: settingValueUpdateSchema[] (max 1000), creates: { categoryId, name, type, value }[] (max 200) })`
 → `applyScreenshotRows`; `revalidatePath("/", "layout")`; returns `{ updated, created }`.
@@ -191,7 +198,7 @@ after "Game config files…"; Free users see a `Pro` badge on the item.
 5. Apply ⇒ `applyScreenshotAction`; success ⇒ toast "Applied N settings from your screenshots",
    `router.refresh()`, close.
 
-`lib/billing/public.ts`: "AI screenshot importer (coming soon)" → "AI screenshot importer (30 images/day)".
+`lib/billing/public.ts`: "AI screenshot importer (coming soon)" → "AI screenshot importer (30 screenshots a day)".
 
 ## Errors and safety
 
@@ -209,6 +216,7 @@ after "Game config files…"; Free users see a `Pro` badge on the item.
 - `tests/screenshot-match.test.ts` — exact and normalised matches, category tie-break, dedupe by
   confidence, ordering, unmatched rows with and without a type guess, `buildHints` shape.
 - `tests/billing.test.ts` — `limitsFor("free").aiScreenshots === 0`.
+- `tests/anthropic-vision.test.ts` — fake `messages.parse`: request carries the image and hint lines, output is mapped and clamped, refusal ⇒ no proposals, 401/429 become `AppError`s.
 - Manual: set `AI_VISION_PROVIDER=anthropic` and `AI_VISION_API_KEY` in `.env`, open the CS2 Default
   preset, upload a screenshot of CS2's Video settings, check the matched values, apply, confirm the
   revision "Imported from screenshot" exists and a Free account gets the upsell and a 403.
