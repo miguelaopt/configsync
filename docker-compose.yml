@@ -1,5 +1,6 @@
 # Local development: `docker compose up -d db` then `pnpm dev`.
-# Full self-host:     `docker compose --profile app up -d --build`.
+# Full self-host:     `docker compose --profile app up -d --build`            (you bring the TLS proxy)
+# Production:         `docker compose --profile app --profile proxy up -d --build`  (Caddy + Let's Encrypt on APP_DOMAIN)
 services:
   db:
     image: postgres:16-alpine
@@ -38,5 +39,24 @@ services:
     ports:
       - "${APP_PORT:-3000}:3000"
 
+  caddy:
+    profiles: ["proxy"]
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?set APP_DOMAIN in .env (e.g. configsync.app)}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
 volumes:
   gsv-pgdata:
+  caddy-data:
+  caddy-config:

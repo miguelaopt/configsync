@@ -13,7 +13,7 @@ cp .env.example .env
 docker compose --profile app up -d --build
 ```
 
-This starts Postgres (`db`) and the app (`app`) on port 3000. Migrations run automatically at boot (`RUN_MIGRATIONS=true` in `docker-compose.yml`). Put a reverse proxy (Caddy, nginx, Traefik) in front for TLS.
+This starts Postgres (`db`) and the app (`app`) on port 3000. Migrations run automatically at boot (`RUN_MIGRATIONS=true` in `docker-compose.yml`). Put a reverse proxy in front for TLS — or add `--profile proxy` with `APP_DOMAIN=<your domain>` in `.env` and the bundled Caddy (`docker/Caddyfile`) serves HTTPS with Let's Encrypt and redirects `www`. The full production path is in [launch.md](launch.md).
 
 Data lives in the `gsv-pgdata` volume. Back it up with `pg_dump`:
 
