@@ -24,17 +24,23 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+        NEXT_PUBLIC_REPO_URL: ${NEXT_PUBLIC_REPO_URL:-}
+        NEXT_PUBLIC_PADDLE_CLIENT_TOKEN: ${NEXT_PUBLIC_PADDLE_CLIENT_TOKEN:-}
+        NEXT_PUBLIC_PADDLE_ENV: ${NEXT_PUBLIC_PADDLE_ENV:-sandbox}
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+    # Everything in .env reaches the app (SMTP_URL, PADDLE_*, AI_VISION_*, …);
+    # the keys below override what must differ inside the compose network.
+    env_file: .env
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-gsv}:${POSTGRES_PASSWORD:-gsv}@db:5432/${POSTGRES_DB:-gsv}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?set BETTER_AUTH_SECRET in .env}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3000}
       NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
-      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
-      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
       RUN_MIGRATIONS: "true"
     ports:
       - "${APP_PORT:-3000}:3000"
