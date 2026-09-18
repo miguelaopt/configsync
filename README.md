@@ -61,6 +61,7 @@ Details in [docs/companion.md](docs/companion.md).
 
 ## Documentation
 
+- [Walkthrough](WALKTHROUGH.md) — tour of the system, test accounts, how to test every feature, deploying, what is left
 - [Self-hosting & deployment](docs/self-hosting.md) — Docker, environment variables, email, OAuth
 - [Architecture](docs/architecture/overview.md) — stack, data model, request flow, security
 - [Import/export format](docs/import-export.md) — the stable JSON schema
