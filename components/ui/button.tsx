@@ -45,6 +45,7 @@ export function Button({
     return (
       <Slot.Root
         data-slot="button"
+        data-variant={variant ?? "secondary"}
         className={cn(buttonVariants({ variant, size }), className)}
         {...props}
       >
@@ -55,6 +56,7 @@ export function Button({
   return (
     <button
       data-slot="button"
+      data-variant={variant ?? "secondary"}
       className={cn(buttonVariants({ variant, size }), className)}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
