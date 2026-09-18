@@ -20,9 +20,9 @@ const row = (over: Partial<PlanRow>): PlanRow => ({
 const now = new Date("2026-09-17T12:00:00Z");
 
 describe("limits", () => {
-  it("free is 3 games and 10 snapshots; pro is unlimited", () => {
-    expect(limitsFor("free")).toEqual({ games: 3, revisions: 10 });
-    expect(limitsFor("pro")).toEqual({ games: Infinity, revisions: Infinity });
+  it("free is 3 games, 10 snapshots and no AI; pro is unlimited with 30 screenshots a day", () => {
+    expect(limitsFor("free")).toEqual({ games: 3, revisions: 10, aiScreenshots: 0 });
+    expect(limitsFor("pro")).toEqual({ games: Infinity, revisions: Infinity, aiScreenshots: 30 });
     expect(LIMITS.free.games).toBe(3);
   });
 });

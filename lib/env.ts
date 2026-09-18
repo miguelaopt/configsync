@@ -4,7 +4,7 @@ import { z } from "zod";
  * Server-side environment. Parsed once; fails fast with a readable message.
  * Never import this from client components — only NEXT_PUBLIC_* values are safe there.
  */
-const schema = z.object({
+const base = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required (see .env.example)"),
   BETTER_AUTH_SECRET: z
@@ -20,6 +20,13 @@ const schema = z.object({
   PADDLE_WEBHOOK_SECRET: z.string().optional(),
   PADDLE_PRICE_MONTHLY: z.string().optional(),
   PADDLE_PRICE_LIFETIME: z.string().optional(),
+  AI_VISION_PROVIDER: z.enum(["anthropic"]).optional(),
+  AI_VISION_API_KEY: z.string().optional(),
+  AI_VISION_MODEL: z.string().default("claude-opus-5"),
+});
+const schema = base.refine((e) => !e.AI_VISION_PROVIDER || Boolean(e.AI_VISION_API_KEY), {
+  message: "AI_VISION_API_KEY is required when AI_VISION_PROVIDER is set",
+  path: ["AI_VISION_API_KEY"],
 });
 
 function load() {
@@ -32,6 +39,9 @@ function load() {
     PADDLE_WEBHOOK_SECRET: process.env.PADDLE_WEBHOOK_SECRET || undefined,
     PADDLE_PRICE_MONTHLY: process.env.PADDLE_PRICE_MONTHLY || undefined,
     PADDLE_PRICE_LIFETIME: process.env.PADDLE_PRICE_LIFETIME || undefined,
+    AI_VISION_PROVIDER: process.env.AI_VISION_PROVIDER || undefined,
+    AI_VISION_API_KEY: process.env.AI_VISION_API_KEY || undefined,
+    AI_VISION_MODEL: process.env.AI_VISION_MODEL || undefined,
   });
   if (!parsed.success) {
     const issues = parsed.error.issues.map((i) => `  - ${i.path.join(".")}: ${i.message}`);
@@ -44,3 +54,5 @@ export const env = load();
 export const githubOAuthEnabled = Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET);
 /** No Paddle configured ⇒ no plans: every account is Pro (self-hosting). */
 export const billingEnabled = Boolean(env.PADDLE_API_KEY && env.PADDLE_WEBHOOK_SECRET);
+/** Whether the screenshot importer is offered at all. Off ⇒ the UI never mentions it. */
+export const screenshotAssistantEnabled = Boolean(env.AI_VISION_PROVIDER);
