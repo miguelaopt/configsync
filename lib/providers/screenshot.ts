@@ -1,66 +1,58 @@
 /**
- * Screenshot assistant — provider contracts.
+ * Screenshot importer — provider contract.
  *
- * The core app never depends on these. A future "import from screenshot" flow:
- *   1. user uploads an image
- *   2. a ScreenshotParser proposes settings (via OCR and/or a vision model)
- *   3. the user reviews and corrects every proposal
- *   4. only confirmed values are saved — nothing is written without confirmation
+ * Flow: the user uploads a screenshot of a settings menu → the parser returns what it read
+ * (setting names and on-screen values, as text) → lib/ai/screenshot.ts matches them to the
+ * preset's own settings and coerces the values → the user reviews every row → only rows the
+ * user confirms are saved.
  *
- * Providers are selected by AI_VISION_PROVIDER at runtime; none ships today.
- * See docs/architecture/ai-providers.md.
+ * Providers are selected by AI_VISION_PROVIDER. See docs/architecture/ai-providers.md.
  */
-import type { SettingTypeId, SettingValue } from "@/lib/settings/types";
+import "server-only";
+import type { SettingTypeId } from "@/lib/settings/types";
 
 export type ScreenshotImage = {
   bytes: Uint8Array;
   mimeType: "image/png" | "image/jpeg" | "image/webp";
 };
 
-/** One proposed setting. Always shown to the user as a suggestion, never auto-applied. */
-export type ProposedSetting = {
-  name: string;
-  value: SettingValue;
-  /** Best-effort guess; the review UI lets the user change it. */
-  type?: SettingTypeId;
-  /** 0–1. Below ~0.5 the UI should visibly flag the row. */
-  confidence: number;
-  /** Which category the provider thinks this belongs to (a heading it saw on screen). */
-  category?: string;
+/** What the model is told about the preset so it can reuse exact names. */
+export type ScreenshotHints = {
+  gameName: string;
+  categories: {
+    name: string;
+    settings: { name: string; type: SettingTypeId; options?: string[]; unit?: string | null }[];
+  }[];
 };
 
-/** Plain text extraction — e.g. Tesseract. Cheap, offline-capable. */
-export interface OCRProvider {
-  readonly id: string;
-  extractText(image: ScreenshotImage): Promise<string>;
-}
+/** One thing the model read. Values are on-screen text; the core coerces them to setting types. */
+export type ProposedSetting = {
+  /** Exact existing name when the label matches one of the hints, else the on-screen label. */
+  name: string;
+  /** "On", "1920x1080", "0.85", "High", "Mouse 4", … */
+  rawValue: string;
+  /** Heading or tab the setting appeared under. */
+  category: string | null;
+  /** Best-effort guess, only meaningful for names not in the hints. */
+  type: SettingTypeId | null;
+  /** 0–1. */
+  confidence: number;
+};
 
-/** Multimodal model that reads the image directly and returns structured proposals. */
-export interface VisionProvider {
-  readonly id: string;
-  proposeSettings(
-    image: ScreenshotImage,
-    hints?: { gameName?: string; categoryNames?: string[] },
-  ): Promise<ProposedSetting[]>;
-}
+export type ParseResult = {
+  proposals: ProposedSetting[];
+  usage: { inputTokens: number; outputTokens: number; model: string };
+};
 
-/** What the import flow talks to. Wraps an OCRProvider, a VisionProvider, or both. */
 export interface ScreenshotParser {
   readonly id: string;
-  parse(
-    image: ScreenshotImage,
-    hints?: { gameName?: string; categoryNames?: string[] },
-  ): Promise<ProposedSetting[]>;
+  parse(image: ScreenshotImage, hints: ScreenshotHints): Promise<ParseResult>;
 }
 
-/** Whether the UI should offer the screenshot assistant at all. */
-export const screenshotAssistantEnabled = Boolean(process.env.AI_VISION_PROVIDER);
-
 /**
- * Resolves the configured parser. Returns null when AI is not configured so the
- * caller can hide the feature instead of failing.
+ * Resolves the configured parser, or null when AI is not configured so callers can hide
+ * the feature instead of failing. Adding a provider = implement ScreenshotParser + a case here.
  */
 export function getScreenshotParser(): ScreenshotParser | null {
-  // ponytail: no providers exist yet. Add a switch on AI_VISION_PROVIDER when the first one lands.
   return null;
 }
