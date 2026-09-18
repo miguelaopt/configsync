@@ -369,6 +369,52 @@ export const deviceGames = pgTable(
   (t) => [uniqueIndex("device_games_uq").on(t.userId, t.device, t.source, t.appId)],
 );
 
+/** Mirror of the daemon's state.json, keyed by catalog id. `status` comes from the daemon's current run. */
+export type DeviceApplied = Record<
+  string,
+  { presetSlug: string; version: string; at: string; status: "applied" | "waiting" | "failed" }
+>;
+
+/** One row per machine that has talked to the vault (hostname by default). */
+export const devices = pgTable(
+  "devices",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    /** process.platform of the CLI: linux | win32 | darwin. */
+    platform: text("platform"),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).defaultNow().notNull(),
+    applied: jsonb("applied").$type<DeviceApplied>().default({}).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("devices_user_name_uq").on(t.userId, t.name)],
+);
+
+/** Per-PC choice of preset for a game. No row ⇒ the game's Default. */
+export const devicePresets = pgTable(
+  "device_presets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    deviceId: uuid("device_id")
+      .notNull()
+      .references(() => devices.id, { onDelete: "cascade" }),
+    gameId: uuid("game_id")
+      .notNull()
+      .references(() => games.id, { onDelete: "cascade" }),
+    presetId: uuid("preset_id")
+      .notNull()
+      .references(() => presets.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("device_presets_device_game_uq").on(t.deviceId, t.gameId)],
+);
+
 // ---------------------------------------------------------------------------
 // AI: one row per analysed screenshot (rolling daily cap + cost per user)
 // ---------------------------------------------------------------------------
@@ -390,6 +436,7 @@ export const aiRequests = pgTable(
 
 export type CompanionToken = typeof companionTokens.$inferSelect;
 export type DeviceGame = typeof deviceGames.$inferSelect;
+export type Device = typeof devices.$inferSelect;
 
 // ---------------------------------------------------------------------------
 // Billing (written only by the Paddle webhook — see lib/billing)

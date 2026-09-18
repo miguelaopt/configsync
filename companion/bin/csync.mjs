@@ -6,7 +6,7 @@ import { api } from "../lib/api.mjs";
 import { loadConfig, saveConfig } from "../lib/config.mjs";
 import { scanEpic, scanSteam } from "../lib/scan.mjs";
 import { applyPreset, readFiles } from "../lib/apply.mjs";
-import { loadState } from "../lib/state.mjs";
+import { loadState, reportable } from "../lib/state.mjs";
 import { isRunning, runningProcessNames } from "../lib/procs.mjs";
 import { decide } from "../lib/sync.mjs";
 import * as autostart from "../lib/autostart.mjs";
@@ -20,7 +20,7 @@ const HELP = `csync — ConfigSync companion
   csync import <game> [--name "…"]        read the game's config files into a new preset (game: cs2, rocket-league…)
   csync apply <game> <preset> [--dry-run] write a preset into the game's config files (backs up first)
   csync games                             list catalog games and whether their files were found here
-  csync watch [--interval 30] [--once]    keep every game's files equal to its Default preset (Pro); --install / --uninstall autostart
+  csync watch [--interval 30] [--once]    keep every game's files equal to the preset chosen for this PC (Pro); --install / --uninstall autostart
   csync launch <game> -- <command…>       apply the game's Default preset, then run the command (Steam launch options)
 
 Close the game before import/apply. Steam Cloud may restore old files for some games.`;
@@ -144,10 +144,10 @@ const ts = () => new Date().toISOString().slice(11, 19);
 const log = (m) => console.log(`${ts()} ${m}`);
 
 /** One pass over every catalog game: apply what changed, wait for running games, skip the rest. */
-async function tick(c, catalog, state, waiting) {
+async function tick(c, catalog, state, waiting, failed) {
   let sync;
   try {
-    sync = await api(c).get("/sync");
+    sync = await report(c, state, waiting, failed);
   } catch (e) {
     if (/Pro feature/.test(e.message)) {
       console.error(e.message);
@@ -157,6 +157,7 @@ async function tick(c, catalog, state, waiting) {
     return;
   }
   const running = await runningProcessNames();
+  let changed = false;
   for (const target of sync.games) {
     const game = catalog.find((g) => g.id === target.catalogId);
     if (!game || game.files.length === 0) continue;
@@ -170,21 +171,35 @@ async function tick(c, catalog, state, waiting) {
     });
     if (verdict === "skip") continue;
     if (verdict === "wait") {
-      if (!waiting.has(game.id))
+      if (!waiting.has(game.id)) {
         log(`waiting: ${game.name} is running; will apply "${target.presetName}" when it closes`);
+        changed = true;
+      }
       waiting.add(game.id);
       continue;
     }
+    changed = true;
     try {
       await applyPreset(c, game, target.presetSlug, { log: () => {}, version: target.version });
-      state.applied[game.id] = remote;
+      state.applied[game.id] = { ...remote, at: new Date().toISOString() };
       waiting.delete(game.id);
+      failed.delete(game.id);
       log(`applied "${target.presetName}" to ${game.name}`);
     } catch (e) {
+      failed.add(game.id);
       log(`failed to apply to ${game.name}: ${e.message}`);
     }
   }
+  // Tell the vault what just happened instead of waiting a whole interval (and at all with --once).
+  if (changed) await report(c, state, waiting, failed).catch(() => {});
 }
+
+const report = (c, state, waiting, failed) =>
+  api(c).post("/sync", {
+    device: c.device,
+    platform: process.platform,
+    applied: reportable(state, { waiting, failed }),
+  });
 
 async function watch() {
   const me = fileURLToPath(import.meta.url);
@@ -195,9 +210,12 @@ async function watch() {
   const { games: catalog } = await api(c).get("/catalog");
   const state = loadState();
   const waiting = new Set();
-  log(`watching ${catalog.length} catalog games every ${interval / 1000}s as "${c.device}"`);
+  const failed = new Set();
+  log(
+    `watching ${catalog.length} catalog games every ${interval / 1000}s as "${c.device}" (per-PC presets on)`,
+  );
   for (;;) {
-    await tick(c, catalog, state, waiting);
+    await tick(c, catalog, state, waiting, failed);
     if (flag("once")) break;
     await new Promise((r) => setTimeout(r, interval));
   }
@@ -210,7 +228,9 @@ async function launch() {
     return console.error("Usage: csync launch <game> -- <command…>");
   try {
     const g = await catalogGame(c, gameId);
-    const target = await api(c).get(`/default?game=${encodeURIComponent(g.id)}`);
+    const target = await api(c).get(
+      `/default?game=${encodeURIComponent(g.id)}&device=${encodeURIComponent(c.device)}`,
+    );
     await applyPreset(c, g, target.presetSlug, { log: () => {}, version: target.version });
     console.log(`csync: applied "${target.presetName}" to ${g.name}`);
   } catch (e) {

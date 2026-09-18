@@ -19,6 +19,6 @@ export const FEATURES = {
     "Unlimited snapshot history",
     "Auto-switch: your PC keeps every game's files equal to its Default preset (csync watch)",
     "AI screenshot importer (30 screenshots a day)",
-    "Cloud sync across your PCs (coming soon)",
+    "Per-PC presets: choose what each PC runs and see what's applied where",
   ],
 } as const;

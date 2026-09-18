@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { replaceDeviceGames } from "@/lib/data/devices";
+import { replaceDeviceGames, touchDevice } from "@/lib/data/devices";
 import { companionRoute } from "@/lib/api/companion";
 
 const body = z.object({
@@ -17,6 +17,7 @@ const body = z.object({
 });
 
 /** A scan replaces everything known about that device. */
-export const PUT = companionRoute(body, async (v, userId) => ({
-  stored: await replaceDeviceGames(userId, v.device, v.games),
-}));
+export const PUT = companionRoute(body, async (v, userId) => {
+  await touchDevice(userId, v.device);
+  return { stored: await replaceDeviceGames(userId, v.device, v.games) };
+});
