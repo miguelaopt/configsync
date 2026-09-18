@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/app/logo";
+import { LegalLinks } from "@/components/marketing/legal";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,8 +13,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <main className="flex flex-1 items-start justify-center px-4 py-8 sm:items-center sm:py-12">
         <div className="w-full max-w-sm">{children}</div>
       </main>
-      <footer className="px-4 py-6 text-center text-xs text-ink-3">
-        Source-available · self-hostable · your data stays yours.
+      <footer className="flex flex-col gap-2 px-4 py-6 text-center text-xs text-ink-3">
+        <span>Source-available · self-hostable · your data stays yours.</span>
+        <LegalLinks />
       </footer>
     </div>
   );
