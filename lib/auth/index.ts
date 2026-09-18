@@ -4,6 +4,7 @@ import { nextCookies } from "better-auth/next-js";
 import { db, schema } from "@/lib/db";
 import { env, githubOAuthEnabled } from "@/lib/env";
 import { sendEmail } from "@/lib/email";
+import { resetPasswordEmail } from "@/lib/email-templates";
 import { createProfileForUser } from "@/lib/auth/profile";
 
 export const auth = betterAuth({
@@ -27,11 +28,7 @@ export const auth = betterAuth({
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: async ({ user, url }) => {
       // Not awaited on purpose: keeps response timing independent of the mail server.
-      void sendEmail({
-        to: user.email,
-        subject: "Reset your ConfigSync password",
-        text: `Someone requested a password reset for your account.\n\nReset it here (valid for 1 hour):\n${url}\n\nIf this wasn't you, you can ignore this email.`,
-      });
+      void sendEmail({ to: user.email, ...resetPasswordEmail({ url, name: user.name }) });
     },
   },
   socialProviders: githubOAuthEnabled

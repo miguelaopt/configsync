@@ -2,7 +2,7 @@ import "server-only";
 import nodemailer from "nodemailer";
 import { env } from "@/lib/env";
 
-type Mail = { to: string; subject: string; text: string };
+type Mail = { to: string; subject: string; text: string; html?: string };
 
 /**
  * Sends transactional email through SMTP_URL when configured.
