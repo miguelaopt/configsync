@@ -30,8 +30,8 @@ Invoke a skill by name (`/skill-name` in the prompt, or ask Claude to "use the X
 
 ## The workflow for the landing page
 
-1. `brainstorming` — paste `design/landing-page-prompt.md`; it asks the Step 0 style questions
-   one at a time, plays the direction back, and waits for your go. Because the style will be
+1. `brainstorming` — paste `design/landing-page-prompt.md`; it asks four style questions one
+   at a time, proposes two or three directions as compact token plans, and waits for your go. Because the style will be
    applied to the whole app afterwards, expect this to be classified _architectural_ once the
    token/component changes are in scope → written spec in `docs/superpowers/specs/`.
 2. `frontend-design` — Claude writes `app/(marketing)/page.tsx` against the real tokens and
