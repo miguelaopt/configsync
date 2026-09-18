@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { requireUser } from "@/lib/auth/session";
 import { listGames } from "@/lib/data/games";
 import { publicCatalog } from "@/lib/catalog";
@@ -8,7 +7,6 @@ import { ImportForm } from "@/components/import-export/import-form";
 import { GameFilesForm } from "@/components/import-export/game-files-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SearchParams } from "@/lib/types";
-import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Import" };
 
@@ -25,14 +23,7 @@ export default async function ImportPage({ searchParams }: { searchParams: Searc
         description={
           <>
             Bring in a JSON file exported from ConfigSync — yours or a friend’s — or read a game’s
-            own config files. The JSON format is open and documented in{" "}
-            <Link
-              href={`${SITE.repoUrl}/blob/main/${SITE.docsImportExport}`}
-              className="text-ink underline underline-offset-4"
-            >
-              docs/import-export.md
-            </Link>
-            .
+            own config files.
           </>
         }
       />

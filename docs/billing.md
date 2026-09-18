@@ -12,8 +12,8 @@ webhooks. Leave every `PADDLE_*` variable unset to run without billing — every
 3. Paddle → Developer tools → Notifications: add a destination
    `https://<your-domain>/api/billing/paddle`, type webhook, events: `transaction.completed`,
    `subscription.activated`, `subscription.updated`, `subscription.canceled`,
-   `subscription.past_due`, `subscription.paused`, `subscription.resumed`. Copy the **secret
-   key** (`pdl_ntfset_…`).
+   `subscription.past_due`, `subscription.paused`, `subscription.resumed`,
+   `adjustment.created`, `adjustment.updated`. Copy the **secret key** (`pdl_ntfset_…`).
 4. Set the environment:
 
 | Variable                          | Value                                         |
@@ -33,7 +33,9 @@ Checkout runs in Paddle's overlay with `customData.userId`. Paddle posts events 
 `/api/billing/paddle`; the server verifies the `Paddle-Signature` HMAC, stores the event id
 (retries are no-ops), maps the event to a `plans` row and answers 200. `getPlan()` reads that
 row: lifetime ⇒ Pro forever; subscription `active`/`trialing`/`past_due` ⇒ Pro; `canceled` ⇒
-Pro until the paid period ends. Nothing is deleted on downgrade.
+Pro until the paid period ends. An **approved full refund or chargeback** (`adjustment.*`)
+revokes Pro immediately, lifetime included; manual grants are never touched. Nothing is deleted
+on downgrade.
 
 ## Granting Pro by hand
 

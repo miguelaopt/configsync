@@ -156,9 +156,7 @@ export function SignUpForm({ githubEnabled }: { githubEnabled: boolean }) {
   return (
     <div>
       <h1 className="font-display text-2xl">Create your vault</h1>
-      <p className="mt-1 text-[13px] text-ink-2">
-        Free and open source. Export everything, any time.
-      </p>
+      <p className="mt-1 text-[13px] text-ink-2">Free to start. Export everything, any time.</p>
       <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
         <Field
           label="Name"
