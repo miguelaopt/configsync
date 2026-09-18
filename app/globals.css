@@ -21,6 +21,8 @@
   --accent: #e9b44c;
   --accent-ink: #1a1408;
   --accent-soft: rgb(233 180 76 / 0.14);
+  /* Amber as text: same as --accent on dark, a deeper amber on light so it passes 4.5:1. */
+  --accent-text: #e9b44c;
   --good: #59c48d;
   --good-soft: rgb(89 196 141 / 0.14);
   --bad: #e5655c;
@@ -30,6 +32,8 @@
   --shadow-dialog: 0 24px 64px -12px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.04);
   --shadow-menu: 0 12px 32px -8px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.04);
   --row-h: 3rem;
+  /* Marketing pages sit one step darker than the app so the app "panels" read as the product. */
+  --stage: #0e1115;
   color-scheme: dark;
 }
 
@@ -47,6 +51,7 @@
   --accent: #b27a12;
   --accent-ink: #ffffff;
   --accent-soft: rgb(178 122 18 / 0.12);
+  --accent-text: #7a4f08;
   --good: #1f9d5f;
   --good-soft: rgb(31 157 95 / 0.12);
   --bad: #d3453b;
@@ -55,6 +60,7 @@
   --note-soft: rgb(47 111 220 / 0.12);
   --shadow-dialog: 0 24px 64px -12px rgb(15 20 30 / 0.28), 0 0 0 1px rgb(15 20 30 / 0.06);
   --shadow-menu: 0 12px 32px -8px rgb(15 20 30 / 0.22), 0 0 0 1px rgb(15 20 30 / 0.06);
+  --stage: #eceef1;
   color-scheme: light;
 }
 
@@ -76,6 +82,8 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-text: var(--accent-text);
+  --color-stage: var(--stage);
   --color-good: var(--good);
   --color-good-soft: var(--good-soft);
   --color-bad: var(--bad);
@@ -148,6 +156,7 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: 5rem;
+    scroll-behavior: smooth; /* reset to auto under prefers-reduced-motion below */
   }
   body {
     background: var(--ground);
