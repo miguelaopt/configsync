@@ -111,7 +111,7 @@ ON CONFLICT DO NOTHING;
 Routes:
 
 - `app/api/companion/sync/route.ts` — `GET` unchanged (no device). New `POST` with body
-  `{ device: string (1–60), platform?: "linux" | "win32" | "darwin", applied?: DeviceApplied }`:
+  `{ device: string (1–60), platform?: string (≤ 20, whatever `process.platform` says), applied?: DeviceApplied }`:
   Pro check → `touchDevice(userId, device, { platform, applied })` → `{ games: await listSyncTargets(userId, device) }`.
   `applied` is validated with `z.record(z.string().max(60), z.object({ presetSlug: z.string().max(120), version: z.string().max(64), at: z.string().max(40), status: z.enum(["applied","waiting","failed"]) }))` and capped at 200 keys.
 - `app/api/companion/default/route.ts` — reads `&device=`; when present, `touchDevice` (no
@@ -195,9 +195,6 @@ Docs: `docs/companion.md` — new section "Per-PC presets" and the `/sync` POST 
 
 - `tests/device-status.test.ts` — `deviceStatus()` matrix: undefined → never; same slug+version →
   applied; waiting status → waiting; failed → failed; different version → stale.
-- `tests/catalog.test.ts` or a new `tests/sync-target.test.ts` — the pure resolver
-  `pickTarget({ override, default })` used by `defaultPresetFor`: override wins when present and
-  not archived; otherwise Default; `source` set accordingly.
 - `companion/test/state.test.mjs` — `reportable(state, { waiting, failed })` marks waiting and
   failed games and keeps the others as applied.
 - Manual on this machine (demo account is Pro): open CS2 in the web app → card shows this
