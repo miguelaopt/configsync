@@ -8,7 +8,7 @@ What you need at hand: a card, your NIF and a postal address you are willing to 
 e-commerce rules), a Hetzner account, a Paddle account, a GitHub account, and this repository
 with PRs #5, #6 and the launch-prep PR merged.
 
-Running costs: Hetzner ≈ 4 €/month · domain ≈ 13 €/year · email (Resend) free tier · Paddle
+Running costs: Hetzner ≈ 7.4 €/month (CX23 incl. VAT + IPv4) · domain ≈ 13 €/year · email (Resend) free tier · Paddle
 5 % + 0.50 € per sale · Anthropic ≈ 0.01 € per screenshot analysed.
 
 ---
@@ -27,8 +27,8 @@ Check: `dig NS configsync.app` shows the registrar's nameservers.
 ## 2. Server (Hetzner)
 
 - [ ] console.hetzner.cloud → New project "configsync" → Add server:
-  - Location **Falkenstein** (or Nuremberg) · Image **Ubuntu 24.04**
-  - Type: shared vCPU x86, **2 vCPU / 4 GB** (CX line, ≈ 4 €/month)
+  - Location **Falkenstein** (or Nuremberg) · Image **Ubuntu 24.04 or 26.04 LTS**
+  - Type: shared vCPU x86, **2 vCPU / 4 GB** (CX23, ≈ 7.4 €/month incl. VAT and IPv4)
   - SSH key: your public key (`cat ~/.ssh/id_ed25519.pub`)
   - Firewall (create one): inbound **22, 80, 443 TCP** and **443 UDP**; nothing else
   - Backups: optional (+20 %) — the `pg_dump` cron below is enough
