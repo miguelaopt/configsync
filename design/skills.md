@@ -30,14 +30,18 @@ Invoke a skill by name (`/skill-name` in the prompt, or ask Claude to "use the X
 
 ## The workflow for the landing page
 
-1. `brainstorming` — paste `design/landing-page-prompt.md`, answer its questions, approve the
-   direction. Expect it to classify the page as *bounded* (one file) → short design in chat, no
-   spec document.
+1. `brainstorming` — paste `design/landing-page-prompt.md`; it asks the Step 0 style questions
+   one at a time, plays the direction back, and waits for your go. Because the style will be
+   applied to the whole app afterwards, expect this to be classified _architectural_ once the
+   token/component changes are in scope → written spec in `docs/superpowers/specs/`.
 2. `frontend-design` — Claude writes `app/(marketing)/page.tsx` against the real tokens and
    components. Ask for desktop + 400 px screenshots (Playwright is installed) before accepting.
 3. `verification-before-completion` — `pnpm check`, `pnpm format:check`, `pnpm build`.
 4. `finishing-a-development-branch` — branch → push → PR → merge → on the server
    `git pull && docker compose --profile app --profile proxy up -d --build`.
+5. **Roll the style out to the app** — a second brainstorm scoped to `app/globals.css` tokens
+   and `components/ui`, then page by page (dashboard, game, preset, settings), each its own PR
+   with desktop + mobile screenshots.
 
 ## Other tools already available
 

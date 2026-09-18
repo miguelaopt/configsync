@@ -2,7 +2,7 @@
 
 Paste everything below the line into Claude (Claude Design, claude.ai, or Claude Code with the
 `frontend-design` skill). It is self-contained: product facts, brand tokens, constraints and the
-deliverable. Adjust the "Direction" section to taste before sending.
+deliverable. It starts by asking you the style questions; the answers become the direction for the whole app.
 
 ---
 
@@ -12,6 +12,28 @@ You are designing the public landing page for **ConfigSync**, a web app that sto
 compares and syncs video-game settings. You are a product designer with strong front-end taste:
 opinionated, restrained, allergic to generic SaaS templates. Design first, then hand over
 production-ready code.
+
+**The landing page sets the style for the whole product.** Whatever direction we agree on here
+becomes the design system that the app (dashboard, game pages, settings, dialogs) is restyled
+to afterwards. So think in terms of a system — tokens, type scale, spacing, component shapes,
+motion rules — not a one-off marketing page.
+
+## Step 0 — ask me before you design
+
+Do not start designing until you have asked me, one question at a time, and I have answered:
+
+1. **Mood in three words** — and two or three sites or products whose look I admire (any
+   domain, not necessarily gaming).
+2. **Dark or light first** — the app is dark-first today; keep it, flip it, or make both equal?
+3. **Density** — compact and information-rich (spec sheet) or airy with big type (editorial)?
+4. **Hero visual** — a faithful mock of the product UI, an abstract/diagrammatic illustration,
+   typography only, or something else?
+5. **Motion** — none, subtle and explanatory only, or expressive?
+6. **Accent** — keep the vault amber, or propose alternatives (show them)?
+7. **Type** — keep Barlow Semi Condensed + Geist, or propose a pairing (show it)?
+8. Anything I must avoid (clichés, colours, layouts) or must include.
+
+Then play back the direction in one paragraph and wait for my "go" before producing anything.
 
 ## What the product is (facts — do not invent features)
 
@@ -60,13 +82,12 @@ confident, a little dry. Short sentences. Show the product, don't sell it.
 - The app's own UI is the visual reference: rows with game-menu-style controls (toggles,
   segmented choices, sliders, key caps), 13px labels, tight spacing, thin hairlines.
 
-## Direction (edit this)
+## Direction
 
-Something between a well-made hardware spec sheet and a game's options screen. Structure and
-density over decoration. Let one big idea carry the hero: the same settings, on every machine,
-without touching files by hand. Consider a faithful mock of the product's settings rows as the
-hero visual (it _is_ the product) rather than an abstract illustration. Motion: subtle, only
-where it explains something (a preset switching, a PC picking it up).
+Filled in from my answers in Step 0. Until then, my default leaning: something between a
+well-made hardware spec sheet and a game's options screen; structure and density over
+decoration; one big idea in the hero (the same settings, on every machine, without touching
+files by hand); motion only where it explains something.
 
 ## Page structure (suggested, not mandatory)
 
@@ -99,4 +120,7 @@ where it explains something (a preset switching, a PC picking it up).
 
 1. A short rationale (5–10 lines): the one idea, the layout, why it fits the brand.
 2. The complete `page.tsx`.
-3. A list of any new shared component or token you needed (ideally none).
+3. **The design system it implies**, so the rest of the app can follow: proposed changes to the
+   tokens in `app/globals.css` (colours, radii, shadows, type scale) as a diff, and a list of
+   `components/ui` pieces that would change (button shapes, inputs, badges, dialogs) with one
+   line each on how. Keep it to what the landing page actually establishes.
