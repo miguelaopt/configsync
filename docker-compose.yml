@@ -58,6 +58,7 @@ services:
       - "443:443/udp"
     volumes:
       - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./docker/maintenance.html:/srv/maintenance.html:ro
       - caddy-data:/data
       - caddy-config:/config
 

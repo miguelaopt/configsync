@@ -5,7 +5,7 @@ import { LegalPage, Section } from "@/components/marketing/legal";
 export const metadata: Metadata = { title: "Privacy Policy" };
 
 /**
- * TODO before launch: confirm the processors list matches what is actually configured in
+ * Keep the processors list equal to what is actually configured in
  * production (SMTP provider, GitHub OAuth, AI provider) and fill LEGAL.address.
  */
 export default function PrivacyPage() {
@@ -77,8 +77,12 @@ export default function PrivacyPage() {
             GitHub”.
           </li>
           <li>
-            <strong className="text-ink">Our email provider</strong> — password-reset emails
-            (recipient address and the message only). {/* TODO: name the SMTP provider */}
+            <strong className="text-ink">Resend (Plus Five Five, Inc.)</strong> — delivery of
+            account emails such as password resets (recipient address and the message only).
+          </li>
+          <li>
+            <strong className="text-ink">Cloudflare, Inc.</strong> — DNS for the domain, and email
+            routing for the contact address, which forwards messages you send us to our mailbox.
           </li>
         </ul>
         <p>
@@ -124,7 +128,23 @@ export default function PrivacyPage() {
         </p>
       </Section>
 
-      <Section title="8. Changes">
+      <Section title="8. Contact and complaints">
+        <p>
+          {LEGAL.operator} is the controller for the data described here. Write to{" "}
+          <a href={`mailto:${LEGAL.email}`} className="text-accent-text hover:text-ink">
+            {LEGAL.email}
+          </a>{" "}
+          for any request under this policy, including access, correction, export and deletion. We
+          answer within 30 days; there is no charge.
+        </p>
+        <p>
+          If you are not happy with the answer you can complain to your national data protection
+          authority. In Portugal that is the Comissão Nacional de Proteção de Dados (CNPD); if you
+          live elsewhere in the EU or the UK, your own authority can take the complaint.
+        </p>
+      </Section>
+
+      <Section title="9. Changes">
         <p>
           We will announce material changes in the app before they take effect and update the date
           at the top of this page.

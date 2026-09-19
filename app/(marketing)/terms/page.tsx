@@ -6,7 +6,7 @@ import { LegalPage, Section } from "@/components/marketing/legal";
 
 export const metadata: Metadata = { title: "Terms of Service" };
 
-/** TODO before launch: read once, adjust anything that doesn't match how you run the service. */
+/** Keep every sentence true for how the Service is actually run. */
 export default function TermsPage() {
   return (
     <LegalPage
@@ -111,7 +111,30 @@ export default function TermsPage() {
         </p>
       </Section>
 
-      <Section title="9. Law and contact">
+      <Section title="9. Acceptable use">
+        <p>
+          Use the Service for your own game settings. Do not upload content you have no right to
+          share, anything unlawful, or anything that is not what this Service is for. Do not resell
+          access, share one account between people, or run automated requests against the Service
+          beyond what the companion program does on your behalf.
+        </p>
+        <p>
+          The companion reads and writes files on your own computer. Do not use it against computers
+          or accounts that are not yours, and do not use the Service to break the terms of any game
+          you play — anti-cheat systems and publisher rules are between you and them.
+        </p>
+      </Section>
+
+      <Section title="10. Changes to these terms">
+        <p>
+          We may change these terms as the Service changes. The date at the top says when they were
+          last updated. If a change materially reduces what you get, we will say so by email to the
+          address on your account before it takes effect, and you can cancel and ask for a refund of
+          anything you paid for a period you no longer want.
+        </p>
+      </Section>
+
+      <Section title="11. Law and contact">
         <p>
           These terms are governed by the law of {LEGAL.country}; consumers keep the protection of
           the mandatory rules of their country of residence. Questions:{" "}

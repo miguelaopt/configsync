@@ -14,7 +14,7 @@
   ],
   "type": "module",
   "bin": {
-    "csync": "./bin/csync.mjs"
+    "csync": "bin/csync.mjs"
   },
   "files": [
     "bin",
