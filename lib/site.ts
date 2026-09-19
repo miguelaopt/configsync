@@ -2,9 +2,7 @@
 export const SITE = {
   name: "ConfigSync",
   tagline: "Your game settings. One place.",
-  /** Set NEXT_PUBLIC_REPO_URL once the repository is published. */
-  repoUrl: process.env.NEXT_PUBLIC_REPO_URL || "https://github.com/miguelaopt/configsync",
-  docsImportExport: "docs/import-export.md",
-  docsCompanion: "docs/companion.md",
+  /** Public origin, for absolute URLs in robots/sitemap. */
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://configsync.app",
   version: "0.1.0",
 };

@@ -145,18 +145,6 @@ export function PreferencesForm({ profile }: { profile: Profile }) {
 
   return (
     <div className="flex max-w-md flex-col gap-5" aria-busy={pending}>
-      <PrefRow label="Theme" hint="Dark is the default. System follows your OS.">
-        <Segmented
-          aria-label="Theme"
-          value={prefs.theme ?? "dark"}
-          onValueChange={(v) => update({ theme: v as "dark" | "light" | "system" })}
-          options={[
-            { label: "Dark", value: "dark" },
-            { label: "Light", value: "light" },
-            { label: "System", value: "system" },
-          ]}
-        />
-      </PrefRow>
       <PrefRow label="Density" hint="Compact fits more settings on screen.">
         <Segmented
           aria-label="Density"

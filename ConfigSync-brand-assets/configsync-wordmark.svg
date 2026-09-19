@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="220" viewBox="0 0 900 220">
+<text x="20" y="145"
+      font-family="Inter, Arial, sans-serif"
+      font-size="120"
+      font-weight="650"
+      letter-spacing="-5">
+  <tspan fill="#E9E9ED">Config</tspan><tspan fill="#B7A6FF">Sync</tspan>
+</text>
+</svg>

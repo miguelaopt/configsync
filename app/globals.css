@@ -1,126 +1,43 @@
 @import "tailwindcss";
-@import "@fontsource/barlow-semi-condensed/500.css";
-@import "@fontsource/barlow-semi-condensed/600.css";
 
 /* ---------------------------------------------------------------------------
-   ConfigSync design tokens
-   Dark-first. Surfaces stack ground → surface → raised. One accent (vault amber),
-   overridable per game via --accent on a container.
+   ConfigSync design tokens — one palette, dark only.
+   Values come from ConfigSync-brand-assets/README.txt. Surfaces stack
+   ground → surface → raised; one accent, overridable per game via --accent
+   on a container.
 --------------------------------------------------------------------------- */
 :root {
-  --ground: #12161c;
-  --surface: #181d24;
-  --raised: #1f252e;
-  --overlay: #262d38;
-  --line: #2a323d;
-  --line-strong: #3a4553;
-  --hairline: rgb(42 50 61 / 0.7);
-  --ink: #e6eaf0;
-  --ink-2: #9aa5b4;
-  --ink-3: #6b7684;
-  --accent: #e9b44c;
-  --accent-ink: #1a1408;
-  --accent-soft: rgb(233 180 76 / 0.14);
-  /* Amber as text: same as --accent on dark, a deeper amber on light so it passes 4.5:1. */
-  --accent-text: #e9b44c;
-  --good: #59c48d;
-  --good-soft: rgb(89 196 141 / 0.14);
-  --bad: #e5655c;
-  --bad-soft: rgb(229 101 92 / 0.14);
-  --note: #6fa8ff;
-  --note-soft: rgb(111 168 255 / 0.14);
-  --shadow-dialog: 0 24px 64px -12px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.04);
-  --shadow-menu: 0 12px 32px -8px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.04);
-  --row-h: 3rem;
-  /* Marketing pages sit one step darker than the app so the app "panels" read as the product. */
-  --stage: #0e1115;
-  color-scheme: dark;
-}
-
-[data-theme="light"] {
-  --ground: #f3f4f6;
-  --surface: #ffffff;
-  --raised: #ffffff;
-  --overlay: #ffffff;
-  --line: #dde1e7;
-  --line-strong: #c4cad3;
-  --hairline: rgb(221 225 231 / 0.9);
-  --ink: #151a21;
-  --ink-2: #5b6674;
-  --ink-3: #8a94a2;
-  --accent: #b27a12;
-  --accent-ink: #ffffff;
-  --accent-soft: rgb(178 122 18 / 0.12);
-  --accent-text: #7a4f08;
-  --good: #1f9d5f;
-  --good-soft: rgb(31 157 95 / 0.12);
-  --bad: #d3453b;
-  --bad-soft: rgb(211 69 59 / 0.12);
-  --note: #2f6fdc;
-  --note-soft: rgb(47 111 220 / 0.12);
-  --shadow-dialog: 0 24px 64px -12px rgb(15 20 30 / 0.28), 0 0 0 1px rgb(15 20 30 / 0.06);
-  --shadow-menu: 0 12px 32px -8px rgb(15 20 30 / 0.22), 0 0 0 1px rgb(15 20 30 / 0.06);
-  --stage: #eceef1;
-  color-scheme: light;
-}
-
-[data-density="compact"] {
-  --row-h: 2.5rem;
-}
-
-/* ---------------------------------------------------------------------------
-   Nocturne skin — the landing page's palette, applied by putting `.nocturne` on a subtree.
-   Every existing component keeps working because it only reads the tokens above.
-   Today: auth pages. Rolling it out to the app = adding the class to the root layout.
---------------------------------------------------------------------------- */
-.nocturne {
-  --ground: #0f1019;
-  --surface: #171a28;
-  --raised: #1c1f30;
-  --overlay: #22263a;
+  --ground: #161826;
+  --surface: #1c1f30;
+  --raised: #22263a;
+  --overlay: #262b40;
   --line: #2a2d42;
   --line-strong: #3a3f61;
   --hairline: rgb(42 45 66 / 0.8);
   --ink: #e9e9ed;
   --ink-2: #a9aac0;
-  --ink-3: #9296ae;
+  --ink-3: #8f93ab;
   --accent: #9184d9;
   --accent-ink: #f2f0ff;
   --accent-soft: rgb(145 132 217 / 0.18);
-  --accent-text: #b5abfc;
-  --stage: #0f1019;
+  --accent-text: #b7a6ff;
+  --good: #4ade80;
+  --good-soft: rgb(74 222 128 / 0.14);
+  --bad: #f2736a;
+  --bad-soft: rgb(242 115 106 / 0.14);
+  --note: #7fb0ff;
+  --note-soft: rgb(127 176 255 / 0.14);
   --shadow-dialog: 0 30px 70px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(233 233 237 / 0.05);
   --shadow-menu: 0 12px 34px rgb(0 0 0 / 0.45), 0 0 0 1px rgb(145 132 217 / 0.16);
-  background: var(--ground);
-  color: var(--ink);
+  --shadow-panel: 0 1px 0 rgb(233 233 237 / 0.03) inset;
+  --row-h: 3rem;
+  /* Marketing pages sit one step darker than the app. */
+  --stage: #12131f;
   color-scheme: dark;
 }
-.nocturne h1,
-.nocturne h2,
-.nocturne h3,
-.nocturne .font-display {
-  font-family: var(--font-sans);
-  letter-spacing: -0.024em;
-}
-.nocturne [data-slot="button"][data-variant="primary"] {
-  background: linear-gradient(180deg, #6f61ba, #524889);
-  border: 1px solid rgb(181 171 252 / 0.5);
-  box-shadow: 0 10px 30px rgb(110 96 186 / 0.4);
-  transition:
-    box-shadow 0.2s,
-    transform 0.2s,
-    filter 0.2s;
-}
-.nocturne [data-slot="button"][data-variant="primary"]:hover:not(:disabled) {
-  filter: none;
-  box-shadow: 0 12px 34px rgb(130 114 220 / 0.55);
-  transform: translateY(-1px);
-}
-.nocturne [data-slot="button"][data-variant="secondary"] {
-  background: rgb(28 31 48 / 0.7);
-}
-.nocturne [data-slot="input"]:focus {
-  box-shadow: 0 0 0 3px rgb(145 132 217 / 0.22);
+
+[data-density="compact"] {
+  --row-h: 2.5rem;
 }
 
 @theme inline {
@@ -148,7 +65,7 @@
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
-  --font-display: "Barlow Semi Condensed", var(--font-geist-sans), ui-sans-serif, sans-serif;
+  --font-display: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 
   --radius-xs: 2px;
   --radius-sm: 4px;
@@ -228,7 +145,7 @@
   h3,
   .font-display {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.024em;
     line-height: 1.15;
     font-weight: 600;
   }
@@ -250,6 +167,26 @@
   }
   .tnum {
     font-variant-numeric: tabular-nums;
+  }
+  [data-slot="button"][data-variant="primary"] {
+    background: linear-gradient(180deg, #6f61ba, #524889);
+    border: 1px solid rgb(181 171 252 / 0.5);
+    box-shadow: 0 10px 30px rgb(110 96 186 / 0.4);
+    transition:
+      box-shadow 0.2s,
+      transform 0.2s,
+      filter 0.2s;
+  }
+  [data-slot="button"][data-variant="primary"]:hover:not(:disabled) {
+    filter: none;
+    box-shadow: 0 12px 34px rgb(130 114 220 / 0.55);
+    transform: translateY(-1px);
+  }
+  [data-slot="button"][data-variant="secondary"] {
+    background: rgb(34 38 58 / 0.7);
+  }
+  [data-slot="input"]:focus {
+    box-shadow: 0 0 0 3px rgb(145 132 217 / 0.22);
   }
   @media (prefers-reduced-motion: reduce) {
     *,
@@ -292,10 +229,12 @@
   .menu-row[data-active="true"] {
     background: rgb(255 255 255 / 0.025);
   }
-  [data-theme="light"] .menu-row:hover,
-  [data-theme="light"] .menu-row:focus-within,
-  [data-theme="light"] .menu-row[data-active="true"] {
-    background: rgb(15 20 30 / 0.03);
+  /* The dashboard's card chrome: raised plate, hairline border, soft inner top light. */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-panel);
   }
   .scrollbar-thin {
     scrollbar-width: thin;
