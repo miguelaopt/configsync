@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, eq, ne } from "drizzle-orm";
+import { and, asc, desc, eq, ne, sql } from "drizzle-orm";
 import { db, schema, type Tx } from "@/lib/db";
 import { uniqueSlug } from "@/lib/utils/slug";
 import { notFound } from "./errors";
@@ -8,7 +8,7 @@ import type { PresetInput } from "@/lib/validation";
 import type { CategoryDoc, PresetDoc } from "@/lib/import-export/schema";
 import type { SettingValue } from "@/lib/settings/types";
 
-const { presets, categories, settings } = schema;
+const { games, presets, categories, settings } = schema;
 
 export type CategoryWithSettings = schema.Category & { settings: schema.Setting[] };
 export type PresetFull = schema.Preset & { categories: CategoryWithSettings[] };
@@ -243,4 +243,31 @@ export async function insertCategoriesFromDocs(
       })),
     );
   }
+}
+
+/** Presets across every active game, most recently edited first. Used by the dashboard and library. */
+export async function listRecentPresets(userId: string, limit = 5) {
+  const rows = await db
+    .select({
+      id: presets.id,
+      name: presets.name,
+      slug: presets.slug,
+      updatedAt: presets.updatedAt,
+      isDefault: presets.isDefault,
+      gameId: games.id,
+      gameName: games.name,
+      gameSlug: games.slug,
+      accentColor: games.accentColor,
+      coverAttachmentId: games.coverAttachmentId,
+      coverUrl: games.coverUrl,
+      settingCount: sql<number>`(select count(*) from settings s where s.preset_id = "presets"."id")`,
+    })
+    .from(presets)
+    .innerJoin(games, eq(games.id, presets.gameId))
+    .where(
+      and(eq(presets.userId, userId), eq(presets.isArchived, false), eq(games.isArchived, false)),
+    )
+    .orderBy(desc(presets.updatedAt))
+    .limit(limit);
+  return rows.map((p) => ({ ...p, settingCount: Number(p.settingCount) }));
 }

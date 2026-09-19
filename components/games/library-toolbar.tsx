@@ -4,10 +4,26 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils/cn";
+import { GAME_SORTS, type GameSort } from "@/lib/types";
 
-/** Search box (debounced, URL-backed) + active/archived switch. */
-export function LibraryToolbar({ query, archived }: { query: string; archived: boolean }) {
+/** Search box (debounced, URL-backed) + active/archived switch + sort. */
+export function LibraryToolbar({
+  query,
+  archived,
+  sort,
+}: {
+  query: string;
+  archived: boolean;
+  sort: GameSort;
+}) {
   const router = useRouter();
   const [value, setValue] = React.useState(query);
   const first = React.useRef(true);
@@ -18,18 +34,15 @@ export function LibraryToolbar({ query, archived }: { query: string; archived: b
       return;
     }
     const t = setTimeout(() => {
-      const params = new URLSearchParams();
-      if (value.trim()) params.set("q", value.trim());
-      if (archived) params.set("view", "archived");
-      router.replace(`/games${params.size ? `?${params}` : ""}`);
+      router.replace(`/games${href({ q: value.trim(), archived, sort })}`);
     }, 250);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <div className="relative w-full sm:w-72">
+    <div className="flex flex-wrap items-center gap-3">
+      <div className="relative w-full sm:w-80">
         <Search
           className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-ink-3"
           aria-hidden
@@ -59,8 +72,16 @@ export function LibraryToolbar({ query, archived }: { query: string; archived: b
         aria-label="Show"
       >
         {[
-          { label: "Active", href: "/games", active: !archived },
-          { label: "Archived", href: "/games?view=archived", active: archived },
+          {
+            label: "Active",
+            href: `/games${href({ q: query, archived: false, sort })}`,
+            active: !archived,
+          },
+          {
+            label: "Archived",
+            href: `/games${href({ q: query, archived: true, sort })}`,
+            active: archived,
+          },
         ].map((t) => (
           <Link
             key={t.label}
@@ -78,6 +99,35 @@ export function LibraryToolbar({ query, archived }: { query: string; archived: b
           </Link>
         ))}
       </div>
+      <label className="ml-auto flex items-center gap-2 text-[13px] whitespace-nowrap text-ink-3">
+        Sort by
+        <Select
+          value={sort}
+          onValueChange={(v) =>
+            router.replace(`/games${href({ q: query, archived, sort: v as GameSort })}`)
+          }
+        >
+          <SelectTrigger aria-label="Sort games" className="w-48">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {GAME_SORTS.map((o) => (
+              <SelectItem key={o.value} value={o.value}>
+                {o.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </label>
     </div>
   );
+}
+
+/** One place that builds the library URL, so every control keeps the others' state. */
+function href({ q, archived, sort }: { q: string; archived: boolean; sort: GameSort }) {
+  const params = new URLSearchParams();
+  if (q.trim()) params.set("q", q.trim());
+  if (archived) params.set("view", "archived");
+  if (sort !== "updated") params.set("sort", sort);
+  return params.size ? `?${params}` : "";
 }

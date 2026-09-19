@@ -7,7 +7,12 @@ import { listRevisions } from "@/lib/data/revisions";
 import { getPlan } from "@/lib/billing/plan";
 import { screenshotAssistantEnabled } from "@/lib/env";
 import { publicCatalog } from "@/lib/catalog";
-import { Page, PageHeader } from "@/components/app/page-header";
+import Link from "next/link";
+import { deviceRowsForGame } from "@/lib/data/devices";
+import { summarise } from "@/lib/data/sync";
+import { Page } from "@/components/app/page-header";
+import { GameBand } from "@/components/presets/game-band";
+import { PresetRail } from "@/components/presets/preset-rail";
 import { PresetHeader } from "@/components/presets/preset-header";
 import { PresetEditor } from "@/components/settings/preset-editor";
 import type { Params } from "@/lib/types";
@@ -48,46 +53,77 @@ export default async function PresetPage({
   const catalogEntry = game.catalogId
     ? (publicCatalog().find((c) => c.id === game.catalogId) ?? null)
     : null;
+  const deviceRows = game.catalogId
+    ? await deviceRowsForGame(user.id, { id: game.id, catalogId: game.catalogId })
+    : [];
+  const sync = deviceRows.length ? summarise(deviceRows.map((r) => r.status.kind)) : null;
+  const activeSiblings = siblings.filter((p) => !p.isArchived);
 
   return (
     <Page size="xl">
-      <div style={{ "--accent": game.accentColor ?? undefined } as React.CSSProperties}>
-        <PageHeader
-          crumbs={[
-            { label: "Games", href: "/games" },
-            { label: game.name, href: `/games/${game.slug}` },
-            { label: preset.name },
-          ]}
-          title=""
-          className="mb-0 [&_h1]:hidden"
-        />
-        <PresetHeader
+      <nav aria-label="Breadcrumb" className="mb-4 text-[13px] text-ink-3">
+        <Link href="/games" className="rounded-sm hover:text-ink">
+          Games
+        </Link>
+        <span aria-hidden className="px-2">
+          ›
+        </span>
+        <Link href={`/games/${game.slug}`} className="rounded-sm hover:text-ink">
+          {game.name}
+        </Link>
+        <span aria-hidden className="px-2">
+          ›
+        </span>
+        <span className="text-ink-2">{preset.name}</span>
+      </nav>
+
+      <div
+        className="flex flex-col gap-5"
+        style={{ "--accent": game.accentColor ?? undefined } as React.CSSProperties}
+      >
+        <GameBand
           game={game}
-          preset={presetOnly}
-          siblings={siblings.filter((p) => !p.isArchived).map((p) => ({ id: p.id, name: p.name }))}
-          copyPayload={{
-            title: `${game.name} — ${preset.name}`,
-            categories: toCategoryDocs(categories),
+          stats={{
+            presets: activeSiblings.length,
+            settings: settingCount,
+            categories: categories.length,
           }}
-          copyFormat={copyFormat}
-          settingCount={settingCount}
-          revisions={revisions}
-          catalogEntry={catalogEntry}
-          publicUrl={
-            profile?.isPublic ? `/p/${profile.username}/${game.slug}/${preset.slug}` : null
-          }
-          ai={{
-            enabled: screenshotAssistantEnabled,
-            pro: plan === "pro",
-            categories: categories.map((c) => ({ id: c.id, name: c.name })),
-          }}
+          sync={sync}
         />
-        <PresetEditor
-          game={game}
-          preset={presetOnly}
-          categories={categories}
-          preferences={profile?.preferences ?? {}}
-        />
+
+        <div className="grid items-start gap-5 xl:grid-cols-[288px_minmax(0,1fr)]">
+          <PresetRail presets={siblings} gameSlug={game.slug} currentSlug={preset.slug} />
+
+          <div className="panel min-w-0 p-4 sm:p-5">
+            <PresetHeader
+              game={game}
+              preset={presetOnly}
+              siblings={activeSiblings.map((p) => ({ id: p.id, name: p.name }))}
+              copyPayload={{
+                title: `${game.name} — ${preset.name}`,
+                categories: toCategoryDocs(categories),
+              }}
+              copyFormat={copyFormat}
+              settingCount={settingCount}
+              revisions={revisions}
+              catalogEntry={catalogEntry}
+              publicUrl={
+                profile?.isPublic ? `/p/${profile.username}/${game.slug}/${preset.slug}` : null
+              }
+              ai={{
+                enabled: screenshotAssistantEnabled,
+                pro: plan === "pro",
+                categories: categories.map((c) => ({ id: c.id, name: c.name })),
+              }}
+            />
+            <PresetEditor
+              game={game}
+              preset={presetOnly}
+              categories={categories}
+              preferences={profile?.preferences ?? {}}
+            />
+          </div>
+        </div>
       </div>
     </Page>
   );

@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { ConfirmDialog } from "@/components/ui/alert-dialog";
 import { copyWithToast } from "@/lib/copy/use-copy";
 import { plural, timeAgo } from "@/lib/utils/format";
-import { SITE } from "@/lib/site";
 
 type Token = { id: string; name: string; createdAt: Date; lastUsedAt: Date | null };
 type Device = {
@@ -57,15 +56,15 @@ export function CompanionCard({
     <div className="flex flex-col gap-6 text-[13px]">
       <div className="rounded-sm border border-line p-3">
         <p className="text-ink">Install the companion on your gaming PC:</p>
-        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`git clone ${SITE.repoUrl} && cd configsync/companion && npm i -g .\ncsync login ${appUrl}\ncsync scan --push\ncsync import cs2\ncsync watch --install   # Pro: keeps files equal to each game's Default preset`}</pre>
+        <p className="mt-1 text-ink-3">
+          Node 20 or newer. The package is served by this site — no registry account, nothing else
+          to install. (npm 12 refuses to fetch a package straight from a URL, hence the download
+          step.)
+        </p>
+        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`curl -fsSL ${appUrl}/csync.tgz -o csync.tgz && npm i -g ./csync.tgz\ncsync login ${appUrl}\ncsync scan --push\ncsync import cs2\ncsync watch --install   # Pro: keeps files equal to each game's Default preset`}</pre>
         <p className="mt-2 text-ink-3">
-          It reads your game config files and never writes without a backup. Docs:{" "}
-          <a
-            href={`${SITE.repoUrl}/blob/main/${SITE.docsCompanion}`}
-            className="underline underline-offset-4 hover:text-ink"
-          >
-            {SITE.docsCompanion}
-          </a>
+          It reads your game config files and never writes without a backup. Run{" "}
+          <code className="font-mono text-xs">csync --help</code> for every command.
         </p>
         <p className="mt-1 text-ink-3">
           Steam launch options:{" "}

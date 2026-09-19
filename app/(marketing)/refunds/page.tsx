@@ -4,7 +4,12 @@ import { LEGAL } from "@/lib/legal";
 import { PRICES } from "@/lib/billing/public";
 import { LegalPage, Section } from "@/components/marketing/legal";
 
-export const metadata: Metadata = { title: "Refund Policy" };
+export const metadata: Metadata = {
+  title: "Refund Policy",
+  description:
+    "Fourteen days, no questions asked, on every ConfigSync payment. How to ask and how long it takes.",
+  alternates: { canonical: "/refunds" },
+};
 
 /** Kept deliberately simple and at least as generous as EU consumer law and Paddle's own policy. */
 export default function RefundsPage() {
@@ -40,6 +45,28 @@ export default function RefundsPage() {
           Paddle to the original payment method, usually within 5–10 business days depending on your
           bank. Pro is switched off when the refund is issued; your data stays in your account on
           the Free plan.
+        </p>
+      </Section>
+
+      <Section title="VAT and invoices">
+        <p>
+          Prices are shown with VAT included for the country you buy from. Paddle issues the invoice
+          and emails it with the receipt; you can ask Paddle for a copy at any time, and add a
+          business VAT number at checkout if you need one on the invoice.
+        </p>
+      </Section>
+
+      <Section title="If we stop running the Service">
+        <p>
+          The lifetime licence covers Pro on this hosted service for as long as it exists, so it is
+          fair to say what happens if it stops. We would announce it by email at least 60 days
+          before shutting anything down, keep exports working for that whole period, and refund the
+          unused part of any subscription. Lifetime licences bought in the 12 months before such an
+          announcement would be refunded in full.
+        </p>
+        <p>
+          Your data is yours either way: a full export of every game, preset, setting and snapshot
+          is one click away in the app, today and on the last day.
         </p>
       </Section>
 

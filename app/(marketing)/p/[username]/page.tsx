@@ -27,20 +27,22 @@ export default async function PublicProfilePage({ params }: { params: Params<"us
   const initials = (p.displayName ?? p.username).trim().slice(0, 1).toUpperCase();
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex items-start gap-4">
+      <header className="panel flex items-start gap-5 p-6 sm:p-7">
         {p.avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={p.avatarUrl} alt="" className="size-16 shrink-0 rounded-full object-cover" />
         ) : (
           <div
-            className="flex size-16 shrink-0 items-center justify-center rounded-full border border-line bg-raised font-display text-2xl"
+            className="flex size-16 shrink-0 items-center justify-center rounded-full bg-accent-soft text-2xl font-semibold text-accent-text"
             aria-hidden
           >
             {initials}
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <h1 className="font-display text-2xl">{p.displayName ?? p.username}</h1>
+          <h1 className="text-[28px] font-bold tracking-[-0.024em]">
+            {p.displayName ?? p.username}
+          </h1>
           <p className="text-[13px] text-ink-3">@{p.username}</p>
           {p.bio ? <p className="mt-2 max-w-prose text-[13px] text-ink-2">{p.bio}</p> : null}
           <div className="mt-3">
@@ -49,10 +51,14 @@ export default async function PublicProfilePage({ params }: { params: Params<"us
         </div>
       </header>
       {p.games.length === 0 ? (
-        <p className="text-[13px] text-ink-3">No public presets yet.</p>
+        <p className="panel p-6 text-[14px] text-ink-3">No public presets yet.</p>
       ) : (
         p.games.map((g) => (
-          <section key={g.slug} aria-labelledby={`g-${g.slug}`} className="flex gap-4">
+          <section
+            key={g.slug}
+            aria-labelledby={`g-${g.slug}`}
+            className="panel flex gap-5 p-5 sm:p-6"
+          >
             <GameCover
               game={{
                 name: g.name,
@@ -60,10 +66,10 @@ export default async function PublicProfilePage({ params }: { params: Params<"us
                 coverAttachmentId: null,
                 coverUrl: g.coverUrl,
               }}
-              className="w-20"
+              className="w-24 shrink-0 rounded-lg"
             />
             <div className="min-w-0 flex-1">
-              <h2 id={`g-${g.slug}`} className="font-display text-lg">
+              <h2 id={`g-${g.slug}`} className="text-[18px] font-semibold">
                 {g.name}
               </h2>
               <ul className="mt-2 flex flex-col gap-1.5">
@@ -71,7 +77,7 @@ export default async function PublicProfilePage({ params }: { params: Params<"us
                   <li key={pr.slug}>
                     <Link
                       href={`/p/${p.username}/${g.slug}/${pr.slug}`}
-                      className="flex items-baseline justify-between gap-3 rounded-sm border border-line bg-surface px-3 py-2 hover:border-line-strong"
+                      className="flex items-baseline justify-between gap-3 rounded-lg border border-line bg-raised px-3.5 py-2.5 transition-colors hover:border-line-strong"
                     >
                       <span className="text-ink">{pr.name}</span>
                       <span className="shrink-0 text-xs text-ink-3">

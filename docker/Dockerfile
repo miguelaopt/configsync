@@ -16,9 +16,11 @@ ENV DATABASE_URL=postgres://build:build@localhost:5432/build \
     BETTER_AUTH_SECRET=build-time-placeholder-secret
 # NEXT_PUBLIC_* are inlined into the browser bundle at build time, so they must be build args
 # (docker-compose passes them from .env). All of them are public by design.
-ARG NEXT_PUBLIC_APP_URL NEXT_PUBLIC_REPO_URL NEXT_PUBLIC_PADDLE_CLIENT_TOKEN NEXT_PUBLIC_PADDLE_ENV
-ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL NEXT_PUBLIC_REPO_URL=$NEXT_PUBLIC_REPO_URL \
+ARG NEXT_PUBLIC_APP_URL NEXT_PUBLIC_PADDLE_CLIENT_TOKEN NEXT_PUBLIC_PADDLE_ENV
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
     NEXT_PUBLIC_PADDLE_CLIENT_TOKEN=$NEXT_PUBLIC_PADDLE_CLIENT_TOKEN NEXT_PUBLIC_PADDLE_ENV=$NEXT_PUBLIC_PADDLE_ENV
+# The companion ships from this site, not from a registry: `npm i -g <origin>/csync.tgz`.
+RUN pnpm pack:companion
 RUN pnpm build
 
 FROM node:22-alpine AS runner

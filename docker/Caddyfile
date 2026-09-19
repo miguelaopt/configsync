@@ -1,7 +1,26 @@
 # Production reverse proxy: TLS from Let's Encrypt, www → apex. APP_DOMAIN comes from .env.
 {$APP_DOMAIN} {
 	encode zstd gzip
-	reverse_proxy app:3000
+
+	# The app is unreachable or restarting (bad deploy, failed migration, container down):
+	# serve the maintenance page instead of a bare gateway error. A 500 from a running app is
+	# NOT intercepted — that is the app's own error page, and it says more than "maintenance".
+	handle_errors 502 503 504 {
+		rewrite * /maintenance.html
+		file_server {
+			root /srv
+		}
+	}
+
+	reverse_proxy app:3000 {
+		@down status 502 503 504
+		handle_response @down {
+			rewrite * /maintenance.html
+			file_server {
+				root /srv
+			}
+		}
+	}
 }
 
 www.{$APP_DOMAIN} {

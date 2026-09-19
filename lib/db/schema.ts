@@ -101,7 +101,6 @@ export const verifications = pgTable(
 
 export type UserPreferences = {
   copyFormat?: "plain" | "markdown" | "json";
-  theme?: "dark" | "light" | "system";
   density?: "comfortable" | "compact";
 };
 

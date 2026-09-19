@@ -12,7 +12,7 @@ export const LEGAL = {
   /** TODO: postal address required by EU e-commerce rules (can be a business address service). */
   address: "Praça das Palmeiras lt120, Viseu, Portugal",
   /** TODO: tax id (NIF). Leave empty to hide the line. */
-  taxId: "",
+  taxId: "258697849",
   /** Contact for support, privacy requests and refunds. */
   email: "hello@configsync.app",
   /** Public origin of the service. */

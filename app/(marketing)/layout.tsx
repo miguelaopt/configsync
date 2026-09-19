@@ -1,22 +1,19 @@
-import Link from "next/link";
-import { Logo } from "@/components/app/logo";
-import { LegalLinks } from "@/components/marketing/legal";
+import { getSession } from "@/lib/auth/session";
+import { Backdrop, MarketingFooter, MarketingHeader } from "@/components/marketing/chrome";
 
-export default function MarketingLayout({ children }: { children: React.ReactNode }) {
+/** Public pages outside the landing: the same chrome, so the brand does not change mid-visit. */
+export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSession();
   return (
-    <div className="flex min-h-dvh flex-col bg-stage">
-      <header className="flex h-14 items-center px-4 sm:px-6">
-        <Link href="/" aria-label="ConfigSync home" className="rounded-sm">
-          <Logo />
-        </Link>
-      </header>
-      <main className="flex flex-1 items-start justify-center px-4 py-8 sm:py-12">
-        <div className="w-full max-w-3xl">{children}</div>
+    <div className="relative flex min-h-dvh flex-col overflow-x-hidden bg-ground">
+      <Backdrop />
+      <MarketingHeader signedIn={Boolean(session)} />
+      <main className="relative flex-1 px-4 pt-12 pb-8 sm:px-6 sm:pt-16">
+        <div className="mx-auto w-full max-w-6xl">{children}</div>
       </main>
-      <footer className="flex flex-col gap-2 px-4 py-6 text-center text-xs text-ink-3">
-        <span>Your data stays yours — export everything, any time.</span>
-        <LegalLinks />
-      </footer>
+      <div className="relative">
+        <MarketingFooter />
+      </div>
     </div>
   );
 }

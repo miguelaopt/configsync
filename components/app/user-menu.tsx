@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { LogOut, Settings, User } from "lucide-react";
+import { ChevronDown, LogOut, Settings, User } from "lucide-react";
 import { authClient } from "@/lib/auth/client";
 import {
   DropdownMenu,
@@ -26,14 +26,20 @@ export function UserMenu({
         <button
           type="button"
           aria-label="Account menu"
-          className="flex size-9 cursor-pointer items-center justify-center rounded-full border border-line bg-raised text-[13px] font-semibold text-ink hover:border-line-strong"
+          className="flex cursor-pointer items-center gap-2 rounded-full border border-line bg-raised py-1 pr-2 pl-1 text-ink transition-colors hover:border-line-strong sm:pr-3"
         >
-          {user.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={user.image} alt="" className="size-full rounded-full object-cover" />
-          ) : (
-            initials
-          )}
+          <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent-soft text-[13px] font-semibold text-accent-text">
+            {user.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={user.image} alt="" className="size-full object-cover" />
+            ) : (
+              initials
+            )}
+          </span>
+          <span className="hidden max-w-28 truncate text-[13px] font-medium sm:block">
+            {user.name.split(" ")[0] || user.email}
+          </span>
+          <ChevronDown className="hidden size-4 text-ink-3 sm:block" aria-hidden />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

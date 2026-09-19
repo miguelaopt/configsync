@@ -2,13 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
+import { LogoMark } from "@/components/app/logo";
 import { HeroCard, MotionProvider, Reveal, SyncCard } from "@/components/landing/motion";
+import { StructuredData } from "@/components/marketing/structured-data";
 import s from "./landing.module.css";
 
 export const metadata: Metadata = {
   title: { absolute: "ConfigSync — Your game settings. Everywhere." },
   description:
     "Store, organise and compare the settings you use for any game, then put the setup you want on any PC. Every save keeps a snapshot.",
+  alternates: { canonical: "/" },
 };
 
 const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(" ");
@@ -18,6 +21,7 @@ export default async function LandingPage() {
   if (await getSession()) redirect("/dashboard");
   return (
     <MotionProvider>
+      <StructuredData />
       <div className={s.root}>
         <div aria-hidden className={s.grid} />
         <div aria-hidden className={s.glowTop} />
@@ -26,16 +30,7 @@ export default async function LandingPage() {
         <div className={s.headerWrap}>
           <header className={s.header}>
             <a href="#top" className={s.brand}>
-              <span aria-hidden className={s.mark}>
-                <span className={s.markRing} />
-                <span className={s.markTick} style={{ left: 12, top: 2.5, width: 2, height: 4 }} />
-                <span
-                  className={s.markTick}
-                  style={{ left: 12, bottom: 2.5, width: 2, height: 4 }}
-                />
-                <span className={s.markTick} style={{ top: 12, left: 2.5, width: 4, height: 2 }} />
-                <span className={s.markTick} style={{ top: 12, right: 2.5, width: 4, height: 2 }} />
-              </span>
+              <LogoMark size={28} />
               <span className={s.wordmark}>
                 Config<span>Sync</span>
               </span>

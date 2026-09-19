@@ -8,12 +8,12 @@ import { Ribbon } from "@/components/auth/ribbon";
  */
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="nocturne grid min-h-dvh lg:grid-cols-2">
+    <div className="grid min-h-dvh lg:grid-cols-2">
       <aside className="relative hidden overflow-hidden bg-[#0c0d14] lg:block">
         <Ribbon />
         <div className="relative flex h-full flex-col justify-between p-12 xl:p-16">
           <Link href="/" aria-label="ConfigSync home" className="w-fit rounded-sm">
-            <Logo className="text-[20px] [&_svg]:size-7" />
+            <Logo size={30} className="text-[20px]" />
           </Link>
           <p className="font-display text-[clamp(40px,4.2vw,64px)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
             Your game settings.

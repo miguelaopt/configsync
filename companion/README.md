@@ -7,9 +7,15 @@ no dependencies.
 ## Install
 
 ```sh
-git clone <repo> && cd configsync/companion
-npm i -g .            # installs the `csync` command
+curl -fsSL https://configsync.app/csync.tgz -o csync.tgz
+npm i -g ./csync.tgz          # installs the `csync` command
 ```
+
+npm 12 refuses to install a package straight from a URL (`allow-remote` defaults to `none`),
+so the file is downloaded first.
+
+The package is served by the app itself, so it is always the build the server is running.
+Self-hosting? Replace the host with your own origin.
 
 From a checkout of the repo you can also run it without installing: `pnpm csync <command>`.
 
