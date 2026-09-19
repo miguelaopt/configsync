@@ -40,6 +40,7 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
 
   return (
     <div className="flex min-h-dvh">
+      <div aria-hidden className="app-backdrop" />
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-sm focus:bg-accent focus:px-3 focus:py-2 focus:text-accent-ink"
