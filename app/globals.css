@@ -230,22 +230,30 @@
     background: rgb(255 255 255 / 0.025);
   }
   /*
-     The navigation rail. Deep navy rather than flat black, with three layers that read as one
-     lit surface: a cool wash near the top, a violet bloom rising out of the bottom-left corner,
-     and a gentle vertical fall-off between them. Kept low-contrast on purpose — it should look
-     like light in the room, not a gradient laid over the panel.
+     The app's lighting comes from one image (public/brand/gradient.webp): deep navy, a cool wash
+     near the top, a violet bloom out of the bottom-left. Both layers below use `cover` against the
+     viewport, so the rail and the page are lit by the same source and line up exactly.
   */
+
+  /* Behind the content. A 160px-wide copy scaled up *is* the blur, so it costs no GPU time. */
+  .app-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--ground);
+    background-image: url("/brand/gradient-blur.webp");
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* The navigation rail shows the same light, unblurred and aligned to the viewport. */
   .app-rail {
     background-color: #151829;
-    background-image:
-      radial-gradient(
-        82% 46% at -10% 100%,
-        rgb(141 122 244 / 0.32),
-        rgb(116 99 206 / 0.09) 44%,
-        transparent 74%
-      ),
-      radial-gradient(120% 24% at 46% -6%, rgb(116 150 226 / 0.1), transparent 72%),
-      linear-gradient(180deg, #191d30 0%, #14172600 46%, #12152200 72%, #161a2e 100%);
+    background-image: url("/brand/gradient.webp");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
     border-right: 1px solid rgb(62 70 108 / 0.45);
   }
 
