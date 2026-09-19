@@ -50,7 +50,7 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
       {/* Rail */}
       <nav
         aria-label="Primary"
-        className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-line bg-stage lg:flex"
+        className="app-rail sticky top-0 hidden h-dvh w-60 shrink-0 flex-col lg:flex"
       >
         <Link
           href="/dashboard"
@@ -68,8 +68,8 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
                 className={cn(
                   "relative flex h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
                   isActive(href)
-                    ? "bg-accent-soft text-ink before:absolute before:top-2.5 before:bottom-2.5 before:-left-3 before:w-[3px] before:rounded-r-sm before:bg-accent"
-                    : "text-ink-2 hover:bg-surface hover:text-ink",
+                    ? "bg-[rgb(120_108_205/0.16)] text-ink shadow-[inset_0_1px_0_rgb(233_233_237/0.05)] before:absolute before:top-1.5 before:bottom-1.5 before:left-0 before:w-[3px] before:rounded-r-full before:bg-accent-text"
+                    : "text-ink-2 hover:bg-[rgb(233_233_237/0.04)] hover:text-ink",
                 )}
               >
                 <Icon
@@ -81,17 +81,9 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
             </li>
           ))}
         </ul>
-        <div className="relative mt-auto overflow-hidden px-5 py-6">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -bottom-24 left-1/2 h-56 w-72 -translate-x-1/2 rounded-full"
-            style={{
-              background:
-                "radial-gradient(closest-side, rgb(145 132 217 / 0.22), rgb(145 132 217 / 0.05) 55%, transparent 78%)",
-            }}
-          />
-          <p className="relative text-[11px] text-ink-3">ConfigSync v{SITE.version}</p>
-          <p className="relative text-[11px] text-ink-3">Play better. Everywhere.</p>
+        <div className="mt-auto px-5 py-6">
+          <p className="text-[11px] text-ink-3">ConfigSync v{SITE.version}</p>
+          <p className="text-[11px] text-ink-3">Play better. Everywhere.</p>
         </div>
       </nav>
 

@@ -36,7 +36,7 @@ export function UserMenu({
               initials
             )}
           </span>
-          <span className="hidden max-w-28 truncate text-[13px] font-medium sm:block">
+          <span className="hidden max-w-28 truncate bg-[linear-gradient(100deg,#f0ecff,#c9c0ff_45%,#9184d9)] bg-clip-text text-[13px] font-semibold text-transparent sm:block">
             {user.name.split(" ")[0] || user.email}
           </span>
           <ChevronDown className="hidden size-4 text-ink-3 sm:block" aria-hidden />
