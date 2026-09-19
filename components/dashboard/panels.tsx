@@ -76,7 +76,44 @@ export function SyncPill({ status, className }: { status: SyncLabel; className?:
 }
 
 /**
- * A card for something that is designed but not built yet (friends, discovery, pro players).
+ * What is coming, as one panel of rows rather than a stack of cards. Three cards gave a quarter
+ * of the dashboard to features that do not exist yet; three rows say the same in half the height.
+ */
+export function DiscoverPanel({
+  items,
+}: {
+  items: { icon: React.ReactNode; title: string; description: string }[];
+}) {
+  return (
+    <section className="panel flex flex-col" aria-labelledby="discover">
+      <h2
+        id="discover"
+        className="px-5 pt-4 pb-3 text-[11px] font-semibold tracking-wide text-ink-3 uppercase"
+      >
+        Discover
+      </h2>
+      <ul className="flex flex-col">
+        {items.map((i) => (
+          <li key={i.title} className="flex items-start gap-3 border-t border-hairline px-5 py-3.5">
+            <span aria-hidden className="mt-0.5 shrink-0 text-ink-3 [&_svg]:size-[18px]">
+              {i.icon}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[14px] font-medium text-ink-2">{i.title}</span>
+              <span className="mt-0.5 block text-[13px] text-ink-3">{i.description}</span>
+            </span>
+            <span className="mt-0.5 shrink-0 text-[12px] whitespace-nowrap text-ink-3">
+              Coming soon
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/**
+ * A card for something that is designed but not built yet.
  * It describes what will be there — no fake avatars, no invented numbers.
  */
 export function ComingSoonPanel({

@@ -69,7 +69,7 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
                 className={cn(
                   "relative flex h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors",
                   isActive(href)
-                    ? "bg-[rgb(120_108_205/0.16)] text-ink shadow-[inset_0_1px_0_rgb(233_233_237/0.05)] before:absolute before:top-1.5 before:bottom-1.5 before:left-0 before:w-[3px] before:rounded-r-full before:bg-accent-text"
+                    ? "bg-[rgb(110_100_190/0.1)] text-ink before:absolute before:top-2 before:bottom-2 before:left-0 before:w-[2px] before:rounded-r-full before:bg-accent-text"
                     : "text-ink-2 hover:bg-[rgb(233_233_237/0.04)] hover:text-ink",
                 )}
               >
@@ -82,9 +82,16 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
             </li>
           ))}
         </ul>
-        <div className="mt-auto px-5 py-6">
-          <p className="text-[11px] text-ink-3">ConfigSync v{SITE.version}</p>
-          <p className="text-[11px] text-ink-3">Play better. Everywhere.</p>
+        <div className="mt-auto flex flex-wrap items-center gap-x-2 gap-y-1 px-5 py-6 text-xs text-ink-3">
+          <span>v{SITE.version}</span>
+          <span aria-hidden>·</span>
+          <Link href="/privacy" className="rounded-sm hover:text-ink-2">
+            Privacy
+          </Link>
+          <span aria-hidden>·</span>
+          <Link href="/terms" className="rounded-sm hover:text-ink-2">
+            Terms
+          </Link>
         </div>
       </nav>
 

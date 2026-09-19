@@ -7,7 +7,6 @@ import {
   FileText,
   Gamepad2,
   Laptop,
-  Layers,
   Monitor,
   RefreshCw,
   Upload,
@@ -24,9 +23,9 @@ import { Page } from "@/components/app/page-header";
 import { GameCover } from "@/components/games/game-cover";
 import { NewGameButton } from "@/components/games/new-game-button";
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
-import { ComingSoonPanel, Panel, SyncPill } from "@/components/dashboard/panels";
+import { DiscoverPanel, Panel, SyncPill } from "@/components/dashboard/panels";
+import { EmptyVault } from "@/components/dashboard/empty-vault";
 import { plural, timeAgo } from "@/lib/utils/format";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -52,55 +51,74 @@ export default async function DashboardPage() {
 
   return (
     <Page size="xl">
-      {/* Greeting */}
+      {/* Greeting — quieter when there is nothing yet, so the empty state is the focus. */}
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-[34px] leading-none font-bold sm:text-[40px]">Hi {firstName}.</h1>
-          <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-2">
-            <span>{plural(data.totals.games, "game")}</span>
-            <Dot />
-            <span>{plural(data.totals.presets, "preset")}</span>
-            <Dot />
-            <span>{plural(data.totals.settings, "setting")}</span>
-            {overall ? (
+          <h1
+            className={
+              empty
+                ? "text-[26px] leading-none font-bold sm:text-[30px]"
+                : "text-[34px] leading-none font-bold sm:text-[40px]"
+            }
+          >
+            Hi {firstName}.
+          </h1>
+          <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-3">
+            {empty ? (
+              <span>Your library is empty.</span>
+            ) : (
               <>
+                <span>{plural(data.totals.games, "game")}</span>
                 <Dot />
-                <span className={`inline-flex items-center gap-1.5 ${overall.tone}`}>
-                  <span className="size-1.5 rounded-full bg-current" aria-hidden />
-                  {overall.label}
-                </span>
+                <span>{plural(data.totals.presets, "preset")}</span>
+                <Dot />
+                <span>{plural(data.totals.settings, "setting")}</span>
+                <Dot />
+                {overall ? (
+                  <span className={`inline-flex items-center gap-1.5 ${overall.tone}`}>
+                    <span className="size-1.5 rounded-full bg-current" aria-hidden />
+                    {overall.label}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="size-1.5 rounded-full bg-current" aria-hidden />
+                    Companion offline
+                  </span>
+                )}
               </>
-            ) : null}
+            )}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <NewGameButton size="lg" catalog={catalog} owned={owned} />
-          <Button asChild variant="secondary" size="lg">
-            <Link href="/import">
-              <Upload /> Import
-            </Link>
-          </Button>
-        </div>
+        {/* With no games the only call to action belongs in the empty state. */}
+        {empty ? null : (
+          <div className="flex flex-wrap gap-2">
+            <NewGameButton size="lg" catalog={catalog} owned={owned} />
+            <Button asChild variant="secondary" size="lg">
+              <Link href="/import">
+                <Upload /> Import
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
 
       {empty ? (
-        <EmptyState
-          icon={<Layers />}
-          title="Start your vault"
-          description="Add a game, create a preset like “Main Setup”, then add categories and settings that mirror the game's own menu."
-          action={
-            <>
-              <NewGameButton catalog={catalog} owned={owned} />
-              <Button asChild variant="secondary">
-                <Link href="/import">Import a JSON file</Link>
-              </Button>
-            </>
-          }
-        />
+        <EmptyVault catalog={catalog} owned={owned} />
       ) : (
         <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_336px]">
           {/* Main column */}
           <div className="flex min-w-0 flex-col gap-5">
+            {data.recentPresets[0] ? (
+              <Link
+                href={`/games/${data.recentPresets[0].gameSlug}/${data.recentPresets[0].slug}`}
+                className="flex w-fit items-center gap-2 rounded-sm text-[13px] text-ink-3 hover:text-ink"
+              >
+                <span className="text-ink-2">Continue editing</span>
+                {data.recentPresets[0].gameName}
+                <ChevronRight className="size-3.5" aria-hidden />
+                {data.recentPresets[0].name}
+              </Link>
+            ) : null}
             <Panel
               icon={<Gamepad2 />}
               title="Your games"
@@ -123,16 +141,17 @@ export default async function DashboardPage() {
                         <span className="block truncate text-[15px] font-semibold text-ink">
                           {g.name}
                         </span>
-                        <span className="mt-0.5 block truncate text-[13px] text-ink-3">
-                          {plural(g.presetCount, "preset")} · {plural(g.settingCount, "setting")}
-                        </span>
-                        <span className="mt-2 flex flex-wrap items-center gap-2">
-                          {g.platforms.slice(0, 1).map((p) => (
-                            <Badge key={p} variant="outline">
-                              {p}
-                            </Badge>
-                          ))}
-                          {g.sync ? <SyncPill status={g.sync} /> : null}
+                        <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-3">
+                          <span>{plural(g.presetCount, "preset")}</span>
+                          <Dot />
+                          <span>{plural(g.settingCount, "setting")}</span>
+                          {g.platforms[0] ? (
+                            <>
+                              <Dot />
+                              <span>{g.platforms[0]}</span>
+                            </>
+                          ) : null}
+                          {g.sync ? <SyncPill status={g.sync} className="ml-1" /> : null}
                         </span>
                       </span>
                       <ChevronRight className="size-5 shrink-0 text-ink-3" aria-hidden />
@@ -194,11 +213,14 @@ export default async function DashboardPage() {
                           {timeAgo(p.updatedAt)}
                         </td>
                         <td className="py-2.5 pr-4 sm:pr-5">
-                          {p.sync ? (
-                            <SyncPill status={p.sync} />
-                          ) : (
-                            <span className="text-ink-3">—</span>
-                          )}
+                          <span className="flex items-center justify-between gap-3">
+                            {p.sync ? (
+                              <SyncPill status={p.sync} />
+                            ) : (
+                              <span className="text-ink-3">—</span>
+                            )}
+                            <ChevronRight className="size-4 shrink-0 text-ink-3" aria-hidden />
+                          </span>
                         </td>
                       </tr>
                     ))}
@@ -301,20 +323,24 @@ export default async function DashboardPage() {
 
           {/* Rail */}
           <aside className="flex min-w-0 flex-col gap-5">
-            <ComingSoonPanel
-              icon={<Users />}
-              title="Friends"
-              description="See who is online, what they are playing and the preset they are running."
-            />
-            <ComingSoonPanel
-              icon={<UserSearch />}
-              title="Public profiles"
-              description="Discover community setups and follow the players whose configs you copy."
-            />
-            <ComingSoonPanel
-              icon={<Crown />}
-              title="Pro players"
-              description="Verified pro configs, straight into your vault with one click."
+            <DiscoverPanel
+              items={[
+                {
+                  icon: <Users />,
+                  title: "Friends",
+                  description: "See what your friends are playing.",
+                },
+                {
+                  icon: <UserSearch />,
+                  title: "Public profiles",
+                  description: "Discover and save community setups.",
+                },
+                {
+                  icon: <Crown />,
+                  title: "Pro players",
+                  description: "Verified setups from competitive players.",
+                },
+              ]}
             />
             {billingEnabled && plan !== "pro" ? (
               <section className="panel flex flex-col gap-3 p-5">

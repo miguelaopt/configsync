@@ -171,7 +171,7 @@
   [data-slot="button"][data-variant="primary"] {
     background: linear-gradient(180deg, #6f61ba, #524889);
     border: 1px solid rgb(181 171 252 / 0.5);
-    box-shadow: 0 10px 30px rgb(110 96 186 / 0.4);
+    box-shadow: 0 6px 18px rgb(110 96 186 / 0.22);
     transition:
       box-shadow 0.2s,
       transform 0.2s,
@@ -179,7 +179,7 @@
   }
   [data-slot="button"][data-variant="primary"]:hover:not(:disabled) {
     filter: none;
-    box-shadow: 0 12px 34px rgb(130 114 220 / 0.55);
+    box-shadow: 0 8px 22px rgb(130 114 220 / 0.32);
     transform: translateY(-1px);
   }
   [data-slot="button"][data-variant="secondary"] {
@@ -230,31 +230,29 @@
     background: rgb(255 255 255 / 0.025);
   }
   /*
-     The app's lighting comes from one image (public/brand/gradient.webp): deep navy, a cool wash
-     near the top, a violet bloom out of the bottom-left. Both layers below use `cover` against the
-     viewport, so the rail and the page are lit by the same source and line up exactly.
+     The app's lighting is light, not a picture. It should be perceived, never looked at: a
+     lavender glow gathered in the bottom-left corner, a cool breath off the top edge, and a
+     ground darker than the rail so the two separate without leaning on borders.
   */
-
-  /* Behind the content. A 160px-wide copy scaled up *is* the blur, so it costs no GPU time. */
   .app-backdrop {
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background-color: var(--ground);
-    background-image: url("/brand/gradient-blur.webp");
-    background-size: cover;
-    background-position: center;
+    background:
+      radial-gradient(
+        ellipse at 5% 90%,
+        rgb(91 62 255 / 0.22) 0%,
+        rgb(72 54 210 / 0.1) 22%,
+        transparent 47%
+      ),
+      radial-gradient(ellipse at 36% 2%, rgb(72 92 190 / 0.08) 0%, transparent 38%), #0d1425;
   }
 
-  /* The navigation rail shows the same light, unblurred and aligned to the viewport. */
+  /* The rail sits a shade lighter and bluer, and lets the corner glow through from behind. */
   .app-rail {
-    background-color: #151829;
-    background-image: url("/brand/gradient.webp");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    border-right: 1px solid rgb(62 70 108 / 0.45);
+    background: linear-gradient(180deg, rgb(32 43 82 / 0.34), rgb(24 33 66 / 0.26));
+    border-right: 1px solid rgb(62 70 108 / 0.4);
   }
 
   /* The dashboard's card chrome: raised plate, hairline border, soft inner top light. */
