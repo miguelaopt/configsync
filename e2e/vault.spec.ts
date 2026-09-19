@@ -24,7 +24,8 @@ async function signUp(page: Page) {
 test("create account and see the empty dashboard", async ({ page }) => {
   await signUp(page);
   await expect(page.getByRole("heading", { name: /Hi E2E/ })).toBeVisible();
-  await expect(page.getByText("Start your vault")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Build your library" })).toBeVisible();
+  await expect(page.getByText("Your library is empty.")).toBeVisible();
 });
 
 test.describe("library flow", () => {
