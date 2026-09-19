@@ -5,14 +5,15 @@ import { uniqueSlug } from "@/lib/utils/slug";
 import { assertCanAddGame } from "@/lib/billing/plan";
 import { notFound } from "./errors";
 import type { GameInput } from "@/lib/validation";
+import type { GameSort } from "@/lib/types";
 
 const { games, presets } = schema;
 
-export type GameListItem = schema.Game & { presetCount: number };
+export type GameListItem = schema.Game & { presetCount: number; settingCount: number };
 
 export async function listGames(
   userId: string,
-  opts: { archived?: boolean; query?: string } = {},
+  opts: { archived?: boolean; query?: string; sort?: GameSort } = {},
 ): Promise<GameListItem[]> {
   const conditions = [eq(games.userId, userId), eq(games.isArchived, opts.archived ?? false)];
   if (opts.query?.trim()) {
@@ -25,14 +26,28 @@ export async function listGames(
       )!,
     );
   }
+  const order =
+    opts.sort === "name"
+      ? [asc(games.name)]
+      : opts.sort === "presets"
+        ? [desc(count(presets.id)), asc(games.name)]
+        : [desc(games.updatedAt)];
   const rows = await db
-    .select({ game: games, presetCount: count(presets.id) })
+    .select({
+      game: games,
+      presetCount: count(presets.id),
+      settingCount: sql<number>`(select count(*) from settings s join presets p on p.id = s.preset_id where p.game_id = "games"."id")`,
+    })
     .from(games)
     .leftJoin(presets, and(eq(presets.gameId, games.id), eq(presets.isArchived, false)))
     .where(and(...conditions))
     .groupBy(games.id)
-    .orderBy(desc(games.isFavorite), asc(games.name));
-  return rows.map((r) => ({ ...r.game, presetCount: Number(r.presetCount) }));
+    .orderBy(desc(games.isFavorite), ...order);
+  return rows.map((r) => ({
+    ...r.game,
+    presetCount: Number(r.presetCount),
+    settingCount: Number(r.settingCount),
+  }));
 }
 
 export async function getGameBySlug(userId: string, slug: string) {

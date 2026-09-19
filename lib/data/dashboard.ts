@@ -1,11 +1,12 @@
 import "server-only";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
-import { deviceRowsForGame } from "./devices";
+import { listRecentPresets } from "./presets";
+import { listDeviceState, overallSync, syncLabelsForGames, type SyncLabel } from "./sync";
 
-const { devices, games, presets, revisions } = schema;
+const { games, presets, revisions } = schema;
 
-export type SyncLabel = "synced" | "pending" | "never" | "failed";
+export type { SyncLabel };
 
 /** One line in the activity feed: a preset save, or a PC that reported in. */
 export type Activity = {
@@ -36,28 +37,7 @@ export async function getDashboardData(userId: string) {
       .where(and(eq(games.userId, userId), eq(games.isArchived, false)))
       .orderBy(desc(games.isFavorite), desc(games.lastOpenedAt))
       .limit(4),
-    db
-      .select({
-        id: presets.id,
-        name: presets.name,
-        slug: presets.slug,
-        updatedAt: presets.updatedAt,
-        isDefault: presets.isDefault,
-        gameId: games.id,
-        gameName: games.name,
-        gameSlug: games.slug,
-        accentColor: games.accentColor,
-        coverAttachmentId: games.coverAttachmentId,
-        coverUrl: games.coverUrl,
-        settingCount: sql<number>`(select count(*) from settings s where s.preset_id = "presets"."id")`,
-      })
-      .from(presets)
-      .innerJoin(games, eq(games.id, presets.gameId))
-      .where(
-        and(eq(presets.userId, userId), eq(presets.isArchived, false), eq(games.isArchived, false)),
-      )
-      .orderBy(desc(presets.updatedAt))
-      .limit(5),
+    listRecentPresets(userId, 5),
     db
       .select({
         games: sql<number>`count(distinct ${games.id})`,
@@ -67,18 +47,7 @@ export async function getDashboardData(userId: string) {
       .from(games)
       .leftJoin(presets, eq(presets.gameId, games.id))
       .where(and(eq(games.userId, userId), eq(games.isArchived, false))),
-    db
-      .select({
-        id: devices.id,
-        name: devices.name,
-        platform: devices.platform,
-        lastSeenAt: devices.lastSeenAt,
-        applied: devices.applied,
-      })
-      .from(devices)
-      .where(eq(devices.userId, userId))
-      .orderBy(desc(devices.lastSeenAt))
-      .limit(4),
+    listDeviceState(userId, 4),
     db
       .select({
         note: revisions.note,
@@ -96,19 +65,7 @@ export async function getDashboardData(userId: string) {
       .limit(5),
   ]);
 
-  // ponytail: one fingerprint per device per shown game (max 4 games). Cache per game if the
-  // dashboard ever shows more.
-  const syncByGame = new Map<string, SyncLabel>();
-  if (deviceRows.length > 0) {
-    await Promise.all(
-      recentGames
-        .filter((g) => g.catalogId)
-        .map(async (g) => {
-          const rows = await deviceRowsForGame(userId, { id: g.id, catalogId: g.catalogId! });
-          syncByGame.set(g.id, summarise(rows.map((r) => r.status.kind)));
-        }),
-    );
-  }
+  const syncByGame = await syncLabelsForGames(userId, recentGames, deviceRows.length > 0);
 
   const feed: Activity[] = [
     ...activity.map((r) => ({
@@ -155,21 +112,6 @@ export async function getDashboardData(userId: string) {
       settings: Number(totals[0]?.settings ?? 0),
     },
     /** Headline state: only "synced" when every tracked game on every PC is up to date. */
-    overall: labels.length === 0 ? null : summariseLabels(labels),
+    overall: overallSync(labels),
   };
-}
-
-/** Worst status wins: a failure or a pending change is what the user needs to see. */
-function summarise(kinds: string[]): SyncLabel {
-  if (kinds.length === 0 || kinds.every((k) => k === "never")) return "never";
-  if (kinds.includes("failed")) return "failed";
-  if (kinds.some((k) => k === "stale" || k === "waiting")) return "pending";
-  return "synced";
-}
-
-function summariseLabels(labels: SyncLabel[]): SyncLabel {
-  if (labels.includes("failed")) return "failed";
-  if (labels.includes("pending")) return "pending";
-  if (labels.every((l) => l === "never")) return "never";
-  return "synced";
 }

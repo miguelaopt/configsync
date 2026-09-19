@@ -73,3 +73,21 @@ export async function restoreRevision(userId: string, presetId: string, revision
     await insertCategoriesFromDocs(tx, userId, presetId, doc.categories);
   });
 }
+
+/** Recent saves across every preset of one game, for the game page's activity panel. */
+export async function listGameActivity(userId: string, gameId: string, limit = 6) {
+  const { presets } = schema;
+  return db
+    .select({
+      id: revisions.id,
+      note: revisions.note,
+      createdAt: revisions.createdAt,
+      presetName: presets.name,
+      presetSlug: presets.slug,
+    })
+    .from(revisions)
+    .innerJoin(presets, eq(presets.id, revisions.presetId))
+    .where(and(eq(revisions.userId, userId), eq(presets.gameId, gameId)))
+    .orderBy(desc(revisions.createdAt))
+    .limit(limit);
+}
