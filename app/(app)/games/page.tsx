@@ -67,7 +67,7 @@ export default async function GamesPage({ searchParams }: { searchParams: Search
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <NewGameButton autoOpen={openNew} catalog={catalog} owned={owned} />
+          <NewGameButton autoOpen={openNew} size="lg" catalog={catalog} owned={owned} />
           <Button asChild variant="secondary" size="lg">
             <Link href="/import">
               <Upload /> Import config

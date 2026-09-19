@@ -74,7 +74,7 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <NewGameButton catalog={catalog} owned={owned} />
+          <NewGameButton size="lg" catalog={catalog} owned={owned} />
           <Button asChild variant="secondary" size="lg">
             <Link href="/import">
               <Upload /> Import
@@ -107,7 +107,7 @@ export default async function DashboardPage() {
               subtitle="Manage your games, presets and settings."
               action={{ href: "/games", label: "View all games" }}
             >
-              <ul className="grid gap-3 sm:grid-cols-2">
+              <ul className={`grid gap-3 ${data.recentGames.length > 1 ? "sm:grid-cols-2" : ""}`}>
                 {data.recentGames.map((g) => (
                   <li key={g.id}>
                     <Link

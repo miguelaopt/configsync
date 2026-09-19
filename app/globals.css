@@ -229,6 +229,26 @@
   .menu-row[data-active="true"] {
     background: rgb(255 255 255 / 0.025);
   }
+  /*
+     The navigation rail. Deep navy rather than flat black, with three layers that read as one
+     lit surface: a cool wash near the top, a violet bloom rising out of the bottom-left corner,
+     and a gentle vertical fall-off between them. Kept low-contrast on purpose — it should look
+     like light in the room, not a gradient laid over the panel.
+  */
+  .app-rail {
+    background-color: #151829;
+    background-image:
+      radial-gradient(
+        82% 46% at -10% 100%,
+        rgb(141 122 244 / 0.32),
+        rgb(116 99 206 / 0.09) 44%,
+        transparent 74%
+      ),
+      radial-gradient(120% 24% at 46% -6%, rgb(116 150 226 / 0.1), transparent 72%),
+      linear-gradient(180deg, #191d30 0%, #14172600 46%, #12152200 72%, #161a2e 100%);
+    border-right: 1px solid rgb(62 70 108 / 0.45);
+  }
+
   /* The dashboard's card chrome: raised plate, hairline border, soft inner top light. */
   .panel {
     background: var(--surface);
