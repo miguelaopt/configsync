@@ -28,11 +28,18 @@ describe("readGameConfig", () => {
     expect(find(r.preset, "Keybinds", "Fire").value).toBe("mouse1"); // default, not in file
     expect(r.missingFiles).toEqual([]);
     expect(r.unmappedSettings).toContain("Video › Brightness");
+    expect(r.readSettings).toContain("Video › Resolution");
+    expect(r.readSettings).not.toContain("Video › Brightness");
+    expect(Object.values(r.perFile).reduce((sum, count) => sum + count, 0)).toBe(
+      r.readSettings.length,
+    );
   });
   it("reports missing files and keeps defaults", () => {
     const r = readGameConfig(cs2, { video: cs2Files.video });
     expect(r.missingFiles).toEqual(["convars", "keys"]);
     expect(find(r.preset, "Crosshair", "Length").value).toBe(5);
+    expect(r.perFile.convars).toBeUndefined();
+    expect(r.readSettings).not.toContain("Crosshair › Length");
   });
   it("warns on values it cannot decode", () => {
     const broken = cs2Files.video.replace(
@@ -41,6 +48,7 @@ describe("readGameConfig", () => {
     );
     const r = readGameConfig(cs2, { video: broken });
     expect(r.warnings.some((w) => w.includes("mat_vsync"))).toBe(true);
+    expect(r.readSettings).not.toContain("Video › Wait for Vertical Sync");
     expect(find(r.preset, "Video", "Wait for Vertical Sync").value).toBe(false);
   });
   it("reads Rocket League video + input and lists camera as unmapped", () => {
@@ -50,6 +58,7 @@ describe("readGameConfig", () => {
     expect(find(r.preset, "Video", "Motion Blur").value).toBe(false);
     expect(find(r.preset, "Controls", "Mouse Sensitivity").value).toBe(10);
     expect(r.unmappedSettings).toContain("Camera › Field of View");
+    expect(r.perFile).toEqual({ video: 9, input: 1 });
   });
 });
 

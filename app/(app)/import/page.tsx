@@ -5,6 +5,7 @@ import { publicCatalog } from "@/lib/catalog";
 import { Page, PageHeader } from "@/components/app/page-header";
 import { ImportForm } from "@/components/import-export/import-form";
 import { GameFilesForm } from "@/components/import-export/game-files-form";
+import { RecentImports } from "@/components/import-export/recent-imports";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SearchParams } from "@/lib/types";
 
@@ -17,31 +18,43 @@ export default async function ImportPage({ searchParams }: { searchParams: Searc
   const defaultTarget =
     typeof sp.game === "string" && games.some((g) => g.id === sp.game) ? sp.game : null;
   return (
-    <Page size="md">
+    <Page size="lg">
       <PageHeader
         title="Import"
-        description={
-          <>
-            Bring in a JSON file exported from ConfigSync — yours or a friend’s — or read a game’s
-            own config files.
-          </>
-        }
+        description="Bring settings into your vault from ConfigSync, a game config file, or pasted data."
       />
+      <p className="mb-5 text-[13px] text-ink-3">
+        Your files stay yours. Review everything before it is added to your vault.
+      </p>
       <Tabs defaultValue={sp.tab === "files" ? "files" : "json"}>
         <TabsList className="mb-5">
-          <TabsTrigger value="json">Vault JSON</TabsTrigger>
-          <TabsTrigger value="files">Game files</TabsTrigger>
+          <TabsTrigger value="json">ConfigSync backup</TabsTrigger>
+          <TabsTrigger value="files">Game config</TabsTrigger>
         </TabsList>
         <TabsContent value="json">
+          <h2 className="mb-1 text-[11px] font-semibold tracking-wide text-ink-3 uppercase">
+            Import from ConfigSync
+          </h2>
+          <p className="mb-5 text-[13px] text-ink-2">
+            Move presets from another account, another device, or a backup.
+          </p>
           <ImportForm
+            userId={user.id}
             games={games.map((g) => ({ id: g.id, name: g.name, slug: g.slug }))}
             defaultTargetId={defaultTarget}
           />
         </TabsContent>
         <TabsContent value="files">
-          <GameFilesForm catalog={publicCatalog()} />
+          <h2 className="mb-1 text-[11px] font-semibold tracking-wide text-ink-3 uppercase">
+            Game config
+          </h2>
+          <p className="mb-5 text-[13px] text-ink-2">
+            Read settings straight out of a game&rsquo;s own configuration files.
+          </p>
+          <GameFilesForm catalog={publicCatalog()} userId={user.id} />
         </TabsContent>
       </Tabs>
+      <RecentImports userId={user.id} />
     </Page>
   );
 }

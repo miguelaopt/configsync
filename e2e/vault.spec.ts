@@ -42,6 +42,8 @@ test.describe("library flow", () => {
     context,
     browserName,
   }) => {
+    // This deliberately covers the entire product in one test, including mobile dialogs.
+    test.slow();
     // --- Create game -------------------------------------------------------
     await page.goto("/games");
     await page.getByRole("button", { name: "Add game" }).first().click();
@@ -157,14 +159,27 @@ test.describe("library flow", () => {
         .map((g) => ({ ...g, name: "Imported Arena" })),
     };
     await page.goto("/import");
-    await page.getByText("Or paste JSON").click();
+    await page.getByText("or paste JSON").click();
     await page.getByLabel("JSON to import").fill(JSON.stringify(importFile));
-    await expect(page.getByText("Looks good")).toBeVisible();
-    await page.getByRole("button", { name: "Import", exact: true }).click();
+    await page.getByRole("button", { name: "Review" }).click();
+    // Step 2 names what is about to land before anything is written.
+    await expect(page.getByText("Found", { exact: true })).toBeVisible();
+    await page.getByRole("button", { name: /^Import / }).click();
     await expect(page.getByRole("heading", { name: "Imported" })).toBeVisible();
+
     await page.getByRole("link", { name: "Open Imported Arena" }).click();
     await page.waitForURL("**/games/imported-arena");
     await expect(page.getByText("Main Setup", { exact: true })).toBeVisible();
+
+    // The same file again, skipping duplicates, must add nothing.
+    await page.goto("/import");
+    await page.getByText("or paste JSON").click();
+    await page.getByLabel("JSON to import").fill(JSON.stringify(importFile));
+    await page.getByRole("button", { name: "Review" }).click();
+    await expect(page.getByText("already exists").first()).toBeVisible();
+    await page.getByRole("radio", { name: /Skip duplicates/ }).check();
+    await page.getByRole("button", { name: /^Nothing to import|^Import / }).click();
+    await expect(page.getByText(/skipped/)).toBeVisible();
 
     // --- Search -------------------------------------------------------------
     await page.goto("/search?q=Sensitivity");
@@ -203,13 +218,17 @@ test.describe("library flow", () => {
 
     // --- Import a real config file as a preset -------------------------------
     await page.goto("/import?tab=files");
-    await expect(page.getByRole("tab", { name: "Game files" })).toHaveAttribute(
+    await expect(page.getByRole("tab", { name: "Game config" })).toHaveAttribute(
       "aria-selected",
       "true",
     );
-    await page.locator("#gf-video").setInputFiles("tests/fixtures/cs2_video.txt");
-    await expect(page.getByRole("status")).toContainText("will be created");
-    await page.getByRole("button", { name: "Import as preset" }).click();
+    await page.getByLabel(/config files here/).setInputFiles("tests/fixtures/cs2_video.txt");
+    await expect(page.getByRole("status")).toContainText("detected");
+    await expect(page.getByRole("status")).toContainText("recognised");
+    await page.getByRole("button", { name: /^Review / }).click();
+    await expect(page.getByRole("heading", { name: "Review settings" })).toBeVisible();
+    await page.getByRole("button", { name: "Import preset", exact: true }).click();
+    await page.getByRole("link", { name: "Open imported preset" }).click();
     await page.waitForURL("**/games/counter-strike-2/imported-*");
     await expect(page.getByLabel("Resolution width")).toHaveValue("1280");
 
