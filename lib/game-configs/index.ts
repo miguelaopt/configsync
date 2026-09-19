@@ -14,6 +14,8 @@ export type ReadResult = {
   missingFiles: string[];
   unmappedSettings: string[];
   warnings: string[];
+  /** Settings actually read, per config file id. */
+  perFile: Record<string, number>;
 };
 export type WriteResult = {
   files: Record<string, string>;
@@ -102,6 +104,8 @@ export function readGameConfig(game: CatalogGame, files: ConfigFiles): ReadResul
   const unmappedSettings: string[] = [];
   const missingFiles = game.files.filter((f) => files[f.id] == null).map((f) => f.id);
   const parsed = new Map<string, Record<string, string>>();
+  /** How many values each file actually produced — what the UI shows after a drop. */
+  const perFile: Record<string, number> = {};
   for (const f of game.files) {
     const text = files[f.id];
     if (text == null) continue;
@@ -123,10 +127,12 @@ export function readGameConfig(game: CatalogGame, files: ConfigFiles): ReadResul
       const vals = parsed.get(source.file);
       if (!vals) return s;
       const v = readOne(cs, source, vals, warnings, label);
-      return v === undefined ? s : { ...s, value: v };
+      if (v === undefined) return s;
+      perFile[source.file] = (perFile[source.file] ?? 0) + 1;
+      return { ...s, value: v };
     }),
   }));
-  return { preset: { ...template, categories }, missingFiles, unmappedSettings, warnings };
+  return { preset: { ...template, categories }, missingFiles, unmappedSettings, warnings, perFile };
 }
 
 export function writeGameConfig(

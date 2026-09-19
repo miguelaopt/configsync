@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { importGameConfigAction, previewGameConfigAction } from "@/lib/actions/catalog";
 import type { PublicCatalogEntry } from "@/lib/catalog";
+import { ArrowRight, Check } from "lucide-react";
+import { Dropzone } from "./dropzone";
 import { Button } from "@/components/ui/button";
 import { toastError } from "@/components/ui/toaster";
 import { Field } from "@/components/ui/field";
@@ -22,6 +24,7 @@ type Preview = {
   unmappedSettings: string[];
   warnings: string[];
   settingCount: number;
+  perFile: Record<string, number>;
 };
 const MAX = 512 * 1024;
 
@@ -53,6 +56,21 @@ export function GameFilesForm({ catalog }: { catalog: PublicCatalogEntry[] }) {
     setGameId(id);
     setFiles({});
     setPreview(null);
+  };
+
+  /** Matches dropped files to the catalog's file ids by name, so order does not matter. */
+  const onDropped = (dropped: File[]) => {
+    if (!game) return;
+    for (const f of dropped) {
+      const hit =
+        game.files.find((c) => c.id.toLowerCase() === f.name.toLowerCase()) ??
+        game.files.find((c) => f.name.toLowerCase().includes(c.id.toLowerCase().split(".")[0]!));
+      if (!hit) {
+        toast.error(`${f.name} isn't one of ${game.name}'s config files.`);
+        continue;
+      }
+      onFile(hit.id, f);
+    }
   };
 
   const onFile = (fileId: string, f: File | undefined) => {
@@ -96,27 +114,54 @@ export function GameFilesForm({ catalog }: { catalog: PublicCatalogEntry[] }) {
           </SelectContent>
         </Select>
       </Field>
-      {game.files.map((f) => (
-        <Field key={f.id} label={`${f.id} file`} htmlFor={`gf-${f.id}`} hint={hintFor(f)}>
-          <Input
-            id={`gf-${f.id}`}
-            type="file"
-            onChange={(e) => onFile(f.id, e.target.files?.[0])}
-          />
-        </Field>
-      ))}
+      <Dropzone
+        accept=".cfg,.txt,.ini,.json,text/plain"
+        label={`Drop ${game.name}'s config files here`}
+        hint={`Supported: ${game.files.map((f) => f.id).join(", ")}`}
+        multiple
+        onFiles={onDropped}
+      >
+        <Button variant="secondary">Choose files</Button>
+      </Dropzone>
+
+      <ul className="flex flex-col gap-1.5 text-[13px]">
+        {game.files.map((f) => {
+          const loaded = files[f.id] != null;
+          return (
+            <li key={f.id} className="flex items-center gap-2">
+              {loaded ? (
+                <Check className="size-4 shrink-0 text-good" aria-hidden />
+              ) : (
+                <span aria-hidden className="size-4 shrink-0 text-center text-ink-3">
+                  ·
+                </span>
+              )}
+              <span className={loaded ? "font-mono text-ink" : "font-mono text-ink-3"}>{f.id}</span>
+              {loaded ? (
+                <span className="text-ink-2">
+                  {plural(preview?.perFile[f.id] ?? 0, "setting")} found
+                </span>
+              ) : (
+                <span className="truncate text-ink-3">{hintFor(f)}</span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+
       {preview ? (
-        <div className="rounded-sm border border-line p-3 text-[13px] text-ink-2" role="status">
-          <p className="text-ink">{plural(preview.settingCount, "setting")} will be created.</p>
+        <div className="panel flex flex-col gap-1.5 p-4 text-[13px] text-ink-2" role="status">
+          <p className="text-[15px] font-semibold text-ink">{game.name} detected</p>
+          <p className="text-ink">{plural(preview.settingCount, "setting")} recognised.</p>
+          {preview.unmappedSettings.length > 0 ? (
+            <p>
+              {plural(preview.unmappedSettings.length, "setting")} couldn&rsquo;t be matched (e.g.{" "}
+              {preview.unmappedSettings[0]}) — add those by hand.
+            </p>
+          ) : null}
           {preview.missingFiles.length > 0 ? (
             <p>
               Not provided: {preview.missingFiles.join(", ")} — those settings keep their defaults.
-            </p>
-          ) : null}
-          {preview.unmappedSettings.length > 0 ? (
-            <p>
-              {plural(preview.unmappedSettings.length, "setting")} aren’t stored in files (e.g.{" "}
-              {preview.unmappedSettings[0]}); enter them by hand.
             </p>
           ) : null}
           {preview.warnings.map((w) => (
@@ -124,16 +169,18 @@ export function GameFilesForm({ catalog }: { catalog: PublicCatalogEntry[] }) {
           ))}
         </div>
       ) : null}
+
       <Field label="Preset name" htmlFor="gf-name" optional hint="Defaults to “Imported <date>”.">
         <Input id="gf-name" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
       </Field>
       <Button
         variant="primary"
+        size="lg"
         onClick={submit}
         loading={pending}
         disabled={Object.keys(files).length === 0}
       >
-        Import as preset
+        Review {plural(preview?.settingCount ?? 0, "setting")} <ArrowRight />
       </Button>
     </div>
   );
