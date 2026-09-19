@@ -47,3 +47,6 @@ next-env.d.ts
 
 # local
 !.env.example
+
+# Built by `pnpm pack:companion`; served as the companion installer.
+public/csync.tgz

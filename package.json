@@ -25,7 +25,8 @@
     "db:reset": "tsx --conditions=react-server --tsconfig tsconfig.json scripts/reset.ts",
     "db:studio": "drizzle-kit studio",
     "check": "pnpm typecheck && pnpm lint && pnpm test",
-    "csync": "node companion/bin/csync.mjs"
+    "csync": "node companion/bin/csync.mjs",
+    "pack:companion": "npm pack ./companion --pack-destination /tmp && cp /tmp/configsync-*.tgz public/csync.tgz"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.126.0",

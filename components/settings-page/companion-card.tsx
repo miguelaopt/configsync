@@ -56,7 +56,12 @@ export function CompanionCard({
     <div className="flex flex-col gap-6 text-[13px]">
       <div className="rounded-sm border border-line p-3">
         <p className="text-ink">Install the companion on your gaming PC:</p>
-        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`npm i -g configsync\ncsync login ${appUrl}\ncsync scan --push\ncsync import cs2\ncsync watch --install   # Pro: keeps files equal to each game's Default preset`}</pre>
+        <p className="mt-1 text-ink-3">
+          Node 20 or newer. The package is served by this site — no registry account, nothing else
+          to install. (npm 12 refuses to fetch a package straight from a URL, hence the download
+          step.)
+        </p>
+        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`curl -fsSL ${appUrl}/csync.tgz -o csync.tgz && npm i -g ./csync.tgz\ncsync login ${appUrl}\ncsync scan --push\ncsync import cs2\ncsync watch --install   # Pro: keeps files equal to each game's Default preset`}</pre>
         <p className="mt-2 text-ink-3">
           It reads your game config files and never writes without a backup. Run{" "}
           <code className="font-mono text-xs">csync --help</code> for every command.

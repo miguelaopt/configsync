@@ -10,9 +10,9 @@ Work top to bottom. The blockers genuinely block.
 
 ## 0. Blockers — do not deploy this branch without them
 
-- [ ] **Publish the companion to npm.** Settings → Companion tells every user to run
-      `npm i -g configsync`. Until the package exists, that command fails for everyone.
-      See §1 for how to publish without a security key.
+- [ ] **Check the companion installer.** The app serves its own package, so there is nothing to
+      publish. After deploying, run `npm i -g https://configsync.app/csync.tgz` on a machine that
+      has never had it (see §1), then `csync --help`.
 - [ ] **Rotate the Anthropic API key.** The key currently in the server's `.env` was shown in
       plain text in a chat session on 2026-09-19. console.anthropic.com → API keys → revoke it,
       create a new one with a monthly spend limit, then replace it on the server (commands below).
@@ -31,44 +31,28 @@ docker compose --profile app --profile proxy up -d
 
 ---
 
-## 1. npm without a security key
+## 1. The companion installer
 
-npm asks for two-factor on publish. A physical key is only one of the options.
-
-**Option A — authenticator app (recommended, one-time setup)**
-
-1. npmjs.com → sign in (create the account if you have none).
-2. Avatar → **Account** → **Two-factor authentication** → choose **Authenticator app**, not
-   security key. Scan the QR with any TOTP app (Aegis, Google Authenticator, 1Password, Proton
-   Pass). Save the recovery codes somewhere that is not this repository.
-3. On your PC:
-   ```bash
-   npm login              # email, password, then the 6-digit code
-   cd ~/Desktop/Settings_Saver/companion
-   npm publish
-   ```
-
-**Option B — automation token (no prompt at all, good for CI later)**
-
-1. npmjs.com → avatar → **Access Tokens** → **Generate New Token** → **Classic** →
-   **Automation**. Automation tokens skip the 2FA prompt on publish.
-2. ```bash
-   cd ~/Desktop/Settings_Saver/companion
-   NPM_TOKEN=npm_xxx npm publish --//registry.npmjs.org/:_authToken=$NPM_TOKEN
-   ```
-   Or write it once to `~/.npmrc`: `//registry.npmjs.org/:_authToken=npm_xxx` (chmod 600).
-
-**Then check it actually works**, from a shell that has never seen this repo:
+The companion is not on npm and does not need to be: it has no dependencies, so the app packs
+it at build time and serves the tarball. Users run one command, against your own domain.
 
 ```bash
-npm view configsync version          # prints 0.1.0
-npm i -g configsync && csync --help  # the command exists and prints usage
+curl -fsSL https://configsync.app/csync.tgz -o csync.tgz
+npm i -g ./csync.tgz
+csync --help
 ```
 
-- [ ] Published, and `csync --help` works from a clean install.
-- [ ] The install snippet in Settings → Companion matches what you published.
+(npm 12 sets `allow-remote = "none"`, so it will not install straight from a URL. The download
+step is not optional, and the snippet in the app already shows it that way.)
 
----
+- [ ] `https://configsync.app/csync.tgz` downloads a file (about 11 kB).
+- [ ] A clean install works and `csync --help` prints the command list.
+- [ ] The snippet in Settings → Companion shows the same URL as the deployment it is served from.
+
+If you ever do want it on npmjs.com, that needs 2FA. A physical key is not the only option —
+a passkey on your phone (Chrome's "Use a phone or tablet" → QR → fingerprint) or one stored in
+a password manager both work, as does a Classic **Automation** access token, which skips the
+2FA prompt on publish. Nothing depends on it.
 
 ## 2. Paddle
 
