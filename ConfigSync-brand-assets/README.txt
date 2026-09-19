@@ -27,5 +27,8 @@ App background
   gradient.webp      1920px wide, quality 82 — the navigation rail, unblurred
   gradient-blur.webp 160px wide  — scaled up behind the page content, which is what makes the
                                    blur; a tiny file instead of a GPU filter.
-- Regenerate after editing gradient.png:
+- gradient-4k.webp is the same artwork at 3840x2160, rebuilt from the fitted formula rather than
+  upscaled, so it is sharp at any size. gradient.py rebuilds it (or any size) from scratch:
+      python3 ConfigSync-brand-assets/gradient.py 3840 2160 out.png
+- Regenerate the app's two derivatives after editing gradient.png:
     python3 -c "from PIL import Image, ImageFilter; im=Image.open('ConfigSync-brand-assets/gradient.png').convert('RGB'); w,h=im.size; im.resize((1920,round(1920*h/w)), Image.LANCZOS).save('public/brand/gradient.webp','WEBP',quality=82,method=6); im.resize((160,round(160*h/w)), Image.LANCZOS).filter(ImageFilter.GaussianBlur(6)).save('public/brand/gradient-blur.webp','WEBP',quality=88,method=6)"
