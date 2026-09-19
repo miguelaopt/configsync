@@ -1,43 +1,81 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Clock, Download, Layers, Search, Star, Upload } from "lucide-react";
+import {
+  Activity,
+  ChevronRight,
+  Crown,
+  FileText,
+  Gamepad2,
+  Laptop,
+  Layers,
+  Monitor,
+  RefreshCw,
+  Upload,
+  Users,
+  UserSearch,
+} from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { listOwnedCatalogIds } from "@/lib/data/catalog";
 import { publicCatalog } from "@/lib/catalog";
-import { Page, SectionTitle } from "@/components/app/page-header";
+import { getPlan } from "@/lib/billing/plan";
+import { billingEnabled } from "@/lib/env";
+import { Page } from "@/components/app/page-header";
 import { GameCover } from "@/components/games/game-cover";
 import { NewGameButton } from "@/components/games/new-game-button";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
+import { ComingSoonPanel, Panel, SyncPill } from "@/components/dashboard/panels";
 import { plural, timeAgo } from "@/lib/utils/format";
-import { SearchTrigger } from "@/components/dashboard/search-trigger";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
+const OVERALL_COPY = {
+  synced: { label: "Everything synced", tone: "text-good" },
+  pending: { label: "Changes to apply", tone: "text-accent-text" },
+  failed: { label: "A PC failed to apply", tone: "text-bad" },
+  never: { label: "Nothing applied yet", tone: "text-ink-3" },
+} as const;
+
 export default async function DashboardPage() {
   const user = await requireUser();
-  const data = await getDashboardData(user.id);
-  const catalog = publicCatalog();
-  const owned = await listOwnedCatalogIds(user.id);
+  const [data, catalog, owned, { plan }] = await Promise.all([
+    getDashboardData(user.id),
+    publicCatalog(),
+    listOwnedCatalogIds(user.id),
+    getPlan(user.id),
+  ]);
   const firstName = user.name.split(" ")[0] || "there";
   const empty = data.totals.games === 0;
+  const overall = data.overall ? OVERALL_COPY[data.overall] : null;
 
   return (
     <Page size="xl">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl sm:text-[28px]">Hi {firstName}.</h1>
-          <p className="mt-1 text-[13px] text-ink-2">
-            {empty
-              ? "Your vault is empty. Add a game or import a file to get started."
-              : `${plural(data.totals.games, "game")}, ${plural(data.totals.presets, "preset")}, ${plural(data.totals.settings, "setting")} saved.`}
+      {/* Greeting */}
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="text-[34px] leading-none font-bold sm:text-[40px]">Hi {firstName}.</h1>
+          <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-2">
+            <span>{plural(data.totals.games, "game")}</span>
+            <Dot />
+            <span>{plural(data.totals.presets, "preset")}</span>
+            <Dot />
+            <span>{plural(data.totals.settings, "setting")}</span>
+            {overall ? (
+              <>
+                <Dot />
+                <span className={`inline-flex items-center gap-1.5 ${overall.tone}`}>
+                  <span className="size-1.5 rounded-full bg-current" aria-hidden />
+                  {overall.label}
+                </span>
+              </>
+            ) : null}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <NewGameButton catalog={catalog} owned={owned} />
-          <Button asChild variant="secondary">
+          <Button asChild variant="secondary" size="lg">
             <Link href="/import">
               <Upload /> Import
             </Link>
@@ -45,11 +83,8 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <SearchTrigger />
-
       {empty ? (
         <EmptyState
-          className="mt-6"
           icon={<Layers />}
           title="Start your vault"
           description="Add a game, create a preset like “Main Setup”, then add categories and settings that mirror the game's own menu."
@@ -63,133 +98,247 @@ export default async function DashboardPage() {
           }
         />
       ) : (
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_320px]">
-          <div className="flex flex-col gap-10">
-            {data.recentGames.length > 0 ? (
-              <section aria-labelledby="recent-games">
-                <SectionTitle
-                  action={
-                    <Link href="/games" className="text-[13px] text-ink-2 hover:text-ink">
-                      All games
-                    </Link>
-                  }
-                >
-                  <span id="recent-games">Continue</span>
-                </SectionTitle>
-                <ul className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
-                  {data.recentGames.map((g) => (
-                    <li key={g.id}>
-                      <Link href={`/games/${g.slug}`} className="block rounded-md outline-offset-4">
-                        <GameCover game={g} className="[container-type:inline-size] w-full" />
-                        <span className="mt-1.5 block truncate text-[13px] font-medium">
-                          {g.name}
-                        </span>
-                        <span className="block truncate text-xs text-ink-3">
-                          <Clock className="mr-1 inline size-3 align-[-1px]" aria-hidden />
-                          {timeAgo(g.lastOpenedAt)}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-
-            <section aria-labelledby="recent-presets">
-              <SectionTitle>
-                <span id="recent-presets">Recently edited presets</span>
-              </SectionTitle>
-              {data.recentPresets.length === 0 ? (
-                <p className="text-[13px] text-ink-3">Presets you edit will show up here.</p>
-              ) : (
-                <ul className="divide-y divide-hairline border-y border-hairline">
-                  {data.recentPresets.map((p) => (
-                    <li key={p.id}>
-                      <Link
-                        href={`/games/${p.gameSlug}/${p.slug}`}
-                        className="menu-row flex items-center gap-3 px-3 py-2 outline-offset-[-2px]"
-                      >
-                        <span
-                          className="size-2 shrink-0 rounded-full"
-                          style={{ background: p.accentColor ?? "var(--accent)" }}
-                          aria-hidden
-                        />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex items-center gap-2">
-                            <span className="truncate text-[13px] font-medium text-ink">
-                              {p.name}
-                            </span>
-                            {p.isDefault ? <Badge variant="accent">Default</Badge> : null}
-                          </span>
-                          <span className="block truncate text-xs text-ink-3">{p.gameName}</span>
-                        </span>
-                        <span className="tnum hidden text-xs text-ink-3 sm:block">
-                          {plural(p.settingCount, "setting")}
-                        </span>
-                        <span className="tnum text-xs whitespace-nowrap text-ink-3">
-                          {timeAgo(p.updatedAt)}
-                        </span>
-                        <ArrowRight className="size-4 text-ink-3" aria-hidden />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-          </div>
-
-          <aside className="flex flex-col gap-8">
-            <section aria-labelledby="favorites">
-              <SectionTitle>
-                <span id="favorites" className="inline-flex items-center gap-1.5">
-                  <Star className="size-4 text-accent" aria-hidden /> Favorites
-                </span>
-              </SectionTitle>
-              {data.favoriteGames.length === 0 ? (
-                <p className="text-[13px] text-ink-3">Star a game from its menu to pin it here.</p>
-              ) : (
-                <ul className="flex flex-col gap-1">
-                  {data.favoriteGames.map((g) => (
-                    <li key={g.id}>
-                      <Link
-                        href={`/games/${g.slug}`}
-                        className="flex items-center gap-3 rounded-sm px-2 py-1.5 hover:bg-surface"
-                      >
-                        <GameCover game={g} className="[container-type:inline-size] size-9" />
-                        <span className="min-w-0 flex-1 truncate text-[13px] font-medium">
-                          {g.name}
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-
-            <section aria-labelledby="quick">
-              <SectionTitle>
-                <span id="quick">Quick access</span>
-              </SectionTitle>
-              <ul className="flex flex-col gap-1 text-[13px]">
-                {[
-                  { href: "/search", label: "Search everything", icon: Search },
-                  { href: "/export", label: "Export your library", icon: Download },
-                  { href: "/import", label: "Import a file", icon: Upload },
-                ].map((q) => (
-                  <li key={q.href}>
+        <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_336px]">
+          {/* Main column */}
+          <div className="flex min-w-0 flex-col gap-5">
+            <Panel
+              icon={<Gamepad2 />}
+              title="Your games"
+              subtitle="Manage your games, presets and settings."
+              action={{ href: "/games", label: "View all games" }}
+            >
+              <ul className="grid gap-3 sm:grid-cols-2">
+                {data.recentGames.map((g) => (
+                  <li key={g.id}>
                     <Link
-                      href={q.href}
-                      className="flex h-9 items-center gap-2.5 rounded-sm px-2 text-ink-2 hover:bg-surface hover:text-ink"
+                      href={`/games/${g.slug}`}
+                      className="flex items-center gap-4 rounded-xl border border-line bg-raised p-3 transition-colors hover:border-line-strong"
                     >
-                      <q.icon className="size-4 text-ink-3" aria-hidden /> {q.label}
+                      <GameCover
+                        game={g}
+                        ratio="wide"
+                        className="[container-type:inline-size] w-28 shrink-0 rounded-lg"
+                      />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate text-[15px] font-semibold text-ink">
+                          {g.name}
+                        </span>
+                        <span className="mt-0.5 block truncate text-[13px] text-ink-3">
+                          {plural(g.presetCount, "preset")} · {plural(g.settingCount, "setting")}
+                        </span>
+                        <span className="mt-2 flex flex-wrap items-center gap-2">
+                          {g.platforms.slice(0, 1).map((p) => (
+                            <Badge key={p} variant="outline">
+                              {p}
+                            </Badge>
+                          ))}
+                          {g.sync ? <SyncPill status={g.sync} /> : null}
+                        </span>
+                      </span>
+                      <ChevronRight className="size-5 shrink-0 text-ink-3" aria-hidden />
                     </Link>
                   </li>
                 ))}
               </ul>
-            </section>
+            </Panel>
+
+            <Panel
+              icon={<FileText />}
+              title="Recent presets"
+              subtitle="Your latest edited presets across all games."
+              action={{ href: "/search", label: "View all presets" }}
+              bodyClassName="px-0 pb-0 sm:px-0 sm:pb-0"
+            >
+              {data.recentPresets.length === 0 ? (
+                <p className="px-4 pb-4 text-[13px] text-ink-3 sm:px-5 sm:pb-5">
+                  Presets you edit will show up here.
+                </p>
+              ) : (
+                <table className="w-full text-[13px]">
+                  <thead>
+                    <tr className="border-y border-line text-left text-[11px] tracking-wide text-ink-3 uppercase">
+                      <th scope="col" className="py-2.5 pl-4 font-medium sm:pl-5">
+                        Preset
+                      </th>
+                      <th scope="col" className="hidden py-2.5 font-medium sm:table-cell">
+                        Game
+                      </th>
+                      <th scope="col" className="hidden py-2.5 font-medium md:table-cell">
+                        Last modified
+                      </th>
+                      <th scope="col" className="py-2.5 pr-4 font-medium sm:pr-5">
+                        Sync status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.recentPresets.map((p) => (
+                      <tr key={p.id} className="menu-row border-b-0 last:border-0">
+                        <td className="py-2.5 pl-4 sm:pl-5">
+                          <Link
+                            href={`/games/${p.gameSlug}/${p.slug}`}
+                            className="flex items-center gap-2.5 rounded-sm font-medium text-ink"
+                          >
+                            <GameCover
+                              game={{ ...p, name: p.gameName }}
+                              className="[container-type:inline-size] size-7 shrink-0 rounded-md"
+                            />
+                            <span className="truncate">{p.name}</span>
+                            {p.isDefault ? <Badge variant="accent">Default</Badge> : null}
+                          </Link>
+                        </td>
+                        <td className="hidden truncate py-2.5 text-ink-2 sm:table-cell">
+                          {p.gameName}
+                        </td>
+                        <td className="hidden py-2.5 whitespace-nowrap text-ink-3 md:table-cell">
+                          {timeAgo(p.updatedAt)}
+                        </td>
+                        <td className="py-2.5 pr-4 sm:pr-5">
+                          {p.sync ? (
+                            <SyncPill status={p.sync} />
+                          ) : (
+                            <span className="text-ink-3">—</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </Panel>
+
+            <div className="grid gap-5 lg:grid-cols-2">
+              <Panel
+                icon={<RefreshCw />}
+                title="Sync status"
+                subtitle="PCs running the companion."
+                action={{ href: "/settings#companion", label: "Manage" }}
+              >
+                {data.devices.length === 0 ? (
+                  <p className="text-[13px] text-ink-3">
+                    No PC has reported in yet. Install the companion from{" "}
+                    <Link href="/settings#companion" className="text-accent-text hover:text-ink">
+                      Settings
+                    </Link>
+                    .
+                  </p>
+                ) : (
+                  <ul className="flex flex-col gap-2">
+                    {data.devices.map((d) => (
+                      <li
+                        key={d.id}
+                        className="flex items-center gap-3 rounded-xl border border-line bg-raised px-3 py-2.5"
+                      >
+                        <span
+                          aria-hidden
+                          className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-surface text-ink-3 [&_svg]:size-[18px]"
+                        >
+                          {/laptop|mac|book/i.test(d.name) ? <Laptop /> : <Monitor />}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[13px] font-medium text-ink">
+                            {d.name}
+                          </span>
+                          <span className="block truncate text-xs text-ink-3">
+                            {d.platform ?? "Unknown"} · {plural(d.games, "game")} applied
+                          </span>
+                        </span>
+                        <span className="shrink-0 text-xs whitespace-nowrap text-ink-3">
+                          {timeAgo(d.lastSeenAt)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Panel>
+
+              <Panel icon={<Activity />} title="Recent activity" subtitle="What changed, and when.">
+                {data.activity.length === 0 ? (
+                  <p className="text-[13px] text-ink-3">Nothing has happened yet.</p>
+                ) : (
+                  <ul className="flex flex-col">
+                    {data.activity.map((a, i) => {
+                      const row = (
+                        <>
+                          <span
+                            aria-hidden
+                            className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-raised text-ink-3 [&_svg]:size-4"
+                          >
+                            {a.kind === "device" ? <RefreshCw /> : <FileText />}
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-[13px] text-ink">{a.text}</span>
+                            <span className="block truncate text-xs text-ink-3">{a.detail}</span>
+                          </span>
+                          <span className="shrink-0 text-xs whitespace-nowrap text-ink-3">
+                            {timeAgo(a.at)}
+                          </span>
+                        </>
+                      );
+                      return (
+                        <li
+                          key={`${a.text}-${i}`}
+                          className="menu-row flex items-center gap-3 py-2"
+                        >
+                          {a.href ? (
+                            <Link
+                              href={a.href}
+                              className="flex min-w-0 flex-1 items-center gap-3 rounded-sm"
+                            >
+                              {row}
+                            </Link>
+                          ) : (
+                            row
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </Panel>
+            </div>
+          </div>
+
+          {/* Rail */}
+          <aside className="flex min-w-0 flex-col gap-5">
+            <ComingSoonPanel
+              icon={<Users />}
+              title="Friends"
+              description="See who is online, what they are playing and the preset they are running."
+            />
+            <ComingSoonPanel
+              icon={<UserSearch />}
+              title="Public profiles"
+              description="Discover community setups and follow the players whose configs you copy."
+            />
+            <ComingSoonPanel
+              icon={<Crown />}
+              title="Pro players"
+              description="Verified pro configs, straight into your vault with one click."
+            />
+            {billingEnabled && plan !== "pro" ? (
+              <section className="panel flex flex-col gap-3 p-5">
+                <h2 className="text-[15px] font-semibold text-ink">Go further with Pro</h2>
+                <p className="text-[13px] text-ink-2">
+                  Unlimited games and history, auto-switch on every PC, per-PC presets and the AI
+                  screenshot importer.
+                </p>
+                <Button asChild variant="primary" size="lg" className="mt-1 w-full">
+                  <Link href="/pricing">Upgrade to Pro</Link>
+                </Button>
+              </section>
+            ) : null}
           </aside>
         </div>
       )}
     </Page>
+  );
+}
+
+function Dot() {
+  return (
+    <span aria-hidden className="text-ink-3">
+      ·
+    </span>
   );
 }

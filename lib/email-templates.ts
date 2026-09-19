@@ -15,7 +15,7 @@ const esc = (s: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-const ACCENT = "#b27a12"; // light-theme accent from globals.css
+const ACCENT = "#6f5ac9"; // the brand gradient's dark end — readable on the white email ground
 const INK = "#151a21";
 const INK_2 = "#5b6674";
 

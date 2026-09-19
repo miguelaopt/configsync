@@ -1,7 +1,17 @@
-import Link from "next/link";
+import * as React from "react";
 import { LEGAL } from "@/lib/legal";
 
-/** Layout for /terms, /privacy and /refunds: title, date, then plain sections. */
+const slug = (title: string) =>
+  title
+    .toLowerCase()
+    .replace(/^\d+\.\s*/, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+/**
+ * Layout for /terms, /privacy and /refunds: title, date, a sticky table of contents built from
+ * the Section children, then the sections themselves.
+ */
 export function LegalPage({
   title,
   intro,
@@ -11,50 +21,66 @@ export function LegalPage({
   intro: string;
   children: React.ReactNode;
 }) {
+  const sections = React.Children.toArray(children)
+    .filter(
+      (c): c is React.ReactElement<{ title: string }> =>
+        React.isValidElement(c) && c.type === Section,
+    )
+    .map((c) => c.props.title);
+
   return (
-    <article className="flex flex-col gap-6 text-[14px] leading-relaxed text-ink-2">
-      <header>
-        <h1 className="font-display text-3xl text-ink">{title}</h1>
-        <p className="mt-1 text-xs text-ink-3">Last updated {LEGAL.updated}</p>
-        <p className="mt-3">{intro}</p>
+    <article className="flex flex-col gap-10">
+      <header className="max-w-3xl">
+        <h1 className="text-[40px] leading-[1.08] font-bold tracking-[-0.03em] sm:text-[48px]">
+          {title}
+        </h1>
+        <p className="mt-3 text-[13px] text-ink-3">Last updated {LEGAL.updated}</p>
+        <p className="mt-5 text-[16px] text-ink-2">{intro}</p>
       </header>
-      {children}
-      <footer className="border-t border-line pt-4 text-xs text-ink-3">
-        {LEGAL.operator}
-        {LEGAL.taxId ? ` · ${LEGAL.taxId}` : ""} · {LEGAL.address} ·{" "}
-        <a href={`mailto:${LEGAL.email}`} className="underline underline-offset-4">
-          {LEGAL.email}
-        </a>
-      </footer>
+
+      <div className="grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-14">
+        <nav aria-label="On this page" className="lg:sticky lg:top-28 lg:self-start">
+          <h2 className="text-[11px] font-semibold tracking-wide text-ink-3 uppercase">
+            On this page
+          </h2>
+          <ol className="mt-3 flex flex-col gap-2">
+            {sections.map((s) => (
+              <li key={s}>
+                <a
+                  href={`#${slug(s)}`}
+                  className="block rounded-sm text-[13px] text-ink-3 transition-colors hover:text-ink"
+                >
+                  {s}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <div className="flex max-w-[68ch] flex-col gap-8 text-[15px] leading-[1.7] text-ink-2">
+          {children}
+          <footer className="panel flex flex-col gap-1 p-5 text-[13px] text-ink-3">
+            <span className="font-medium text-ink">{LEGAL.operator}</span>
+            {LEGAL.taxId ? <span>Tax ID {LEGAL.taxId}</span> : null}
+            <span>{LEGAL.address}</span>
+            <a href={`mailto:${LEGAL.email}`} className="w-fit text-accent-text hover:text-ink">
+              {LEGAL.email}
+            </a>
+            <span className="mt-2">
+              Questions about this page? Write to us — a person reads that address.
+            </span>
+          </footer>
+        </div>
+      </div>
     </article>
   );
 }
 
 export function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="flex flex-col gap-2">
-      <h2 className="font-display text-lg text-ink">{title}</h2>
+    <section id={slug(title)} className="flex scroll-mt-28 flex-col gap-3">
+      <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-ink">{title}</h2>
       {children}
     </section>
-  );
-}
-
-/** Footer links shown on every public and auth page (Paddle checks they are reachable). */
-export function LegalLinks() {
-  return (
-    <nav className="flex justify-center gap-4">
-      <Link href="/terms" className="hover:text-ink">
-        Terms
-      </Link>
-      <Link href="/privacy" className="hover:text-ink">
-        Privacy
-      </Link>
-      <Link href="/refunds" className="hover:text-ink">
-        Refunds
-      </Link>
-      <a href={`mailto:${LEGAL.email}`} className="hover:text-ink">
-        Contact
-      </a>
-    </nav>
   );
 }

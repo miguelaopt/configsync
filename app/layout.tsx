@@ -6,22 +6,27 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
+const description =
+  "Your game settings. One place. Save, organize, compare, copy and export settings for any game.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://configsync.app"),
   title: { default: "ConfigSync", template: "%s · ConfigSync" },
-  description:
-    "Your game settings. One place. Save, organize, compare, copy and export settings for any game.",
+  description,
   applicationName: "ConfigSync",
+  openGraph: { type: "website", siteName: "ConfigSync", title: "ConfigSync", description },
+  twitter: { card: "summary_large_image", title: "ConfigSync", description },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#12161c",
+  themeColor: "#161826",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
 };
 
-// Applies the saved theme before first paint so light-theme users don't see a dark flash.
-const themeScript = `try{var t=localStorage.getItem("csync-theme")||"dark";if(t==="system"){t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"}if(t==="light"){document.documentElement.dataset.theme="light"}var d=localStorage.getItem("csync-density");if(d==="compact"){document.documentElement.dataset.density=d}}catch(e){}`;
+// Applies the saved density before first paint so compact users don't see rows resize.
+const densityScript = `try{var d=localStorage.getItem("csync-density");if(d==="compact"){document.documentElement.dataset.density=d}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -31,8 +36,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col">
-        <Script id="csync-theme" strategy="beforeInteractive">
-          {themeScript}
+        <Script id="csync-density" strategy="beforeInteractive">
+          {densityScript}
         </Script>
         <TooltipProvider>{children}</TooltipProvider>
         <Toaster />

@@ -113,7 +113,6 @@ export const profileInputSchema = z.object({
 
 export const preferencesSchema = z.object({
   copyFormat: z.enum(["plain", "markdown", "json"]).optional(),
-  theme: z.enum(["dark", "light", "system"]).optional(),
   density: z.enum(["comfortable", "compact"]).optional(),
 });
 

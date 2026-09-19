@@ -109,26 +109,6 @@
 .root .brand:hover {
   color: inherit;
 }
-.mark {
-  position: relative;
-  display: block;
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  border: 1px solid #3a3d57;
-  background: linear-gradient(#232742, #1a1c2d);
-}
-.markRing {
-  position: absolute;
-  inset: 7px;
-  border-radius: 50%;
-  border: 1px solid var(--accent);
-}
-.markTick {
-  position: absolute;
-  border-radius: 1px;
-  background: var(--accent);
-}
 .wordmark {
   font-weight: 600;
   font-size: 16px;

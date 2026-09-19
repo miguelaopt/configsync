@@ -1,12 +1,26 @@
 {
-  "name": "csync",
+  "name": "configsync",
   "version": "0.1.0",
   "description": "ConfigSync companion: scan installed games, import and apply config files.",
   "license": "FSL-1.1-MIT",
+  "homepage": "https://configsync.app",
+  "keywords": [
+    "games",
+    "settings",
+    "config",
+    "sync",
+    "steam",
+    "cli"
+  ],
   "type": "module",
   "bin": {
-    "csync": "./bin/csync.mjs"
+    "csync": "bin/csync.mjs"
   },
+  "files": [
+    "bin",
+    "lib",
+    "README.md"
+  ],
   "engines": {
     "node": ">=20"
   },

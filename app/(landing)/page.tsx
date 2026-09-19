@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
+import { LogoMark } from "@/components/app/logo";
 import { HeroCard, MotionProvider, Reveal, SyncCard } from "@/components/landing/motion";
 import s from "./landing.module.css";
 
@@ -26,16 +27,7 @@ export default async function LandingPage() {
         <div className={s.headerWrap}>
           <header className={s.header}>
             <a href="#top" className={s.brand}>
-              <span aria-hidden className={s.mark}>
-                <span className={s.markRing} />
-                <span className={s.markTick} style={{ left: 12, top: 2.5, width: 2, height: 4 }} />
-                <span
-                  className={s.markTick}
-                  style={{ left: 12, bottom: 2.5, width: 2, height: 4 }}
-                />
-                <span className={s.markTick} style={{ top: 12, left: 2.5, width: 4, height: 2 }} />
-                <span className={s.markTick} style={{ top: 12, right: 2.5, width: 4, height: 2 }} />
-              </span>
+              <LogoMark size={28} />
               <span className={s.wordmark}>
                 Config<span>Sync</span>
               </span>

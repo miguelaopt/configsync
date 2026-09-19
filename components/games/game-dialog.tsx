@@ -18,6 +18,7 @@ import { PLATFORM_SUGGESTIONS } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 
 export const ACCENT_SWATCHES = [
+  "#9184d9",
   "#e9b44c",
   "#59c48d",
   "#6fa8ff",
@@ -183,7 +184,7 @@ function GameForm({ game, onDone }: { game?: Game | null; onDone: () => void }) 
           <input
             id="game-accent"
             type="color"
-            value={accent ?? "#e9b44c"}
+            value={accent ?? "#9184d9"}
             onChange={(e) => setAccent(e.target.value)}
             aria-label="Custom accent color"
             className="size-7 cursor-pointer rounded-full border border-line bg-transparent p-0 [&::-webkit-color-swatch]:rounded-full [&::-webkit-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-0.5"
