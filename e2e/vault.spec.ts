@@ -197,7 +197,8 @@ test.describe("library flow", () => {
     await page.goto("/games");
     await expect(page.getByText("Fourth Game")).toHaveCount(0);
     await page.goto("/pricing");
-    await expect(page.getByRole("heading", { name: "Pro" })).toBeVisible();
+    // exact: the footer has a "Product" column, and getByRole name matching is substring-based.
+    await expect(page.getByRole("heading", { name: "Pro", exact: true })).toBeVisible();
 
     // --- Import a real config file as a preset -------------------------------
     await page.goto("/import?tab=files");
