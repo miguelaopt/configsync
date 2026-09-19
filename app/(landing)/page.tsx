@@ -4,12 +4,14 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import { LogoMark } from "@/components/app/logo";
 import { HeroCard, MotionProvider, Reveal, SyncCard } from "@/components/landing/motion";
+import { StructuredData } from "@/components/marketing/structured-data";
 import s from "./landing.module.css";
 
 export const metadata: Metadata = {
   title: { absolute: "ConfigSync — Your game settings. Everywhere." },
   description:
     "Store, organise and compare the settings you use for any game, then put the setup you want on any PC. Every save keeps a snapshot.",
+  alternates: { canonical: "/" },
 };
 
 const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(" ");
@@ -19,6 +21,7 @@ export default async function LandingPage() {
   if (await getSession()) redirect("/dashboard");
   return (
     <MotionProvider>
+      <StructuredData />
       <div className={s.root}>
         <div aria-hidden className={s.grid} />
         <div aria-hidden className={s.glowTop} />

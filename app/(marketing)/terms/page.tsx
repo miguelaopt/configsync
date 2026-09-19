@@ -4,7 +4,12 @@ import { LEGAL } from "@/lib/legal";
 import { PRICES } from "@/lib/billing/public";
 import { LegalPage, Section } from "@/components/marketing/legal";
 
-export const metadata: Metadata = { title: "Terms of Service" };
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "How ConfigSync works, what the Free and Pro plans include, and the rules for using the service.",
+  alternates: { canonical: "/terms" },
+};
 
 /** Keep every sentence true for how the Service is actually run. */
 export default function TermsPage() {

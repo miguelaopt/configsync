@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Pricing",
   description:
     "Free for three games, forever. Pro is 2.99 €/month or 24.99 € once: unlimited games, full history, auto-switch on every PC and per-PC presets.",
+  alternates: { canonical: "/pricing" },
 };
 
 const FAQ = [

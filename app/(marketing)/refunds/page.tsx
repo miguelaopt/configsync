@@ -4,7 +4,12 @@ import { LEGAL } from "@/lib/legal";
 import { PRICES } from "@/lib/billing/public";
 import { LegalPage, Section } from "@/components/marketing/legal";
 
-export const metadata: Metadata = { title: "Refund Policy" };
+export const metadata: Metadata = {
+  title: "Refund Policy",
+  description:
+    "Fourteen days, no questions asked, on every ConfigSync payment. How to ask and how long it takes.",
+  alternates: { canonical: "/refunds" },
+};
 
 /** Kept deliberately simple and at least as generous as EU consumer law and Paddle's own policy. */
 export default function RefundsPage() {

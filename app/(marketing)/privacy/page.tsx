@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { LEGAL } from "@/lib/legal";
 import { LegalPage, Section } from "@/components/marketing/legal";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "What ConfigSync stores, why, who processes it, how long it is kept and how to get it deleted.",
+  alternates: { canonical: "/privacy" },
+};
 
 /**
  * Keep the processors list equal to what is actually configured in
