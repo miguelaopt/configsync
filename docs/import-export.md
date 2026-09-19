@@ -81,9 +81,18 @@ Every export file, revision snapshot and import uses the same JSON document. It 
 
 - The file is parsed with Zod. Any problem is reported with a path (`games[0].presets[1].name`) and nothing is written.
 - A game whose name matches one you already have is **merged into**: its presets are added alongside the existing ones. Otherwise the game is created. You can also pick a target game on the import page.
-- Presets are always added, never overwritten. A preset name that already exists in that game gets a numbered suffix (`Main Setup (2)`).
+- The import page uses **Source → Review → Import**. Upload a ConfigSync JSON file or paste JSON, review the games, presets and settings, then confirm. Preview and comparison do not write anything to the vault.
+- Conflicts are matched by the slug generated from the preset name. **Keep both** (the default) adds a numbered copy (`Main Setup (2)`). **Skip duplicates** keeps the current preset. **Replace existing** deletes the matched preset and its snapshot history before importing the replacement; replacing the current default preserves its default role. Deleting a preset also removes any per-PC override pointing to it.
+- Choose a strategy for the file, or override individual conflicts with **Keep current**, **Import as copy**, or **Replace current**. **Compare differences** shows current and incoming setting values using the vault's comparison engine, before either is changed. Changing the destination refreshes the conflict preview and clears individual overrides.
+- Completed imports appear under **Recent imports**, scoped to the signed-in account in the current browser. Only filenames, preset counts and timestamps are retained locally (up to eight entries); file contents are not stored there. This is browser history, not an account-wide audit log. Skipped-only imports are not recorded.
 - Unknown extra fields are ignored; nothing that validates is silently dropped.
 - Limits: 500 games/file, 200 presets/game, 200 categories/preset, 1 000 settings/category.
+
+## Game config files
+
+Select a supported catalog game in **Game config**, then choose or drop its files in any order. Filenames are matched against catalog paths, with support for CS2's user/slot variants and `.vcfg` files. Each file reports only values actually read; untouched template values do not inflate the recognised count.
+
+**Review settings** shows the full proposed preset, with values not read from the files explicitly marked **Catalog default**. Import remains disabled when no values can be read. Only **Import preset** saves the result, and the completion step links to it. Importing a game you do not yet own also creates its catalog Default preset, as before.
 
 ## Other export formats
 

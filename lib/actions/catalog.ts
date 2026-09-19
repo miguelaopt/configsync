@@ -23,14 +23,24 @@ export async function previewGameConfigAction(raw: unknown) {
   return runAction(filesInput, raw, async (v) => {
     const entry = getCatalogGame(v.catalogId);
     if (!entry) throw new AppError("That game isn't in the catalog.");
-    const { preset, ...rest } = readGameConfig(entry, v.files);
-    return { ...rest, settingCount: preset.categories.reduce((n, c) => n + c.settings.length, 0) };
+    const read = readGameConfig(entry, v.files);
+    return {
+      ...read,
+      settingCount: Object.values(read.perFile).reduce((n, count) => n + count, 0),
+    };
   });
 }
 
 export async function importGameConfigAction(raw: unknown) {
   const schema = filesInput.extend({ name: z.string().trim().max(80).optional() });
   return runAction(schema, raw, async (v, userId) => {
+    const entry = getCatalogGame(v.catalogId);
+    if (!entry) throw new AppError("That game isn't in the catalog.");
+    if (!Object.values(readGameConfig(entry, v.files).perFile).some((count) => count > 0)) {
+      throw new AppError(
+        "No settings could be read. Check that these are the selected game's config files.",
+      );
+    }
     const r = await importConfigFiles(userId, v);
     revalidatePath("/", "layout");
     const { preset: _preset, ...read } = r.read;

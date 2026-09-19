@@ -28,7 +28,7 @@ export type ImportPreview = {
       name: string;
       settingCount: number;
       /** Present when a preset of this name already lives in the target game. */
-      conflict: { settingCount: number; updatedAt: Date } | null;
+      conflict: { id: string; settingCount: number; updatedAt: Date } | null;
     }[];
   }[];
   totals: { games: number; presets: number; settings: number; conflicts: number };
@@ -50,9 +50,7 @@ export async function previewImport(
 
   for (const gameDoc of file.games) {
     const target = opts.targetGameId
-      ? await db.query.games.findFirst({
-          where: and(eq(games.userId, userId), eq(games.id, opts.targetGameId)),
-        })
+      ? await getGameById(userId, opts.targetGameId)
       : await db.query.games.findFirst({
           where: and(eq(games.userId, userId), eq(games.slug, uniqueSlug(gameDoc.name, []))),
         });
@@ -60,6 +58,7 @@ export async function previewImport(
     const existing = target
       ? await db
           .select({
+            id: presets.id,
             slug: presets.slug,
             updatedAt: presets.updatedAt,
             settingCount: sql<number>`(select count(*) from settings s where s.preset_id = "presets"."id")`,
@@ -78,7 +77,9 @@ export async function previewImport(
       return {
         name: p.name,
         settingCount,
-        conflict: hit ? { settingCount: Number(hit.settingCount), updatedAt: hit.updatedAt } : null,
+        conflict: hit
+          ? { id: hit.id, settingCount: Number(hit.settingCount), updatedAt: hit.updatedAt }
+          : null,
       };
     });
     out.totals.games++;
@@ -98,7 +99,11 @@ export async function previewImport(
 export async function importFile(
   userId: string,
   file: ExportFile,
-  opts: { targetGameId?: string | null; strategy?: ImportStrategy } = {},
+  opts: {
+    targetGameId?: string | null;
+    strategy?: ImportStrategy;
+    decisions?: Record<string, ImportStrategy>;
+  } = {},
 ): Promise<ImportOutcome> {
   return db.transaction(async (tx) => {
     const outcome: ImportOutcome = {
@@ -110,7 +115,7 @@ export async function importFile(
       replacedPresets: 0,
     };
 
-    for (const gameDoc of file.games) {
+    for (const [gameIndex, gameDoc] of file.games.entries()) {
       let gameId: string;
       if (opts.targetGameId) {
         gameId = (await getGameById(userId, opts.targetGameId, tx)).id;
@@ -137,7 +142,16 @@ export async function importFile(
           outcome.createdGames.push({ id: created.id, slug: created.slug, name: created.name });
         }
       }
-      await importPresetsInto(tx, userId, gameId, gameDoc, outcome, opts.strategy ?? "keep-both");
+      await importPresetsInto(
+        tx,
+        userId,
+        gameId,
+        gameDoc,
+        outcome,
+        opts.strategy ?? "keep-both",
+        gameIndex,
+        opts.decisions ?? {},
+      );
     }
     return outcome;
   });
@@ -150,9 +164,16 @@ async function importPresetsInto(
   gameDoc: GameDoc,
   outcome: ImportOutcome,
   strategy: ImportStrategy,
+  gameIndex: number,
+  decisions: Record<string, ImportStrategy>,
 ) {
   const existing = await tx
-    .select({ slug: presets.slug, name: presets.name, id: presets.id })
+    .select({
+      slug: presets.slug,
+      name: presets.name,
+      id: presets.id,
+      isDefault: presets.isDefault,
+    })
     .from(presets)
     .where(eq(presets.gameId, gameId));
   const taken = new Set(existing.map((p) => p.slug));
@@ -163,20 +184,23 @@ async function importPresetsInto(
 
   const bySlug = new Map(existing.map((p) => [p.slug, p]));
 
-  for (const presetDoc of gameDoc.presets) {
+  for (const [presetIndex, presetDoc] of gameDoc.presets.entries()) {
+    const choice = decisions[`${gameIndex}:${presetIndex}`] ?? strategy;
     const base = uniqueSlug(presetDoc.name, []);
     const clash = bySlug.get(base);
-    if (clash && strategy === "skip") {
+    if (clash && choice === "skip") {
       outcome.skippedPresets++;
       continue;
     }
-    if (clash && strategy === "replace") {
+    const replacesDefault = Boolean(clash?.isDefault && choice === "replace");
+    if (clash && choice === "replace") {
       // Cascades to that preset's categories, settings and revisions — the user asked for it.
       await tx.delete(presets).where(eq(presets.id, clash.id));
       taken.delete(base);
       bySlug.delete(base);
       outcome.replacedPresets++;
     }
+    const isDefault = replacesDefault || (!hasDefault && presetDoc.isDefault);
     const slug = uniqueSlug(presetDoc.name, taken);
     taken.add(slug);
     const name =
@@ -193,10 +217,10 @@ async function importPresetsInto(
         description: presetDoc.description ?? null,
         notes: presetDoc.notes ?? null,
         tags: presetDoc.tags,
-        isDefault: !hasDefault && presetDoc.isDefault,
+        isDefault,
       })
       .returning({ id: presets.id });
-    if (!hasDefault && presetDoc.isDefault) hasDefault = true;
+    if (isDefault) hasDefault = true;
     await insertCategoriesFromDocs(tx, userId, created!.id, presetDoc.categories);
     outcome.createdPresets++;
     outcome.createdPresetSlugs.push(slug);

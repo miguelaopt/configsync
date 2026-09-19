@@ -5,6 +5,7 @@ import { publicCatalog } from "@/lib/catalog";
 import { Page, PageHeader } from "@/components/app/page-header";
 import { ImportForm } from "@/components/import-export/import-form";
 import { GameFilesForm } from "@/components/import-export/game-files-form";
+import { RecentImports } from "@/components/import-export/recent-imports";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { SearchParams } from "@/lib/types";
 
@@ -20,7 +21,7 @@ export default async function ImportPage({ searchParams }: { searchParams: Searc
     <Page size="lg">
       <PageHeader
         title="Import"
-        description="Bring settings into your vault from a ConfigSync backup or a game's own config files."
+        description="Bring settings into your vault from ConfigSync, a game config file, or pasted data."
       />
       <p className="mb-5 text-[13px] text-ink-3">
         Your files stay yours. Review everything before it is added to your vault.
@@ -38,6 +39,7 @@ export default async function ImportPage({ searchParams }: { searchParams: Searc
             Move presets from another account, another device, or a backup.
           </p>
           <ImportForm
+            userId={user.id}
             games={games.map((g) => ({ id: g.id, name: g.name, slug: g.slug }))}
             defaultTargetId={defaultTarget}
           />
@@ -49,9 +51,10 @@ export default async function ImportPage({ searchParams }: { searchParams: Searc
           <p className="mb-5 text-[13px] text-ink-2">
             Read settings straight out of a game&rsquo;s own configuration files.
           </p>
-          <GameFilesForm catalog={publicCatalog()} />
+          <GameFilesForm catalog={publicCatalog()} userId={user.id} />
         </TabsContent>
       </Tabs>
+      <RecentImports userId={user.id} />
     </Page>
   );
 }
