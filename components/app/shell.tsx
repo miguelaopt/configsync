@@ -90,7 +90,7 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
 
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Top bar */}
-        <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-3 border-b border-line bg-ground/95 px-4 backdrop-blur-sm sm:px-6">
+        <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-3 border-b border-[rgb(62_70_108/0.4)] bg-[rgb(18_22_48/0.55)] px-4 backdrop-blur-xl sm:px-6">
           <Link
             href="/dashboard"
             className="rounded-sm text-ink lg:hidden"
@@ -132,7 +132,7 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
       {/* Mobile bottom navigation */}
       <nav
         aria-label="Primary"
-        className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ground/95 backdrop-blur-sm lg:hidden"
+        className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-[rgb(62_70_108/0.4)] bg-[rgb(18_22_48/0.7)] backdrop-blur-xl lg:hidden"
       >
         <ul className="flex h-14 items-stretch">
           {MOBILE_NAV.map(({ href, label, icon: Icon }) => (
