@@ -61,7 +61,11 @@ export default async function DashboardPage() {
                 : "text-[34px] leading-none font-bold sm:text-[40px]"
             }
           >
-            Hi {firstName}.
+            Hi{" "}
+            <span className="bg-[linear-gradient(100deg,#f0ecff,#c9c0ff_45%,#9184d9)] bg-clip-text text-transparent">
+              {firstName}
+            </span>
+            .
           </h1>
           <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-3">
             {empty ? (
