@@ -284,9 +284,6 @@ export function ForgotPasswordForm() {
           If an account exists for <span className="text-ink">{email}</span>, a reset link is on its
           way. It expires in one hour.
         </p>
-        <p className="mt-4 text-[13px] text-ink-3">
-          Self-hosting without email configured? The link is printed in the server log.
-        </p>
         <Button asChild variant="secondary" className="mt-6">
           <Link href="/sign-in">Back to sign in</Link>
         </Button>

@@ -70,8 +70,8 @@ export default async function ExportPage() {
           ))}
         </ul>
         <p className="mt-2 text-xs leading-relaxed text-ink-3">
-          Exports never include your password or session. JSON files can be imported back into any
-          ConfigSync instance, including one you host yourself.
+          Exports never include your password or session. JSON files can be imported back into
+          ConfigSync on any account.
         </p>
       </Panel>
     </Page>

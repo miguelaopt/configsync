@@ -15,9 +15,6 @@ npm 12 refuses to install a package straight from a URL (`allow-remote` defaults
 so the file is downloaded first.
 
 The package is served by the app itself, so it is always the build the server is running.
-Self-hosting? Replace the host with your own origin.
-
-From a checkout of the repo you can also run it without installing: `pnpm csync <command>`.
 
 ## Commands
 

@@ -11,8 +11,6 @@ reviewer would expect. Ordered by impact.
       "cs2 autoexec sync between pcs") lands nowhere today. Each page: what the catalog knows
       about the game (categories, file paths the companion reads), the Steam launch line,
       a CTA to sign up. Data already exists in `lib/catalog`. Add to `app/sitemap.ts`.
-- [ ] **`/docs/self-hosting`** — `docs/self-hosting.md` exists in the repo only. People who
-      search "self-host game settings" find the GitHub README, not the site.
 - [ ] **`/docs/import-export`** — the JSON format is documented in `docs/import-export.md`;
       nothing public explains what an export contains or that it can be re-imported.
 - [ ] **`/changelog`** — nothing tells a returning visitor what changed. Also the cheapest way
