@@ -20,7 +20,7 @@ export default async function ImportPage({ searchParams }: { searchParams: Searc
   const defaultTarget =
     typeof sp.game === "string" && games.some((g) => g.id === sp.game) ? sp.game : null;
   return (
-    <Page size="lg">
+    <Page size="xl">
       <PageHeader
         title="Import"
         description="Bring settings into your vault from a ConfigSync backup or a game's own config files. Your files stay yours — review everything before it is added."

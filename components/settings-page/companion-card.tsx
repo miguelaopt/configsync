@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ConfirmDialog } from "@/components/ui/alert-dialog";
+import { Copy } from "lucide-react";
 import { copyWithToast } from "@/lib/copy/use-copy";
 import { plural, timeAgo } from "@/lib/utils/format";
 
@@ -38,6 +39,7 @@ export function CompanionCard({
   const [revoking, setRevoking] = React.useState<Token | null>(null);
   const [forgetting, setForgetting] = React.useState<Device | null>(null);
   const [pending, start] = React.useTransition();
+  const install = `curl -fsSL ${appUrl}/csync.tgz -o csync.tgz && npm i -g ./csync.tgz\ncsync login ${appUrl}\ncsync scan --push\ncsync import cs2\ncsync watch --install   # Pro: keeps files equal to each game's Default preset`;
 
   const create = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +63,20 @@ export function CompanionCard({
           to install. (npm 12 refuses to fetch a package straight from a URL, hence the download
           step.)
         </p>
-        <pre className="mt-2 overflow-x-auto rounded-xs bg-raised p-2 font-mono text-xs">{`curl -fsSL ${appUrl}/csync.tgz -o csync.tgz && npm i -g ./csync.tgz\ncsync login ${appUrl}\ncsync scan --push\ncsync import cs2\ncsync watch --install   # Pro: keeps files equal to each game's Default preset`}</pre>
+        <div className="relative mt-2">
+          <pre className="overflow-x-auto rounded-lg bg-raised p-3 pr-12 font-mono text-xs">
+            {install}
+          </pre>
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            className="absolute top-1.5 right-1.5"
+            aria-label="Copy install commands"
+            onClick={() => copyWithToast(install, "Install commands copied")}
+          >
+            <Copy />
+          </Button>
+        </div>
         <p className="mt-2 text-ink-3">
           It reads your game config files and never writes without a backup. Run{" "}
           <code className="font-mono text-xs">csync --help</code> for every command.

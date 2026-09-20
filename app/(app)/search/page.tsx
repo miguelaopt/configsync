@@ -29,7 +29,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
     .filter((g) => g.items.length > 0);
 
   return (
-    <Page>
+    <Page size="xl">
       <PageHeader
         title="Search"
         description="Games, presets, categories, setting names, values, notes and tags."

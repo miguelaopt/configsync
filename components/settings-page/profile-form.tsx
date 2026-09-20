@@ -4,7 +4,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { updatePreferencesAction, updateProfileAction } from "@/lib/actions/profile";
 import type { Profile } from "@/lib/db/schema";
+import { Copy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { copyWithToast } from "@/lib/copy/use-copy";
 import { Field } from "@/components/ui/field";
 import { Input, Textarea } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -20,6 +22,8 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
   const [links, setLinks] = React.useState<string[]>(profile.links);
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [pending, startTransition] = React.useTransition();
+  // The saved username, not the one being typed: the link only works once it is saved.
+  const publicUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/p/${profile.username}`;
 
   const save = (patch: { isPublic?: boolean } = {}) =>
     startTransition(async () => {
@@ -90,12 +94,38 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         htmlFor="is-public"
         hint={
           isPublic
-            ? `Live at ${process.env.NEXT_PUBLIC_APP_URL ?? ""}/p/${username} — only presets you make public show up.`
+            ? "Only presets you make public show up."
             : "Off — nobody can see your presets, even the ones marked public."
         }
       >
-        <div className="flex h-9 items-center">
+        <div className="flex min-h-9 flex-wrap items-center gap-3">
           <Switch id="is-public" checked={isPublic} onCheckedChange={togglePublic} />
+          {isPublic ? (
+            <div className="flex min-w-0 flex-1 items-center gap-1.5">
+              <code className="min-w-0 truncate rounded-md bg-raised px-2 py-1 font-mono text-[12px] text-ink-2">
+                {publicUrl}
+              </code>
+              <Button
+                type="button"
+                size="icon-sm"
+                variant="ghost"
+                aria-label="Copy profile link"
+                onClick={() => copyWithToast(publicUrl, "Profile link copied")}
+              >
+                <Copy />
+              </Button>
+              <Button asChild size="icon-sm" variant="ghost">
+                <a
+                  href={`/p/${profile.username}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Open profile"
+                >
+                  <ExternalLink />
+                </a>
+              </Button>
+            </div>
+          ) : null}
         </div>
       </Field>
       <Field label="Bio" htmlFor="bio" optional error={errors.bio}>

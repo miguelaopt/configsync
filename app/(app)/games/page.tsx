@@ -52,7 +52,7 @@ export default async function GamesPage({ searchParams }: { searchParams: Search
     <Page size="xl">
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-[34px] leading-none font-bold sm:text-[40px]">
+          <h1 className="text-brand w-fit text-[34px] leading-none font-bold sm:text-[40px]">
             {archived ? "Archived games" : "Games"}
           </h1>
           <p className="mt-2.5 text-[15px] text-ink-2">

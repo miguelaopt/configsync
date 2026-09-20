@@ -16,6 +16,25 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-20",
+    version: "0.5.1",
+    title: "Settings, tidied",
+    changes: [
+      {
+        kind: "improved",
+        text: "Settings has a section list that follows you down the page, and the public profile link can be copied or opened right next to its switch.",
+      },
+      {
+        kind: "improved",
+        text: "The companion install commands have a copy button.",
+      },
+      {
+        kind: "improved",
+        text: "Import, Search and Settings sit on the left like every other page, and page titles carry the brand gradient.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-20",
     version: "0.5.0",
     title: "Export, rebuilt",
     changes: [
