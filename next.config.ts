@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
+import pkg from "./package.json";
 
 const nextConfig: NextConfig = {
+  // The one version number, from package.json; SITE.version and the changelog read it.
+  env: { NEXT_PUBLIC_APP_VERSION: pkg.version },
   reactStrictMode: true,
   output: "standalone",
   poweredByHeader: false,

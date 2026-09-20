@@ -49,7 +49,12 @@ export default function ChangelogPage() {
               <time dateTime={entry.date}>{longDate(entry.date)}</time>
             </a>
             <article className="panel p-5 sm:p-6">
-              <h2 className="text-[22px] font-bold tracking-[-0.02em] text-ink">{entry.title}</h2>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h2 className="text-[22px] font-bold tracking-[-0.02em] text-ink">{entry.title}</h2>
+                <code className="rounded-md bg-raised px-2 py-0.5 font-mono text-[12px] text-ink-2">
+                  v{entry.version}
+                </code>
+              </div>
               <ul className="mt-4 flex flex-col gap-3">
                 {entry.changes.map((c) => (
                   <li key={c.text} className="flex items-start gap-3 text-[14px] text-ink-2">
