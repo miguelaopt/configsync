@@ -16,6 +16,29 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-20",
+    version: "0.5.0",
+    title: "Export, rebuilt",
+    changes: [
+      {
+        kind: "new",
+        text: "Download all as ZIP: JSON, Markdown and CSV of your whole library in one file.",
+      },
+      {
+        kind: "new",
+        text: "Recent exports: what you downloaded from this browser, with size and time, and a one-click way to export it again with today's data.",
+      },
+      {
+        kind: "improved",
+        text: "One switch decides whether archived games and presets go into every export; JSON is marked as the backup to keep.",
+      },
+      {
+        kind: "new",
+        text: "A changelog — this page — and a version number that moves with it.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-20",
     version: "0.4.0",
     title: "A page for every game, and the companion guide goes public",
     changes: [

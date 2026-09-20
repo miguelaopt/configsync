@@ -1,8 +1,8 @@
 "use client";
-import * as React from "react";
 import { z } from "zod";
 import { History } from "lucide-react";
 import { Panel } from "@/components/dashboard/panels";
+import { createRecentStore } from "@/lib/recent-store";
 import { plural, timeAgo } from "@/lib/utils/format";
 
 const itemSchema = z.object({
@@ -11,56 +11,16 @@ const itemSchema = z.object({
   importedAt: z.string().datetime(),
 });
 type RecentImport = z.infer<typeof itemSchema>;
-const key = (userId: string) => `configsync:imports:${userId}`;
-const event = "configsync:imports-changed";
-
-function read(userId: string) {
-  try {
-    return localStorage.getItem(key(userId));
-  } catch {
-    return null;
-  }
-}
-function parse(raw: string | null): RecentImport[] {
-  try {
-    const result = z.array(itemSchema).safeParse(JSON.parse(raw ?? "[]"));
-    return result.success ? result.data : [];
-  } catch {
-    return [];
-  }
-}
+const store = createRecentStore("imports", itemSchema);
 
 /** Successful imports only; metadata stays in this browser and is scoped to the signed-in account. */
 export function recordImport(userId: string, item: Omit<RecentImport, "importedAt">) {
   if (item.presets === 0) return;
-  try {
-    const recent = [
-      { ...item, importedAt: new Date().toISOString() },
-      ...parse(read(userId)),
-    ].slice(0, 8);
-    localStorage.setItem(key(userId), JSON.stringify(recent));
-    window.dispatchEvent(new Event(event));
-  } catch {
-    /* Storage is optional; an import still succeeds when it is unavailable. */
-  }
-}
-
-function subscribe(listener: () => void) {
-  window.addEventListener(event, listener);
-  window.addEventListener("storage", listener);
-  return () => {
-    window.removeEventListener(event, listener);
-    window.removeEventListener("storage", listener);
-  };
+  store.add(userId, { ...item, importedAt: new Date().toISOString() });
 }
 
 export function RecentImports({ userId }: { userId: string }) {
-  const raw = React.useSyncExternalStore(
-    subscribe,
-    () => read(userId),
-    () => null,
-  );
-  const items = React.useMemo(() => parse(raw), [raw]);
+  const items = store.useItems(userId);
   return (
     <Panel
       id="recent-imports"

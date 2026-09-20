@@ -3,17 +3,18 @@ import { z } from "zod";
 import { getSession } from "@/lib/auth/session";
 import { exportGame, exportLibrary, exportPreset } from "@/lib/data/export";
 import { buildExportFile, toCsv, toJson, toMarkdown } from "@/lib/import-export/serialize";
+import { zipFiles } from "@/lib/import-export/zip";
 import { AppError } from "@/lib/data/errors";
 import { slugify } from "@/lib/utils/slug";
 
 const query = z.object({
   scope: z.enum(["library", "game", "preset"]).default("library"),
   id: z.uuid().optional(),
-  format: z.enum(["json", "md", "csv"]).default("json"),
+  format: z.enum(["json", "md", "csv", "zip"]).default("json"),
   archived: z.enum(["1", "0"]).default("0"),
 });
 
-/** File downloads: /api/export?scope=library|game|preset&id=…&format=json|md|csv */
+/** File downloads: /api/export?scope=library|game|preset&id=…&format=json|md|csv|zip (zip = all three) */
 export async function GET(req: Request) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Sign in to export." }, { status: 401 });
@@ -42,19 +43,40 @@ export async function GET(req: Request) {
           ? `${slugify(games[0]!.name)}-${stamp}`
           : `${slugify(games[0]!.name)}-${slugify(games[0]!.presets[0]?.name ?? "preset")}-${stamp}`;
 
+    const render = {
+      json: () => toJson(buildExportFile(games, scope)),
+      md: () => toMarkdown(games),
+      csv: () => toCsv(games),
+    };
     const body =
-      format === "json"
-        ? toJson(buildExportFile(games, scope))
-        : format === "md"
-          ? toMarkdown(games)
-          : toCsv(games);
-    const type =
-      format === "json" ? "application/json" : format === "md" ? "text/markdown" : "text/csv";
+      format === "zip"
+        ? new Uint8Array(
+            zipFiles(
+              (["json", "md", "csv"] as const).map((f) => ({
+                name: `${base}.${f}`,
+                data: render[f](),
+              })),
+            ),
+          )
+        : render[format]();
+    const type = {
+      json: "application/json; charset=utf-8",
+      md: "text/markdown; charset=utf-8",
+      csv: "text/csv; charset=utf-8",
+      zip: "application/zip",
+    }[format];
+    const presets = games.reduce((n, g) => n + g.presets.length, 0);
+    const settings = games.reduce(
+      (n, g) => n + g.presets.reduce((m, p) => m + p.categories.reduce((k, c) => k + c.settings.length, 0), 0),
+      0,
+    );
     return new NextResponse(body, {
       headers: {
-        "Content-Type": `${type}; charset=utf-8`,
+        "Content-Type": type,
         "Content-Disposition": `attachment; filename="${base}.${format}"`,
         "Cache-Control": "no-store",
+        // What the file holds, for the "Recent exports" list in the browser.
+        "X-Export-Counts": `${games.length},${presets},${settings}`,
       },
     });
   } catch (error) {
