@@ -92,6 +92,7 @@ const FOOTER_COLUMNS = [
       { href: "/for", label: "Games" },
       { href: "/pricing", label: "Pricing" },
       { href: "/docs/companion", label: "Companion CLI" },
+      { href: "/changelog", label: "Changelog" },
     ],
   },
   {

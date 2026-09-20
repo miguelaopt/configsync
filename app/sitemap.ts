@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE } from "@/lib/site";
 import { CATALOG } from "@/lib/catalog";
+import { CHANGELOG } from "@/content/changelog";
 
 /**
  * The pages a signed-out visitor can read. Public profiles are not listed — they opt in by link.
@@ -13,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/for",
     ...CATALOG.map((g) => `/for/${g.id}`),
     "/docs/companion",
+    "/changelog",
     "/terms",
     "/privacy",
     "/refunds",
@@ -20,7 +22,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/sign-up",
   ].map((path) => ({
     url: `${SITE.url}${path}`,
-    changeFrequency: path === "" ? "weekly" : "monthly",
+    // The changelog is the one page with a date we can stand behind.
+    ...(path === "/changelog" ? { lastModified: CHANGELOG[0]!.date } : {}),
+    changeFrequency: path === "" || path === "/changelog" ? "weekly" : "monthly",
     priority:
       path === ""
         ? 1

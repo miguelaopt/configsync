@@ -1,0 +1,99 @@
+/**
+ * What changed, newest first. Add an entry per release; the page and the sitemap read this file.
+ * Write for the person using the product, not for the person who wrote the code.
+ */
+export type ChangeKind = "new" | "improved" | "fixed";
+
+export type ChangelogEntry = {
+  /** ISO date, also the anchor. */
+  date: string;
+  title: string;
+  changes: { kind: ChangeKind; text: string }[];
+};
+
+export const CHANGELOG: ChangelogEntry[] = [
+  {
+    date: "2026-09-20",
+    title: "A page for every game, and the companion guide goes public",
+    changes: [
+      {
+        kind: "new",
+        text: "Counter-Strike 2 and Rocket League each have their own page: every setting by name with the config key it maps to, the files the companion reads on each launcher, and the three commands to get going.",
+      },
+      {
+        kind: "new",
+        text: "Installing the companion no longer needs an account to read about: the guide is at /docs/companion.",
+      },
+      {
+        kind: "improved",
+        text: "Settings, Export, Search, Compare and Import now use the same cards as the dashboard. The 404 and error pages look like the rest of the site.",
+      },
+      {
+        kind: "fixed",
+        text: "The Public profile switch saves the moment you flip it. It used to wait for Save profile, which read as already done.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-19",
+    title: "Review before you import",
+    changes: [
+      {
+        kind: "new",
+        text: "Import walks through Source → Review → Import for both ConfigSync backups and game config files, so you see every proposed value — and every conflict — before anything is saved.",
+      },
+      {
+        kind: "new",
+        text: "Backup conflicts show the current and incoming preset side by side, with keep, skip or replace per preset.",
+      },
+      {
+        kind: "improved",
+        text: "The whole app moved to the dark Nocturne look: new dashboard with sync status and recent activity, library and preset pages rebuilt, one brand from the landing page to the last dialog.",
+      },
+      {
+        kind: "fixed",
+        text: "Rocket League's real file names and CS2's slot variants are recognised on import.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-18",
+    title: "ConfigSync is live",
+    changes: [
+      {
+        kind: "new",
+        text: "configsync.app opens to everyone: Free keeps three games with ten snapshots per preset; Pro is 2.99 €/month or 24.99 € once.",
+      },
+      {
+        kind: "new",
+        text: "Per-PC presets: pick which preset each of your machines should run, and see what each one last applied and when.",
+      },
+      {
+        kind: "new",
+        text: "Screenshot importer (Pro): upload photos of a game's settings menu and tick the values you want applied.",
+      },
+      {
+        kind: "new",
+        text: "Public profiles at /p/<username>, with the presets you choose to share and your Twitch, YouTube or Discord links.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-17",
+    title: "The foundation",
+    changes: [
+      {
+        kind: "new",
+        text: "Games, presets, categories and settings that mirror a game's own menu; Counter-Strike 2 and Rocket League ship with theirs.",
+      },
+      {
+        kind: "new",
+        text: "The companion CLI: csync scans installed games, imports their config files as presets, applies presets back with a backup, and csync watch keeps every PC on the preset you chose.",
+      },
+      {
+        kind: "new",
+        text: "Compare any two presets, copy any setting as text, Markdown or JSON, and export the whole library.",
+      },
+    ],
+  },
+];

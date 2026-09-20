@@ -8,8 +8,6 @@ reviewer would expect. Ordered by impact.
 
 - [ ] **`/docs/import-export`** — the JSON format is documented in `docs/import-export.md`;
       nothing public explains what an export contains or that it can be re-imported.
-- [ ] **`/changelog`** — nothing tells a returning visitor what changed. Also the cheapest way
-      to get fresh, indexable content on the domain every release.
 - [ ] **`/contact`** — today it is a `mailto:` in the footer. Paddle's reviewers and some
       search engines look for a contact page; can be a short page with the email and the
       legal identity from `lib/legal.ts`.
@@ -18,6 +16,10 @@ reviewer would expect. Ordered by impact.
 
 - [x] `/p/miguel` — public profile switched on (2026-09-20). Mark presets as public so it is
       not "No public presets yet".
+
+## Done in PR `feat/changelog` (2026-09-20)
+
+- `/changelog` from `content/changelog.ts`, footer link, sitemap with a real lastmod.
 
 ## Done in PR `feat/game-pages` (2026-09-20)
 
