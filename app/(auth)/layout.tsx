@@ -18,9 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <p className="font-display text-[clamp(40px,4.2vw,64px)] leading-[1.05] font-medium tracking-[-0.03em] text-ink">
             Your game settings.
             <br />
-            <span className="bg-[linear-gradient(100deg,#f0ecff,#c9c0ff_45%,#9184d9)] bg-clip-text text-transparent">
-              Everywhere
-            </span>
+            <span className="text-brand">Everywhere</span>
             <span className="text-accent">_</span>
           </p>
         </div>
