@@ -16,6 +16,25 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-20",
+    version: "0.6.0",
+    title: "The companion is one file",
+    changes: [
+      {
+        kind: "new",
+        text: "Windows: download csync.exe and run it. Linux: one curl line. No Node, no npm, nothing else to install — the companion carries its own runtime.",
+      },
+      {
+        kind: "improved",
+        text: "On Windows the companion finds Steam wherever it is installed, not only under Program Files.",
+      },
+      {
+        kind: "improved",
+        text: "csync games prints the exact Steam launch option for this machine, with the full path.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-20",
     version: "0.5.1",
     title: "Settings, tidied",
     changes: [

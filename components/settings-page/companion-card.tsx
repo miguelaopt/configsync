@@ -24,6 +24,25 @@ type Device = {
   games: number;
 };
 
+const Mono = ({ children }: { children: React.ReactNode }) => (
+  <code className="rounded-xs bg-raised px-1 py-0.5 font-mono text-[12px] text-ink">
+    {children}
+  </code>
+);
+
+function Install({ title, steps }: { title: string; steps: React.ReactNode[] }) {
+  return (
+    <div>
+      <p className="font-medium text-ink">{title}</p>
+      <ol className="mt-1 flex list-decimal flex-col gap-1 pl-5 text-ink-2">
+        {steps.map((step, i) => (
+          <li key={i}>{step}</li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 /** Personal access tokens for the companion CLI, plus the devices it has scanned. */
 export function CompanionCard({
   tokens,
@@ -39,7 +58,7 @@ export function CompanionCard({
   const [revoking, setRevoking] = React.useState<Token | null>(null);
   const [forgetting, setForgetting] = React.useState<Device | null>(null);
   const [pending, start] = React.useTransition();
-  const install = `curl -fsSL ${appUrl}/csync.tgz -o csync.tgz && npm i -g ./csync.tgz\ncsync login ${appUrl}\ncsync scan --push\ncsync import cs2\ncsync watch --install   # Pro: keeps files equal to each game's Default preset`;
+  const install = `csync login ${appUrl}      # paste the token from below\ncsync scan --push\ncsync import cs2\ncsync watch --install    # Pro: keeps every game on the preset chosen for this PC`;
 
   const create = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,14 +75,37 @@ export function CompanionCard({
 
   return (
     <div className="flex flex-col gap-6 text-[13px]">
-      <div className="rounded-sm border border-line p-3">
-        <p className="text-ink">Install the companion on your gaming PC:</p>
-        <p className="mt-1 text-ink-3">
-          Node 20 or newer. The package is served by this site — no registry account, nothing else
-          to install. (npm 12 refuses to fetch a package straight from a URL, hence the download
-          step.)
+      <div className="flex flex-col gap-3 rounded-lg border border-line p-3">
+        <p className="text-ink">
+          Install the companion on your gaming PC — nothing else to install.
         </p>
-        <div className="relative mt-2">
+        <Install
+          title="Windows"
+          steps={[
+            <>
+              Download{" "}
+              <a href="/csync-windows-x64.exe" className="text-accent-text hover:text-ink" download>
+                csync.exe
+              </a>{" "}
+              and put it somewhere it can stay, e.g. <Mono>C:\Tools\csync.exe</Mono>. Windows may
+              warn about an unknown app the first time: More info → Run anyway.
+            </>,
+            <>
+              Open PowerShell in that folder and run the commands below (use{" "}
+              <Mono>.\csync.exe</Mono> in place of <Mono>csync</Mono>).
+            </>,
+          ]}
+        />
+        <Install
+          title="Linux"
+          steps={[
+            <>
+              <Mono>{`curl -fsSL ${appUrl}/install.sh | sh`}</Mono> puts <Mono>csync</Mono> in{" "}
+              <Mono>~/.local/bin</Mono>.
+            </>,
+          ]}
+        />
+        <div className="relative">
           <pre className="overflow-x-auto rounded-lg bg-raised p-3 pr-12 font-mono text-xs">
             {install}
           </pre>
@@ -71,20 +113,16 @@ export function CompanionCard({
             size="icon-sm"
             variant="ghost"
             className="absolute top-1.5 right-1.5"
-            aria-label="Copy install commands"
-            onClick={() => copyWithToast(install, "Install commands copied")}
+            aria-label="Copy commands"
+            onClick={() => copyWithToast(install, "Commands copied")}
           >
             <Copy />
           </Button>
         </div>
-        <p className="mt-2 text-ink-3">
+        <p className="text-ink-3">
           It reads your game config files and never writes without a backup. Run{" "}
-          <code className="font-mono text-xs">csync --help</code> for every command.
-        </p>
-        <p className="mt-1 text-ink-3">
-          Steam launch options:{" "}
-          <code className="font-mono text-xs">csync launch cs2 -- %command%</code> applies the
-          Default preset right before the game starts.
+          <Mono>csync --help</Mono> for every command. <Mono>csync games</Mono> prints the exact
+          Steam launch option for each game it finds.
         </p>
       </div>
 

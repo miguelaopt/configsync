@@ -23,5 +23,7 @@ export default defineConfig([
     "playwright-report/**",
     "test-results/**",
     "drizzle/**",
+    ".cache/**",
+    "public/**",
   ]),
 ]);

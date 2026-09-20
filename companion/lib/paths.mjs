@@ -1,4 +1,5 @@
 import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { homedir } from "node:os";
 import { join, resolve, sep } from "node:path";
 import { parseVdf } from "./vdf.mjs";
@@ -6,13 +7,28 @@ import { parseVdf } from "./vdf.mjs";
 const home = homedir();
 const win = process.platform === "win32";
 
+/** Where Steam says it lives on Windows (HKCU\Software\Valve\Steam\SteamPath), or null. */
+function steamPathFromRegistry() {
+  try {
+    const out = execFileSync("reg", ["query", "HKCU\\Software\\Valve\\Steam", "/v", "SteamPath"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    const m = /SteamPath\s+REG_SZ\s+(.+)/i.exec(out);
+    return m ? m[1].trim().replace(/\//g, "\\") : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Steam installs, in the order we trust them. */
 export function steamRoots() {
   const candidates = win
     ? [
+        steamPathFromRegistry(),
         join(process.env["ProgramFiles(x86)"] ?? "C:\\Program Files (x86)", "Steam"),
         join(process.env.ProgramFiles ?? "C:\\Program Files", "Steam"),
-      ]
+      ].filter(Boolean)
     : [
         join(home, ".steam", "steam"),
         join(home, ".local", "share", "Steam"),

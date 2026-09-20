@@ -10,9 +10,9 @@ Work top to bottom. The blockers genuinely block.
 
 ## 0. Blockers — do not deploy this branch without them
 
-- [ ] **Check the companion installer.** The app serves its own package, so there is nothing to
-      publish. After deploying, run `npm i -g https://configsync.app/csync.tgz` on a machine that
-      has never had it (see §1), then `csync --help`.
+- [ ] **Check the companion binaries.** After deploying, `https://configsync.app/csync-windows-x64.exe`
+      and `/csync-linux-x64` download (about 90 MB and 120 MB) and `/install.sh` is a script.
+      Then follow `TEST-WINDOWS.md` on the Windows boot.
 - [ ] **Rotate the Anthropic API key.** The key currently in the server's `.env` was shown in
       plain text in a chat session on 2026-09-19. console.anthropic.com → API keys → revoke it,
       create a new one with a monthly spend limit, then replace it on the server (commands below).
@@ -33,26 +33,19 @@ docker compose --profile app --profile proxy up -d
 
 ## 1. The companion installer
 
-The companion is not on npm and does not need to be: it has no dependencies, so the app packs
-it at build time and serves the tarball. Users run one command, against your own domain.
+The companion is a single executable per platform, built from the official Node binary at image
+build time and served by the site. Nothing to publish, nothing for the user to install first.
 
-```bash
-curl -fsSL https://configsync.app/csync.tgz -o csync.tgz
-npm i -g ./csync.tgz
-csync --help
-```
+- Windows: `https://configsync.app/csync-windows-x64.exe` → `.\csync.exe --help` in PowerShell.
+  SmartScreen warns on the first run (not code-signed): More info → Run anyway.
+- Linux: `curl -fsSL https://configsync.app/install.sh | sh` → `csync --help`.
 
-(npm 12 sets `allow-remote = "none"`, so it will not install straight from a URL. The download
-step is not optional, and the snippet in the app already shows it that way.)
+- [ ] Both files download and print the command list.
+- [ ] The snippet in Settings → Companion shows the same origin as the deployment.
+- [ ] `TEST-WINDOWS.md`, top to bottom, on the Windows boot.
 
-- [ ] `https://configsync.app/csync.tgz` downloads a file (about 11 kB).
-- [ ] A clean install works and `csync --help` prints the command list.
-- [ ] The snippet in Settings → Companion shows the same URL as the deployment it is served from.
-
-If you ever do want it on npmjs.com, that needs 2FA. A physical key is not the only option —
-a passkey on your phone (Chrome's "Use a phone or tablet" → QR → fingerprint) or one stored in
-a password manager both work, as does a Classic **Automation** access token, which skips the
-2FA prompt on publish. Nothing depends on it.
+Code signing is the one thing that removes the SmartScreen warning: an OV certificate
+(~200–400 €/year) or Azure Trusted Signing (~10 $/month). Worth it once people are installing.
 
 ## 2. Paddle
 

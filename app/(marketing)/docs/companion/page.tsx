@@ -26,7 +26,7 @@ export default function CompanionDocsPage() {
   return (
     <LegalPage
       title="Companion CLI"
-      intro="csync runs on your gaming PC. It finds the config files of the games you play, imports them into ConfigSync as presets, and writes a preset back into those files — with a backup every time. Plain Node 20+, no dependencies, and it only ever touches files on your own machine."
+      intro="csync runs on your gaming PC. It finds the config files of the games you play, imports them into ConfigSync as presets, and writes a preset back into those files — with a backup every time. One file to download, nothing else to install, and it only ever touches files on your own machine."
       updated={null}
       footer={
         <footer className="panel flex flex-col gap-2 p-5 text-[13px] text-ink-3">
@@ -40,12 +40,29 @@ export default function CompanionDocsPage() {
         </footer>
       }
     >
-      <Section title="Install">
+      <Section title="Install on Windows">
         <p>
-          The package is served by this site — no registry account, nothing else to install. npm
-          refuses to fetch a package straight from a URL, hence the download step.
+          Download{" "}
+          <a href="/csync-windows-x64.exe" className="text-accent-text hover:text-ink" download>
+            csync.exe
+          </a>{" "}
+          (about 90 MB — it carries its own runtime) and put it somewhere it can stay, for example{" "}
+          <Cmd>C:\Tools\csync.exe</Cmd>. Open PowerShell in that folder; every command below is{" "}
+          <Cmd>.\csync.exe …</Cmd> there.
         </p>
-        <Code>{`curl -fsSL ${SITE.url}/csync.tgz -o csync.tgz && npm i -g ./csync.tgz\ncsync --help`}</Code>
+        <p>
+          The first run may show &ldquo;Windows protected your PC&rdquo;: the file is not
+          code-signed yet. <strong className="text-ink">More info → Run anyway</strong>, or
+          right-click the file → Properties → Unblock.
+        </p>
+      </Section>
+
+      <Section title="Install on Linux">
+        <Code>{`curl -fsSL ${SITE.url}/install.sh | sh\ncsync --help`}</Code>
+        <p>
+          That puts <Cmd>csync</Cmd> in <Cmd>~/.local/bin</Cmd>. Steam, Heroic and the Flatpak Steam
+          are all found; Proton prefixes are searched for Windows-only games.
+        </p>
       </Section>
 
       <Section title="Connect it to your account">
@@ -56,8 +73,9 @@ export default function CompanionDocsPage() {
         <Code>{`csync login ${SITE.url}      # paste the token when asked\ncsync scan --push            # tell the vault which games this PC has\ncsync import cs2             # read CS2's config files into a new preset`}</Code>
         <p>
           <Cmd>csync games</Cmd> lists every catalog game and which of its files were found on this
-          machine. Games currently in the catalog: Counter-Strike 2 (<Cmd>cs2</Cmd>) and Rocket
-          League (<Cmd>rocket-league</Cmd>), on Steam, Epic and Heroic.
+          machine, and prints the exact Steam launch option for each. Games currently in the
+          catalog: Counter-Strike 2 (<Cmd>cs2</Cmd>) and Rocket League (<Cmd>rocket-league</Cmd>),
+          on Steam, Epic and Heroic.
         </p>
       </Section>
 
