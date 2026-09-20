@@ -8,6 +8,7 @@
  * rather than "signed, but tampered".
  */
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import {
   chmodSync,
   copyFileSync,
@@ -15,6 +16,7 @@ import {
   existsSync,
   mkdirSync,
   readFileSync,
+  unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { pipeline } from "node:stream/promises";
@@ -22,6 +24,12 @@ import { Readable } from "node:stream";
 import { join } from "node:path";
 
 const NODE = "v24.21.0"; // LTS; bump deliberately, it is what users run
+// SHA-256 of each archive, from https://nodejs.org/dist/<NODE>/SHASUMS256.txt. Pinned here so a
+// tampered download (or mirror) can never become the binary we ship; update them with NODE.
+const SHA256 = {
+  "linux-x64": "fd8e59d5a511510f6a298afb548f18c7d2b1be404d8b4a27d94fbe49f56cb2d6",
+  "win-x64": "158f7685b44de51f6c0df1d153526cbcd3e1bc739a8dfc607721cef75de9e541",
+};
 const FUSE = "NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2";
 const root = process.cwd();
 const cache = join(root, ".cache", "companion");
@@ -30,12 +38,18 @@ mkdirSync(cache, { recursive: true });
 
 const sh = (cmd, args, opts = {}) => execFileSync(cmd, args, { stdio: "inherit", ...opts });
 
-async function fetchTo(url, file) {
-  if (existsSync(file)) return;
-  console.log(`↓ ${url}`);
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`${url}: ${res.status}`);
-  await pipeline(Readable.fromWeb(res.body), createWriteStream(file));
+async function fetchTo(url, file, sha256) {
+  if (!existsSync(file)) {
+    console.log(`↓ ${url}`);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${url}: ${res.status}`);
+    await pipeline(Readable.fromWeb(res.body), createWriteStream(file));
+  }
+  const actual = createHash("sha256").update(readFileSync(file)).digest("hex");
+  if (actual !== sha256) {
+    unlinkSync(file);
+    throw new Error(`${file}: sha256 ${actual} does not match the pinned ${sha256}`);
+  }
 }
 
 /** Official Node for a platform; returns the path of the bare binary. */
@@ -45,12 +59,12 @@ async function nodeBinary(platform) {
   if (existsSync(bin)) return bin;
   if (platform === "win-x64") {
     const zip = join(cache, `${name}.zip`);
-    await fetchTo(`https://nodejs.org/dist/${NODE}/${name}.zip`, zip);
+    await fetchTo(`https://nodejs.org/dist/${NODE}/${name}.zip`, zip, SHA256[platform]);
     sh("unzip", ["-q", "-o", "-j", zip, `${name}/node.exe`, "-d", cache]);
     copyFileSync(join(cache, "node.exe"), bin);
   } else {
     const tar = join(cache, `${name}.tar.xz`);
-    await fetchTo(`https://nodejs.org/dist/${NODE}/${name}.tar.xz`, tar);
+    await fetchTo(`https://nodejs.org/dist/${NODE}/${name}.tar.xz`, tar, SHA256[platform]);
     sh("tar", ["-xJf", tar, "-C", cache, "--strip-components=2", `${name}/bin/node`]);
     copyFileSync(join(cache, "node"), bin);
   }
