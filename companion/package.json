@@ -1,6 +1,6 @@
 {
   "name": "configsync",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "ConfigSync companion: scan installed games, import and apply config files.",
   "license": "FSL-1.1-MIT",
   "homepage": "https://configsync.app",

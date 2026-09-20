@@ -21,7 +21,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     changes: [
       {
         kind: "new",
-        text: "Windows: download csync.exe and run it. Linux: one curl line. No Node, no npm, nothing else to install — the companion carries its own runtime.",
+        text: "csync 0.2.0: Windows users download one executable; Linux users run one curl line. No Node, no npm, nothing else to install — the companion carries its own runtime.",
       },
       {
         kind: "improved",
