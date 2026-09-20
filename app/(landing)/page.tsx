@@ -8,9 +8,9 @@ import { StructuredData } from "@/components/marketing/structured-data";
 import s from "./landing.module.css";
 
 export const metadata: Metadata = {
-  title: { absolute: "ConfigSync — Your game settings. Everywhere." },
+  title: { absolute: "ConfigSync — Sync, back up and share your game settings on every PC" },
   description:
-    "Store, organise and compare the settings you use for any game, then put the setup you want on any PC. Every save keeps a snapshot.",
+    "Store, organise and compare the settings and config files you use for any PC game — CS2, Rocket League and more — then put the setup you want on any PC. Every save keeps a snapshot you can restore.",
   alternates: { canonical: "/" },
 };
 

@@ -76,15 +76,17 @@ export default async function ComparePage({
           title="Compare presets"
           description="Settings are matched by category and name. Differences are marked with an icon and a word, not just color."
         />
-        <CompareView
-          gameSlug={game.slug}
-          presets={presets.map((p) => ({ id: p.id, name: p.name }))}
-          aId={a}
-          bId={b}
-          aName={presetA.name}
-          bName={presetB.name}
-          diff={diff}
-        />
+        <div className="panel p-4 sm:p-5">
+          <CompareView
+            gameSlug={game.slug}
+            presets={presets.map((p) => ({ id: p.id, name: p.name }))}
+            aId={a}
+            bId={b}
+            aName={presetA.name}
+            bName={presetB.name}
+            diff={diff}
+          />
+        </div>
       </div>
     </Page>
   );

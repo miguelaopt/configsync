@@ -5,6 +5,7 @@ import type { SyncLabel } from "@/lib/data/dashboard";
 
 /** A dashboard card: icon plate, title, one line of purpose, optional "view all" link. */
 export function Panel({
+  id,
   icon,
   title,
   subtitle,
@@ -13,6 +14,7 @@ export function Panel({
   bodyClassName,
   children,
 }: {
+  id?: string;
   icon?: React.ReactNode;
   title: string;
   subtitle?: string;
@@ -22,7 +24,13 @@ export function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <section className={cn("panel flex flex-col", className)}>
+    // With an id the panel is a named region (its own heading labels it), so it is reachable by
+    // assistive tech and by tests as `region "…"`.
+    <section
+      id={id}
+      aria-labelledby={id ? `${id}-title` : undefined}
+      className={cn("panel flex scroll-mt-24 flex-col", className)}
+    >
       <header className="flex items-center gap-3 p-4 sm:p-5">
         {icon ? (
           <span
@@ -33,7 +41,9 @@ export function Panel({
           </span>
         ) : null}
         <div className="min-w-0 flex-1">
-          <h2 className="text-[15px] font-semibold text-ink">{title}</h2>
+          <h2 id={id ? `${id}-title` : undefined} className="text-[15px] font-semibold text-ink">
+            {title}
+          </h2>
           {subtitle ? <p className="text-[13px] text-ink-3">{subtitle}</p> : null}
         </div>
         {action ? (

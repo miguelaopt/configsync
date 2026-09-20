@@ -15,10 +15,16 @@ const slug = (title: string) =>
 export function LegalPage({
   title,
   intro,
+  updated = LEGAL.updated,
+  footer,
   children,
 }: {
   title: string;
   intro: string;
+  /** Shown under the title; null hides the line (docs pages). */
+  updated?: string | null;
+  /** Replaces the legal-entity block at the end; null removes it. */
+  footer?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const sections = React.Children.toArray(children)
@@ -34,7 +40,7 @@ export function LegalPage({
         <h1 className="text-[40px] leading-[1.08] font-bold tracking-[-0.03em] sm:text-[48px]">
           {title}
         </h1>
-        <p className="mt-3 text-[13px] text-ink-3">Last updated {LEGAL.updated}</p>
+        {updated ? <p className="mt-3 text-[13px] text-ink-3">Last updated {updated}</p> : null}
         <p className="mt-5 text-[16px] text-ink-2">{intro}</p>
       </header>
 
@@ -59,17 +65,21 @@ export function LegalPage({
 
         <div className="flex max-w-[68ch] flex-col gap-8 text-[15px] leading-[1.7] text-ink-2">
           {children}
-          <footer className="panel flex flex-col gap-1 p-5 text-[13px] text-ink-3">
-            <span className="font-medium text-ink">{LEGAL.operator}</span>
-            {LEGAL.taxId ? <span>Tax ID {LEGAL.taxId}</span> : null}
-            <span>{LEGAL.address}</span>
-            <a href={`mailto:${LEGAL.email}`} className="w-fit text-accent-text hover:text-ink">
-              {LEGAL.email}
-            </a>
-            <span className="mt-2">
-              Questions about this page? Write to us — a person reads that address.
-            </span>
-          </footer>
+          {footer === undefined ? (
+            <footer className="panel flex flex-col gap-1 p-5 text-[13px] text-ink-3">
+              <span className="font-medium text-ink">{LEGAL.operator}</span>
+              {LEGAL.taxId ? <span>Tax ID {LEGAL.taxId}</span> : null}
+              <span>{LEGAL.address}</span>
+              <a href={`mailto:${LEGAL.email}`} className="w-fit text-accent-text hover:text-ink">
+                {LEGAL.email}
+              </a>
+              <span className="mt-2">
+                Questions about this page? Write to us — a person reads that address.
+              </span>
+            </footer>
+          ) : (
+            footer
+          )}
         </div>
       </div>
     </article>
