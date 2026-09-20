@@ -7,6 +7,8 @@ export type ChangeKind = "new" | "improved" | "fixed";
 export type ChangelogEntry = {
   /** ISO date, also the anchor. */
   date: string;
+  /** The package.json version this shipped as. */
+  version: string;
   title: string;
   changes: { kind: ChangeKind; text: string }[];
 };
@@ -14,6 +16,7 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-20",
+    version: "0.4.0",
     title: "A page for every game, and the companion guide goes public",
     changes: [
       {
@@ -36,6 +39,7 @@ export const CHANGELOG: ChangelogEntry[] = [
   },
   {
     date: "2026-09-19",
+    version: "0.3.0",
     title: "Review before you import",
     changes: [
       {
@@ -58,6 +62,7 @@ export const CHANGELOG: ChangelogEntry[] = [
   },
   {
     date: "2026-09-18",
+    version: "0.2.0",
     title: "ConfigSync is live",
     changes: [
       {
@@ -80,6 +85,7 @@ export const CHANGELOG: ChangelogEntry[] = [
   },
   {
     date: "2026-09-17",
+    version: "0.1.0",
     title: "The foundation",
     changes: [
       {
