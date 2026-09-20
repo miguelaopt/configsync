@@ -31,7 +31,7 @@ export function Backdrop() {
 const NAV = [
   { href: "/#product", label: "Product" },
   { href: "/#how", label: "How it works" },
-  { href: "/#games", label: "Games" },
+  { href: "/for", label: "Games" },
   { href: "/pricing", label: "Pricing" },
 ];
 
@@ -89,7 +89,7 @@ const FOOTER_COLUMNS = [
     links: [
       { href: "/#product", label: "What it does" },
       { href: "/#how", label: "How it works" },
-      { href: "/#games", label: "Games" },
+      { href: "/for", label: "Games" },
       { href: "/pricing", label: "Pricing" },
       { href: "/docs/companion", label: "Companion CLI" },
     ],

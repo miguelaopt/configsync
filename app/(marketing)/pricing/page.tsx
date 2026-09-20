@@ -6,6 +6,7 @@ import { billingEnabled, env } from "@/lib/env";
 import { LEGAL } from "@/lib/legal";
 import { ComparisonTable, PricingTable } from "@/components/billing/pricing-table";
 import { Button } from "@/components/ui/button";
+import { Faq } from "@/components/marketing/faq";
 
 export const metadata: Metadata = {
   title: "Pricing — Free and Pro plans",
@@ -129,23 +130,7 @@ export default async function PricingPage() {
         <h2 id="faq" className="text-[26px] font-bold tracking-[-0.024em]">
           Questions
         </h2>
-        <div className="grid gap-3 md:grid-cols-2">
-          {FAQ.map((f) => (
-            <details
-              key={f.q}
-              className="panel group p-5 [&_summary::-webkit-details-marker]:hidden"
-            >
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-[15px] font-semibold text-ink">
-                {f.q}
-                <span
-                  aria-hidden
-                  className="mt-1 size-2.5 shrink-0 rotate-45 border-r border-b border-ink-3 transition-transform group-open:-rotate-[135deg]"
-                />
-              </summary>
-              <p className="mt-3 text-[14px] text-ink-2">{f.a}</p>
-            </details>
-          ))}
-        </div>
+        <Faq items={FAQ} />
       </section>
 
       <section className="panel flex flex-col items-start gap-5 p-7 sm:p-10">

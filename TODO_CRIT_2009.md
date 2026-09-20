@@ -6,11 +6,6 @@ reviewer would expect. Ordered by impact.
 
 ## Public pages that do not exist yet
 
-- [ ] **`/for/<game>` — one public page per catalog game** (`/for/cs2`, `/for/rocket-league`).
-      The long-tail search traffic ("cs2 config backup", "rocket league settings sync",
-      "cs2 autoexec sync between pcs") lands nowhere today. Each page: what the catalog knows
-      about the game (categories, file paths the companion reads), the Steam launch line,
-      a CTA to sign up. Data already exists in `lib/catalog`. Add to `app/sitemap.ts`.
 - [ ] **`/docs/import-export`** — the JSON format is documented in `docs/import-export.md`;
       nothing public explains what an export contains or that it can be re-imported.
 - [ ] **`/changelog`** — nothing tells a returning visitor what changed. Also the cheapest way
@@ -23,6 +18,13 @@ reviewer would expect. Ordered by impact.
 
 - [x] `/p/miguel` — public profile switched on (2026-09-20). Mark presets as public so it is
       not "No public presets yet".
+
+## Done in PR `feat/game-pages` (2026-09-20)
+
+- `/for` and `/for/<game>` (`/for/cs2`, `/for/rocket-league`) from the catalog: every setting
+  by name with its config key, the files per launcher, three commands, FAQ (with FAQPage
+  schema), in the sitemap; header/footer "Games" and the landing cards link there.
+- The Public profile switch saves on toggle.
 
 ## Done in PR `feat/seo-design-sweep` (2026-09-20)
 

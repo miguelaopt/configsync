@@ -930,6 +930,15 @@
   border-radius: 12px;
   background: linear-gradient(160deg, #1e2133, #171a28);
 }
+/* A card that is a link keeps the card's text colours; only the border answers hover. */
+.root .gameLink,
+.root .gameLink:hover {
+  color: inherit;
+  display: block;
+}
+.root .gameLink:hover {
+  border-color: var(--accent);
+}
 .gameAdd {
   border: 1px dashed #33374f;
   background: rgba(23, 26, 40, 0.5);

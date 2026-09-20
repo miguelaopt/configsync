@@ -21,8 +21,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [pending, startTransition] = React.useTransition();
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const save = (patch: { isPublic?: boolean } = {}) =>
     startTransition(async () => {
       const r = await updateProfileAction({
         username,
@@ -30,6 +29,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         isPublic,
         bio: bio || null,
         links: links.map((l) => l.trim()).filter(Boolean),
+        ...patch,
       });
       if (!r.ok) {
         setErrors(r.fieldErrors ?? {});
@@ -37,9 +37,25 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         return;
       }
       setErrors({});
-      toast.success("Profile saved");
+      toast.success(
+        patch.isPublic === undefined
+          ? "Profile saved"
+          : patch.isPublic
+            ? "Profile is public"
+            : "Profile is private",
+      );
       router.refresh();
     });
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    save();
+  };
+
+  // The switch saves on its own: a toggle that waits for a Save button reads as already done.
+  const togglePublic = (v: boolean) => {
+    setIsPublic(v);
+    save({ isPublic: v });
   };
 
   return (
@@ -79,7 +95,7 @@ export function ProfileForm({ profile, email }: { profile: Profile; email: strin
         }
       >
         <div className="flex h-9 items-center">
-          <Switch id="is-public" checked={isPublic} onCheckedChange={setIsPublic} />
+          <Switch id="is-public" checked={isPublic} onCheckedChange={togglePublic} />
         </div>
       </Field>
       <Field label="Bio" htmlFor="bio" optional error={errors.bio}>

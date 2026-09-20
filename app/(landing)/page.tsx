@@ -348,16 +348,16 @@ export default async function LandingPage() {
               settings you care about.
             </p>
             <div className={s.games}>
-              <div className={s.game}>
+              <Link href="/for/cs2" className={cx(s.game, s.gameLink)}>
                 <p className={cx(s.gameCode, s.mono)}>CS2</p>
                 <p className={s.gameName}>Counter-Strike 2</p>
                 <p className={s.gameText}>Real menu, from keyboard and mouse to crosshair.</p>
-              </div>
-              <div className={s.game}>
+              </Link>
+              <Link href="/for/rocket-league" className={cx(s.game, s.gameLink)}>
                 <p className={cx(s.gameCode, s.mono)}>RL</p>
                 <p className={s.gameName}>Rocket League</p>
                 <p className={s.gameText}>Real menu, camera and controls included.</p>
-              </div>
+              </Link>
               <div className={cx(s.game, s.gameAdd)}>
                 <p className={cx(s.gameCode, s.gameCodeMuted, s.mono)}>+</p>
                 <p className={s.gameName}>Any other game</p>
