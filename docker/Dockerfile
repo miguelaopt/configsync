@@ -19,8 +19,11 @@ ENV DATABASE_URL=postgres://build:build@localhost:5432/build \
 ARG NEXT_PUBLIC_APP_URL NEXT_PUBLIC_PADDLE_CLIENT_TOKEN NEXT_PUBLIC_PADDLE_ENV
 ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
     NEXT_PUBLIC_PADDLE_CLIENT_TOKEN=$NEXT_PUBLIC_PADDLE_CLIENT_TOKEN NEXT_PUBLIC_PADDLE_ENV=$NEXT_PUBLIC_PADDLE_ENV
-# The companion ships from this site, not from a registry: `npm i -g <origin>/csync.tgz`.
-RUN pnpm pack:companion
+# The companion ships from this site as single executables (no Node on the user's machine):
+# public/csync-windows-x64.exe, public/csync-linux-x64, public/install.sh. The official Node
+# binaries they are built from are downloaded once and kept in the build cache.
+RUN apk add --no-cache tar xz unzip
+RUN --mount=type=cache,target=/app/.cache pnpm build:companion
 RUN pnpm build
 
 FROM node:22-alpine AS runner

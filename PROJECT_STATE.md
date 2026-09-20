@@ -40,7 +40,8 @@ snapshot you can restore; Free keeps the last 10 per preset.
 game's real config files as a preset, writes a preset back (always a `.bak-*` first, never while
 the game runs), `csync watch` keeps each game equal to its Default preset (Pro), `csync launch`
 applies right before a game starts. Shipped from the site itself, not npm:
-`curl -fsSL https://configsync.app/csync.tgz -o csync.tgz && npm i -g ./csync.tgz`.
+as single executables — `/csync-windows-x64.exe` and `/install.sh` (Linux → `~/.local/bin/csync`) —
+built by `scripts/build-companion.mjs` at image build time. The Windows exe is not code-signed.
 
 **Multi-PC.** Devices report in with a heartbeat and what they last applied. Pro picks a different
 preset per PC. The sync state shown everywhere comes from `lib/data/sync.ts`.
@@ -91,7 +92,7 @@ lib/
   billing/          plan.ts (gating), limits.ts, public.ts (prices, features, comparison)
   catalog/ game-configs/ import-export/   the file formats and the catalog
   auth/ db/ providers/ settings/ copy/ utils/
-companion/          the CLI; packed to public/csync.tgz at build time
+companion/          the CLI; built into public/csync-* single executables at build time
 catalog/            one JSON per supported game
 drizzle/            SQL migrations, 0000…0005
 docs/               launch, billing, companion, catalog, import-export, self-hosting, decisions

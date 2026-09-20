@@ -23,14 +23,18 @@ function startupCmdPath() {
   );
 }
 
-/** Start `csync watch` with the user session. Returns a sentence describing what was done. */
-export function install(nodePath, scriptPath) {
+/**
+ * Start `csync watch` with the user session. `scriptPath` is null when csync runs as a single
+ * executable — then `exe` alone is the command. Returns a sentence describing what was done.
+ */
+export function install(exe, scriptPath) {
+  const command = scriptPath ? `"${exe}" "${scriptPath}"` : `"${exe}"`;
   if (process.platform === "linux") {
     const p = unitPath();
     mkdirSync(dirname(p), { recursive: true });
     writeFileSync(
       p,
-      `[Unit]\nDescription=ConfigSync companion — keeps game config files in sync\nAfter=network-online.target\n\n[Service]\nExecStart=${nodePath} ${scriptPath} watch\nRestart=on-failure\nRestartSec=30\n\n[Install]\nWantedBy=default.target\n`,
+      `[Unit]\nDescription=ConfigSync companion — keeps game config files in sync\nAfter=network-online.target\n\n[Service]\nExecStart=${command} watch\nRestart=on-failure\nRestartSec=30\n\n[Install]\nWantedBy=default.target\n`,
     );
     execFileSync("systemctl", ["--user", "daemon-reload"]);
     execFileSync("systemctl", ["--user", "enable", "--now", "csync-watch"]);
@@ -39,7 +43,7 @@ export function install(nodePath, scriptPath) {
   if (process.platform === "win32") {
     const p = startupCmdPath();
     mkdirSync(dirname(p), { recursive: true });
-    writeFileSync(p, `@echo off\r\nstart "" /min "${nodePath}" "${scriptPath}" watch\r\n`);
+    writeFileSync(p, `@echo off\r\nstart "" /min ${command} watch\r\n`);
     return `Installed ${p}. It starts with Windows; run it once now or sign in again.`;
   }
   throw new Error("Autostart isn't supported on this OS yet. Run `csync watch` in a terminal.");

@@ -111,7 +111,7 @@ pnpm check              # typecheck + lint + unit tests — the gate
 pnpm test:e2e           # Playwright; needs port 3100 free (kill a running pnpm dev first)
 pnpm db:migrate         # apply migrations locally
 pnpm db:seed            # demo@example.com / demo-vault-2026
-pnpm pack:companion     # rebuild public/csync.tgz (the installer the site serves)
+pnpm build:companion    # build public/csync-windows-x64.exe, csync-linux-x64, install.sh (Node SEA)
 ```
 
 ## Testing notes

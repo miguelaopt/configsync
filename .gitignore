@@ -49,4 +49,9 @@ next-env.d.ts
 !.env.example
 
 # Built by `pnpm pack:companion`; served as the companion installer.
-public/csync.tgz
+
+# companion binaries are built, not committed (scripts/build-companion.mjs)
+/.cache
+/public/csync-*
+/public/csync.tgz
+/public/install.sh

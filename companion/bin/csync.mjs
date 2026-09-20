@@ -26,6 +26,14 @@ const HELP = `csync — ConfigSync companion
 Close the game before import/apply. Steam Cloud may restore old files for some games.`;
 
 const argv = process.argv.slice(2);
+// As a single executable (the .exe / Linux binary) there is no script file: import.meta is empty
+// and the executable itself is the command. From a checkout it is `node csync.mjs`.
+const script = import.meta.url ? fileURLToPath(import.meta.url) : null;
+const cli = script
+  ? "csync"
+  : /\s/.test(process.execPath)
+    ? `"${process.execPath}"`
+    : process.execPath;
 const dashdash = argv.indexOf("--");
 /** Everything after `--` is the command `launch` runs, untouched. */
 const tail = dashdash >= 0 ? argv.slice(dashdash + 1) : [];
@@ -97,7 +105,7 @@ async function games() {
   for (const g of games) {
     console.log(`${g.id} — ${g.name}`);
     const { found } = readFiles(g);
-    if (found.length) console.log(`  Steam launch options: csync launch ${g.id} -- %command%`);
+    if (found.length) console.log(`  Steam launch options: ${cli} launch ${g.id} -- %command%`);
   }
 }
 
@@ -202,8 +210,7 @@ const report = (c, state, waiting, failed) =>
   });
 
 async function watch() {
-  const me = fileURLToPath(import.meta.url);
-  if (flag("install")) return console.log(autostart.install(process.execPath, me));
+  if (flag("install")) return console.log(autostart.install(process.execPath, script));
   if (flag("uninstall")) return console.log(autostart.uninstall());
   const c = need();
   const interval = Math.max(5, Number(opt("interval") ?? 30)) * 1000;

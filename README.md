@@ -49,7 +49,7 @@ pnpm dev                           # http://localhost:3000
 ## Companion
 
 ```sh
-cd companion && npm i -g .        # or `pnpm csync …` from this checkout
+pnpm csync <command>              # the companion from this checkout; `pnpm build:companion` builds the binaries
 csync login http://localhost:3000    # paste a token from Settings → Companion
 csync scan --push                    # installed Steam/Epic games → your vault
 csync import cs2                     # CS2's config files → a new preset

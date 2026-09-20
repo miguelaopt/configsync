@@ -13,3 +13,5 @@ skills.md
 pnpm-workspace.yaml
 docs/examples/
 .superpowers/
+.cache/
+public/install.sh

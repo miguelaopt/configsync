@@ -1,19 +1,24 @@
 # Companion CLI (`csync`)
 
 `csync` runs on the gaming PC. It lists installed games, reads a game's config files into the vault
-as a new preset, and writes a preset back into those files. Plain Node ≥ 20, no dependencies,
-source in [`companion/`](../companion/).
+as a new preset, and writes a preset back into those files. Source in [`companion/`](../companion/);
+shipped as single executables built by `scripts/build-companion.mjs` (esbuild → Node SEA):
+`public/csync-windows-x64.exe`, `public/csync-linux-x64`, `public/install.sh`.
 
 ## Install
 
+- Windows: download `<origin>/csync-windows-x64.exe`, run it from PowerShell as `.\csync.exe …`.
+- Linux: `curl -fsSL <origin>/install.sh | sh` → `~/.local/bin/csync`.
+
 ```sh
-git clone <repo> && cd configsync/companion && npm i -g .
-csync login https://your-vault.example      # paste a token from Settings → Companion
+csync login https://configsync.app          # paste a token from Settings → Companion
 csync scan --push
 csync import cs2
 ```
 
-From a repo checkout, `pnpm csync <command>` works without installing.
+From a repo checkout, `pnpm csync <command>` runs the source without building anything.
+`pnpm build:companion` rebuilds the binaries (downloads the official Node binaries once into
+`.cache/`). The Windows exe is not code-signed: SmartScreen warns on first run.
 
 ## Commands
 

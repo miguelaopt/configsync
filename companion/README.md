@@ -1,20 +1,18 @@
 # csync — ConfigSync companion
 
 A small CLI for your gaming PC. It finds the games you have installed, reads their config
-files into your vault as presets, and writes presets back into those files. Plain Node ≥ 20,
-no dependencies.
+files into your vault as presets, and writes presets back into those files. Ships as a single
+executable per platform — the user installs nothing else.
 
 ## Install
 
-```sh
-curl -fsSL https://configsync.app/csync.tgz -o csync.tgz
-npm i -g ./csync.tgz          # installs the `csync` command
-```
+- **Windows:** download `https://configsync.app/csync-windows-x64.exe`, keep it somewhere
+  permanent, run it from PowerShell as `.\csync.exe …`.
+- **Linux:** `curl -fsSL https://configsync.app/install.sh | sh` → `~/.local/bin/csync`.
 
-npm 12 refuses to install a package straight from a URL (`allow-remote` defaults to `none`),
-so the file is downloaded first.
-
-The package is served by the app itself, so it is always the build the server is running.
+The binaries are built by `scripts/build-companion.mjs` (esbuild bundle → Node single
+executable, injected into the official Node binary of each platform) at image build time, so
+they always match the server. From a checkout, `pnpm csync <command>` runs the source.
 
 ## Commands
 
