@@ -23,7 +23,6 @@ export default async function LandingPage() {
     <MotionProvider>
       <StructuredData />
       <div className={s.root}>
-        <div aria-hidden className={s.grid} />
         <div aria-hidden className={s.glowTop} />
         <div aria-hidden className={s.glowRight} />
 
@@ -63,12 +62,6 @@ export default async function LandingPage() {
         <main id="top" className={s.main}>
           {/* Hero */}
           <section className={s.hero}>
-            <Reveal as="div" className={s.pillWrap}>
-              <a href="#pro" className={s.pill}>
-                <span className={s.pillTag}>Pro</span>
-                <span>Import a settings menu from a screenshot</span>
-              </a>
-            </Reveal>
             <div className={s.heroGrid}>
               <Reveal as="div">
                 <h1 className={s.h1}>

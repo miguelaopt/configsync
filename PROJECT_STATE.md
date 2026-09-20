@@ -1,6 +1,6 @@
 # Project state
 
-Last updated 2026-09-20, after PR #43 was merged and deployed. Live version **0.6.0**;
+Last updated 2026-09-21, after PR #44 was merged and deployed. Live version **0.6.1**;
 companion version **0.2.0**.
 
 This is what exists and where it lives. `TODO.md` is what is left. `AGENTS.md` is how to work.
@@ -9,20 +9,20 @@ This is what exists and where it lives. `TODO.md` is what is left. `AGENTS.md` i
 
 ## Live
 
-|                 |                                                                                                |
-| --------------- | ---------------------------------------------------------------------------------------------- |
-| Site            | <https://configsync.app> (Cloudflare DNS, DNS-only; `www` and `http` redirect)                 |
-| Server          | Hetzner CX23, Falkenstein, Ubuntu 26.04, `ssh miguel@49.13.123.75`                             |
-| Repo on server  | `~/configsync`, branch `main`                                                                  |
-| Runtime         | `docker compose --profile app --profile proxy` — app, Postgres, Caddy (Let's Encrypt)          |
-| Deployed commit | `77bbd0c` (merge of PR #43), version 0.6.0                                                     |
-| Deploy          | `cd ~/configsync && git pull && docker compose --profile app --profile proxy up -d --build`    |
-| Migrations      | run at container boot (`RUN_MIGRATIONS=true`)                                                  |
-| Backups         | `pg_dump` cron at 04:00 → `~/backups`, 14 days. **Still only on that machine.**                |
-| Email           | Resend over SMTP; `hello@configsync.app` forwards to Gmail via Cloudflare Email Routing        |
-| Billing         | Paddle **live** keys, webhook → `/api/billing/paddle`                                          |
-| AI              | `AI_VISION_PROVIDER=anthropic`; the key was shown in a chat on 2026-09-19 — rotate if not done |
-| Monitoring      | UptimeRobot on `/pricing`                                                                      |
+|                  |                                                                                                |
+| ---------------- | ---------------------------------------------------------------------------------------------- |
+| Site             | <https://configsync.app> (Cloudflare DNS, DNS-only; `www` and `http` redirect)                 |
+| Server           | Hetzner CX23, Falkenstein, Ubuntu 26.04, `ssh miguel@49.13.123.75`                             |
+| Repo on server   | `~/configsync`, branch `main`                                                                  |
+| Runtime          | `docker compose --profile app --profile proxy` — app, Postgres, Caddy (Let's Encrypt)          |
+| Deployed release | PR #44, version 0.6.1                                                                          |
+| Deploy           | `cd ~/configsync && git pull && docker compose --profile app --profile proxy up -d --build`    |
+| Migrations       | run at container boot (`RUN_MIGRATIONS=true`)                                                  |
+| Backups          | `pg_dump` cron at 04:00 → `~/backups`, 14 days. **Still only on that machine.**                |
+| Email            | Resend over SMTP; `hello@configsync.app` forwards to Gmail via Cloudflare Email Routing        |
+| Billing          | Paddle **live** keys, webhook → `/api/billing/paddle`                                          |
+| AI               | `AI_VISION_PROVIDER=anthropic`; the key was shown in a chat on 2026-09-19 — rotate if not done |
+| Monitoring       | UptimeRobot on `/pricing`                                                                      |
 
 A misconfigured `.env` now kills the container at boot (`instrumentation.ts` → `lib/boot.ts`), so
 the container restart-loops and Caddy serves `docker/maintenance.html` on 502/503/504 instead of a
@@ -156,7 +156,7 @@ Grep `ponytail:` for the full list. The ones that matter:
 
 ## History
 
-PRs #1–#43, all merged except #24 (superseded by this file). #1 foundation, #2 ConfigSync rebrand +
+PRs #1–#44, all merged except #24 (superseded by this file). #1 foundation, #2 ConfigSync rebrand +
 Paddle, #3 auto-switch, #4 public profile, #5 AI screenshot import, #6 multi-PC, #7 launch prep,
 #8–#11 deploy fixes and launch polish, #12–#19 landing experiments, #20 the Nocturne landing,
 #21–#22 the auth pages, #23 the whole app remapped onto the brand plus the marketing pages, SEO and
@@ -165,11 +165,13 @@ import review flow (ChatGPT), #33 searchable titles + `/docs/companion` + panel 
 page, #34 `/for/<game>` pages + public-profile switch autosave, #35 greeting gradient, #36
 `/changelog`, #37 one version number from `package.json`, #38 working agreement and project state,
 #39 ZIP and recent exports, #40 Settings polish, #41 formatting fix, #42 standalone Windows and
-Linux companion binaries, #43 Alpine image-build fix.
+Linux companion binaries, #43 Alpine image-build fix, #44 refreshed auth artwork, a quieter
+landing hero and corrected release state.
 
 Version history: 0.1.0 foundation (17 Sep) · 0.2.0 launch (18 Sep) · 0.3.0 import review + Nocturne
 (19 Sep) · 0.4.0 game pages, docs, SEO · 0.5.0 export rebuild · 0.5.1 Settings polish · 0.6.0
 standalone companion binaries (20 Sep).
+Version 0.6.1 refreshed the auth artwork and simplified the landing hero (21 Sep).
 
 `docs/decisions/` holds the architecture decisions. `WALKTHROUGH.md` is an operator's tour but is
 **out of date** — it still describes merging PRs #5 and #6.

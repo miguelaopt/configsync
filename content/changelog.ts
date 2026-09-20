@@ -15,6 +15,17 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-09-21",
+    version: "0.6.1",
+    title: "A cleaner welcome",
+    changes: [
+      {
+        kind: "improved",
+        text: "Sign in and account creation now use the new ConfigSync artwork, and the home page has a cleaner, quieter hero.",
+      },
+    ],
+  },
+  {
     date: "2026-09-20",
     version: "0.6.0",
     title: "The companion is one file",
