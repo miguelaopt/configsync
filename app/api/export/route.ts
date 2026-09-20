@@ -67,7 +67,9 @@ export async function GET(req: Request) {
     }[format];
     const presets = games.reduce((n, g) => n + g.presets.length, 0);
     const settings = games.reduce(
-      (n, g) => n + g.presets.reduce((m, p) => m + p.categories.reduce((k, c) => k + c.settings.length, 0), 0),
+      (n, g) =>
+        n +
+        g.presets.reduce((m, p) => m + p.categories.reduce((k, c) => k + c.settings.length, 0), 0),
       0,
     );
     return new NextResponse(body, {
