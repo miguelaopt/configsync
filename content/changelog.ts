@@ -15,13 +15,24 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-09-21",
+    version: "0.6.1",
+    title: "A cleaner welcome",
+    changes: [
+      {
+        kind: "improved",
+        text: "Sign in and account creation now use the new ConfigSync artwork, and the home page has a cleaner, quieter hero.",
+      },
+    ],
+  },
+  {
     date: "2026-09-20",
     version: "0.6.0",
     title: "The companion is one file",
     changes: [
       {
         kind: "new",
-        text: "Windows: download csync.exe and run it. Linux: one curl line. No Node, no npm, nothing else to install — the companion carries its own runtime.",
+        text: "csync 0.2.0: Windows users download one executable; Linux users run one curl line. No Node, no npm, nothing else to install — the companion carries its own runtime.",
       },
       {
         kind: "improved",
