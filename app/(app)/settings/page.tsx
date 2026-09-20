@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { eq, and } from "drizzle-orm";
+import { Crown, KeyRound, Laptop, SlidersHorizontal, Trash2, UserRound } from "lucide-react";
 import { getProfile, requireUser } from "@/lib/auth/session";
 import { db, schema } from "@/lib/db";
 import { Page, PageHeader } from "@/components/app/page-header";
+import { Panel } from "@/components/dashboard/panels";
 import { PreferencesForm, ProfileForm } from "@/components/settings-page/profile-form";
 import { ChangePasswordForm, DeleteAccount } from "@/components/settings-page/account-forms";
 import { CompanionCard } from "@/components/settings-page/companion-card";
@@ -39,52 +41,60 @@ export default async function SettingsPage() {
         title="Settings"
         description="Your profile, how the app looks, and your account."
       />
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-5">
         {billingEnabled ? (
-          <Section id="plan" title="Plan">
+          <Panel
+            id="plan"
+            icon={<Crown />}
+            title="Plan"
+            subtitle="What you are on, and how to change it."
+          >
             <PlanCard info={plan} email={user.email} userId={user.id} prices={prices} />
-          </Section>
+          </Panel>
         ) : null}
-        <Section id="profile" title="Profile">
+        <Panel
+          id="profile"
+          icon={<UserRound />}
+          title="Profile"
+          subtitle="Your name, public page and links."
+        >
           <ProfileForm profile={profile} email={user.email} />
-        </Section>
-        <Section id="preferences" title="Preferences">
+        </Panel>
+        <Panel
+          id="preferences"
+          icon={<SlidersHorizontal />}
+          title="Preferences"
+          subtitle="How the app looks and what Copy gives you."
+        >
           <PreferencesForm profile={profile} />
-        </Section>
-        <Section id="companion" title="Companion">
+        </Panel>
+        <Panel
+          id="companion"
+          icon={<Laptop />}
+          title="Companion"
+          subtitle="The CLI on your gaming PCs, its tokens and the PCs it has seen."
+        >
           <CompanionCard tokens={tokens} devices={devices} appUrl={env.BETTER_AUTH_URL} />
-        </Section>
-        <Section id="password" title="Password">
+        </Panel>
+        <Panel
+          id="password"
+          icon={<KeyRound />}
+          title="Password"
+          subtitle="Change the one you sign in with."
+        >
           <ChangePasswordForm hasPassword={Boolean(credential)} />
-        </Section>
-        <Section id="danger" title="Delete account">
+        </Panel>
+        <Panel
+          id="danger"
+          icon={<Trash2 />}
+          title="Delete account"
+          subtitle="Everything goes, immediately."
+          className="border-bad/30 [&_header_span]:bg-bad-soft [&_header_span]:text-bad"
+        >
           <DeleteAccount />
-        </Section>
+        </Panel>
         <p className="text-xs text-ink-3">ConfigSync {SITE.version}</p>
       </div>
     </Page>
-  );
-}
-
-function Section({
-  id,
-  title,
-  children,
-}: {
-  id: string;
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section
-      id={id}
-      aria-labelledby={`${id}-title`}
-      className="grid scroll-mt-20 gap-4 border-t border-line pt-6 md:grid-cols-[200px_1fr]"
-    >
-      <h2 id={`${id}-title`} className="font-display text-[19px]">
-        {title}
-      </h2>
-      <div className="min-w-0">{children}</div>
-    </section>
   );
 }

@@ -8,9 +8,9 @@ import { ComparisonTable, PricingTable } from "@/components/billing/pricing-tabl
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Pricing",
+  title: "Pricing — Free and Pro plans",
   description:
-    "Free for three games, forever. Pro is 2.99 €/month or 24.99 € once: unlimited games, full history, auto-switch on every PC and per-PC presets.",
+    "ConfigSync pricing: free for three games, forever. Pro is 2.99 €/month or 24.99 € once — unlimited games, full settings history, auto-sync on every PC and per-PC presets.",
   alternates: { canonical: "/pricing" },
 };
 

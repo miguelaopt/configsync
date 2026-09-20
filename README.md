@@ -1,6 +1,6 @@
 # ConfigSync
 
-Your game settings. One place.
+Your game settings. One place. **Hosted at [configsync.app](https://configsync.app)** — free for three games, or run it yourself.
 
 Save, organize, compare, copy and export the settings you use for any game — mouse sensitivity, keybinds, graphics, audio, whatever the game has — in an interface that feels like a game's settings menu, not a spreadsheet. Works on phone and desktop. No game integration required: you type (or paste) the values, the vault keeps them.
 

@@ -148,7 +148,7 @@ export function CompareView({
                     <th
                       scope="colgroup"
                       colSpan={4}
-                      className="border-b border-line-strong pt-5 pb-1.5 pl-3 text-left font-display text-[16px] text-ink"
+                      className="border-b border-line-strong pt-5 pb-1.5 pl-3 text-left text-[16px] font-semibold text-ink"
                     >
                       {c.name}
                     </th>

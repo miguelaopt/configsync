@@ -1,6 +1,8 @@
 "use client";
 import * as React from "react";
 import { z } from "zod";
+import { History } from "lucide-react";
+import { Panel } from "@/components/dashboard/panels";
 import { plural, timeAgo } from "@/lib/utils/format";
 
 const itemSchema = z.object({
@@ -60,11 +62,13 @@ export function RecentImports({ userId }: { userId: string }) {
   );
   const items = React.useMemo(() => parse(raw), [raw]);
   return (
-    <section aria-label="Recent imports" className="mt-8 border-t border-hairline pt-5">
-      <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-[13px] font-medium text-ink">Recent imports</h2>
-        <span className="text-[12px] text-ink-3">On this browser</span>
-      </div>
+    <Panel
+      id="recent-imports"
+      icon={<History />}
+      title="Recent imports"
+      subtitle="Kept on this browser only — not a server log."
+      className="mt-5"
+    >
       {items.length ? (
         <ul className="divide-y divide-hairline">
           {items.map((item, index) => (
@@ -83,6 +87,6 @@ export function RecentImports({ userId }: { userId: string }) {
       ) : (
         <p className="text-[13px] text-ink-3">Your completed imports will appear here.</p>
       )}
-    </section>
+    </Panel>
   );
 }

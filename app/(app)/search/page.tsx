@@ -4,9 +4,11 @@ import { Gamepad2, Layers, Search, SlidersHorizontal } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { searchAll, type SearchHit } from "@/lib/data/search";
 import { Page, PageHeader } from "@/components/app/page-header";
+import { Panel } from "@/components/dashboard/panels";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SearchForm } from "@/components/app/search-form";
 import type { SearchParams } from "@/lib/types";
+import { plural } from "@/lib/utils/format";
 
 export const metadata: Metadata = { title: "Search" };
 
@@ -43,15 +45,18 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
           description="Try a shorter word, a value like “1440” or a tag."
         />
       ) : (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-5">
           {groups.map(({ kind, items }) => {
             const Icon = KIND[kind].icon;
             return (
-              <section key={kind} aria-labelledby={`group-${kind}`}>
-                <h2 id={`group-${kind}`} className="mb-2 font-display text-[17px]">
-                  {KIND[kind].label} <span className="tnum text-sm text-ink-3">{items.length}</span>
-                </h2>
-                <ul className="divide-y divide-hairline border-y border-hairline">
+              <Panel
+                key={kind}
+                icon={<Icon />}
+                title={KIND[kind].label}
+                subtitle={plural(items.length, "match", "matches")}
+                bodyClassName="px-2 pb-2 sm:px-2 sm:pb-2"
+              >
+                <ul className="divide-y divide-hairline">
                   {items.map((hit) => (
                     <li key={hit.id}>
                       <Link
@@ -72,7 +77,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
                     </li>
                   ))}
                 </ul>
-              </section>
+              </Panel>
             );
           })}
         </div>
