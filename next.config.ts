@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     // Covers are stored in our own database and served from /api/attachments/*.
     // Remote URLs are rendered with a plain <img> (any host, validated as https on input).
     remotePatterns: [],
+    qualities: [75, 90],
   },
   experimental: {
     serverActions: {

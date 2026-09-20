@@ -15,6 +15,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           alt=""
           fill
           sizes="50vw"
+          quality={90}
           loading="eager"
           className="object-cover"
         />

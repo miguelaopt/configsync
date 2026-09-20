@@ -21,7 +21,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     changes: [
       {
         kind: "improved",
-        text: "Sign in and account creation now use the new ConfigSync artwork, and the home page has a cleaner, quieter hero.",
+        text: "Sign in and account creation now use sharper, high-resolution ConfigSync artwork, and the home page has a cleaner, quieter hero.",
       },
     ],
   },
