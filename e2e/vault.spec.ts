@@ -141,7 +141,8 @@ test.describe("library flow", () => {
     // --- Export (download) --------------------------------------------------
     const downloadPromise = page.waitForEvent("download");
     await page.goto("/export");
-    await page.getByRole("link", { name: "Download" }).first().click();
+    // The JSON row's button; "Download all as ZIP" would also match a substring name.
+    await page.getByRole("button", { name: "Download", exact: true }).first().click();
     const download = await downloadPromise;
     expect(download.suggestedFilename()).toMatch(/configsync-library-.*\.json/);
     const path = await download.path();

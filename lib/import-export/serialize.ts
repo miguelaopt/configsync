@@ -1,7 +1,6 @@
 import { FORMAT_ID, FORMAT_VERSION, type ExportFile, type GameDoc } from "./schema";
 import { formatValue, type SettingValue } from "@/lib/settings/types";
-
-export const APP_VERSION = "0.1.0";
+import { SITE } from "@/lib/site";
 
 export function buildExportFile(games: GameDoc[], kind: ExportFile["kind"]): ExportFile {
   return {
@@ -9,7 +8,7 @@ export function buildExportFile(games: GameDoc[], kind: ExportFile["kind"]): Exp
     version: FORMAT_VERSION,
     kind,
     exportedAt: new Date().toISOString(),
-    app: { name: "ConfigSync", version: APP_VERSION },
+    app: { name: SITE.name, version: SITE.version },
     games,
   };
 }
