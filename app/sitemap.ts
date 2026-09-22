@@ -14,7 +14,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/for",
     ...CATALOG.map((g) => `/for/${g.id}`),
     "/docs/companion",
+    "/docs/import-export",
     "/changelog",
+    "/contact",
     "/terms",
     "/privacy",
     "/refunds",
@@ -28,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority:
       path === ""
         ? 1
-        : path.startsWith("/for") || path === "/pricing" || path === "/docs/companion"
+        : path.startsWith("/for") || path === "/pricing" || path.startsWith("/docs")
           ? 0.8
           : 0.5,
   }));

@@ -92,12 +92,14 @@ const FOOTER_COLUMNS = [
       { href: "/for", label: "Games" },
       { href: "/pricing", label: "Pricing" },
       { href: "/docs/companion", label: "Companion CLI" },
+      { href: "/docs/import-export", label: "Import & export" },
       { href: "/changelog", label: "Changelog" },
     ],
   },
   {
     title: "Legal",
     links: [
+      { href: "/contact", label: "Contact" },
       { href: "/terms", label: "Terms of Service" },
       { href: "/privacy", label: "Privacy Policy" },
       { href: "/refunds", label: "Refund Policy" },
