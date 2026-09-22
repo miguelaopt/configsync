@@ -10,6 +10,7 @@ const cs2Files = {
   video: fx("cs2_video.txt"),
   convars: fx("cs2_user_convars.vcfg"),
   keys: fx("cs2_user_keys.vcfg"),
+  machine: fx("cs2_machine_convars.vcfg"),
 };
 type P = { categories: { name: string; settings: { name: string; value?: unknown }[] }[] };
 const find = (p: P, cat: string, name: string) =>
@@ -26,8 +27,12 @@ describe("readGameConfig", () => {
     expect(find(r.preset, "Crosshair", "Outline").value).toBe(true);
     expect(find(r.preset, "Keybinds", "Toggle Console").value).toBe("p");
     expect(find(r.preset, "Keybinds", "Fire").value).toBe("mouse1"); // default, not in file
+    expect(find(r.preset, "Video", "Maximum FPS In Game").value).toBe(400);
+    expect(find(r.preset, "Audio", "Perspective Correction").value).toBe(true);
     expect(r.missingFiles).toEqual([]);
     expect(r.unmappedSettings).toContain("Video › Brightness");
+    // Present in cs2_machine_convars.vcfg, but which number is which menu label is unverified.
+    expect(r.unmappedSettings).toContain("Audio › EQ Profile");
     expect(r.readSettings).toContain("Video › Resolution");
     expect(r.readSettings).not.toContain("Video › Brightness");
     expect(Object.values(r.perFile).reduce((sum, count) => sum + count, 0)).toBe(
@@ -36,7 +41,7 @@ describe("readGameConfig", () => {
   });
   it("reports missing files and keeps defaults", () => {
     const r = readGameConfig(cs2, { video: cs2Files.video });
-    expect(r.missingFiles).toEqual(["convars", "keys"]);
+    expect(r.missingFiles).toEqual(["convars", "keys", "machine"]);
     expect(find(r.preset, "Crosshair", "Length").value).toBe(5);
     expect(r.perFile.convars).toBeUndefined();
     expect(r.readSettings).not.toContain("Crosshair › Length");
@@ -81,6 +86,18 @@ describe("writeGameConfig", () => {
     expect(w.files.convars).toContain('"cl_crosshair_drawoutline"\t\t"false"');
     expect(w.files.keys).toContain('"mouse4"\t\t"+jump"');
     expect(w.files.keys).toContain('"space"\t\t"<unbound>"');
+  });
+  it("writes machine convars in that file's boolean style and leaves its other keys alone", () => {
+    const r = readGameConfig(cs2, cs2Files);
+    find(r.preset, "Audio", "Perspective Correction").value = false;
+    find(r.preset, "Video", "Maximum FPS In Game").value = 240;
+    const w = writeGameConfig(cs2, r.preset, cs2Files);
+    expect(w.files.machine).toContain('"snd_steamaudio_enable_perspective_correction"\t\t"false"');
+    expect(w.files.machine).toContain('"fps_max"\t\t"240"');
+    // Only mapped keys are touched; everything else stays byte for byte.
+    expect(w.files.machine).toContain('"snd_mixahead"\t\t"0.025"');
+    expect(w.files.machine).toContain('"fps_max_tools"\t\t"120"');
+    expect(w.files.machine).toContain('"snd_headphone_eq"\t\t"0"');
   });
   it("skips settings whose file was not provided", () => {
     const r = readGameConfig(cs2, cs2Files);

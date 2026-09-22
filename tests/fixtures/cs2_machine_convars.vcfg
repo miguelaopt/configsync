@@ -1,0 +1,13 @@
+"config"
+{
+	"convars"
+	{
+		"fps_max"		"400"
+		"fps_max_tools"		"120"
+		"r_fullscreen_gamma"		"2.2"
+		"snd_headphone_eq"		"0"
+		"snd_mixahead"		"0.025"
+		"snd_steamaudio_enable_perspective_correction"		"true"
+		"voice_modenable"		"true"
+	}
+}

@@ -16,6 +16,17 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-22",
+    version: "0.8.1",
+    title: "Two more CS2 settings sync themselves",
+    changes: [
+      {
+        kind: "improved",
+        text: "Counter-Strike 2: Maximum FPS In Game and Audio → Perspective Correction are now read from and written to CS2's own files, instead of being typed in by hand. They live in cs2_machine_convars.vcfg, which the companion now reads alongside the other three.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-22",
     version: "0.8.0",
     title: "Two pages that were missing",
     changes: [
