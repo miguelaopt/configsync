@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { isRunning, parseTasklist } from "../lib/procs.mjs";
+import { assertGameClosed, isRunning, parseTasklist } from "../lib/procs.mjs";
 
 test("parseTasklist reads the first CSV column", () => {
   const csv =
@@ -18,5 +18,23 @@ test("isRunning tolerates the 15-char /proc comm truncation", () => {
   assert.equal(
     isRunning({ processNames: ["RocketLeague.exe"] }, new Set(["rocketleague.ex"])),
     true,
+  );
+});
+
+test("assertGameClosed refuses to let a write through while the game runs", async () => {
+  const cs2 = { name: "Counter-Strike 2", processNames: ["cs2.exe"] };
+  await assert.rejects(
+    () => assertGameClosed(cs2, async () => new Set(["cs2.exe"])),
+    /Counter-Strike 2 is running/,
+  );
+  await assert.doesNotReject(() => assertGameClosed(cs2, async () => new Set(["steam.exe"])));
+});
+test("assertGameClosed fails closed when the process list cannot be read", async () => {
+  await assert.rejects(
+    () =>
+      assertGameClosed({ name: "Counter-Strike 2", processNames: ["cs2.exe"] }, async () => {
+        throw new Error("tasklist: not found");
+      }),
+    /tasklist: not found/,
   );
 });

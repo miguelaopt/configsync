@@ -1,6 +1,7 @@
 import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { api } from "./api.mjs";
 import { resolveFilePath } from "./paths.mjs";
+import { assertGameClosed } from "./procs.mjs";
 import { recordApplied } from "./state.mjs";
 
 /** Reads the game's config files present on this machine. */
@@ -21,8 +22,12 @@ export function readFiles(game, { log = console.log } = {}) {
 }
 
 /**
- * Patch this machine's files with a preset. Backs each file up first; writes only what the
- * server returned; records the applied version when `version` is given.
+ * Patch this machine's files with a preset. Refuses to write while the game is running, backs
+ * each file up first, writes only what the server returned, and records the applied version when
+ * `version` is given.
+ *
+ * The running check lives here, not in the commands: this is the only function that writes, so
+ * every path through the CLI — `apply`, `watch`, `launch` and anything added later — inherits it.
  */
 export async function applyPreset(
   config,
@@ -30,6 +35,9 @@ export async function applyPreset(
   presetSlug,
   { dryRun = false, log = console.log, version } = {},
 ) {
+  // Once up front so a running game fails before the diff is printed, and once more below. A dry
+  // run only reads, so it is allowed while the game is open — that is when you want to preview.
+  if (!dryRun) await assertGameClosed(game);
   const { files, found } = readFiles(game, { log });
   if (found.length === 0) throw new Error(`No ${game.name} config files found on this machine.`);
   const r = await api(config).post("/apply", { catalogId: game.id, presetSlug, files });
@@ -41,6 +49,9 @@ export async function applyPreset(
     );
   for (const s of r.skipped) log(`Skipped — ${s}`);
   if (dryRun) return { ...r, wrote: [] };
+  // The check that actually guarantees the contract, as late as possible: the game can have been
+  // started while the server was computing the patch above.
+  await assertGameClosed(game);
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
   const wrote = [];
   for (const { id, path } of found) {

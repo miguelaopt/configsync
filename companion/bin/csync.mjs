@@ -141,11 +141,7 @@ async function apply() {
   const g = await catalogGame(c, gameId);
   console.log(`Reading current ${g.name} files:`);
   await applyPreset(c, g, presetSlug, { dryRun: flag("dry-run") });
-  console.log(
-    flag("dry-run")
-      ? "\nDry run: nothing written."
-      : "\nDone. If the game was open, close it and apply again.",
-  );
+  console.log(flag("dry-run") ? "\nDry run: nothing written." : "\nDone.");
 }
 
 const ts = () => new Date().toISOString().slice(11, 19);

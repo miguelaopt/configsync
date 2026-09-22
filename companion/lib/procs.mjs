@@ -1,4 +1,5 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, readlinkSync } from "node:fs";
+import { basename } from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
@@ -27,6 +28,14 @@ export async function runningProcessNames() {
       } catch {
         // process exited between readdir and read
       }
+      try {
+        // comm is the *thread* name, which a program can rename — node calls itself
+        // "node-MainThread" — so take the executable behind it as well, or a game that renames
+        // its main thread reads as "not running" and the write guard opens.
+        names.add(basename(readlinkSync(`/proc/${pid}/exe`)).toLowerCase());
+      } catch {
+        // exited, kernel thread, or another user's process: no readable exe link
+      }
     }
   } catch {
     const { stdout } = await run("ps", ["-eo", "comm="]); // macOS: no /proc
@@ -42,4 +51,14 @@ export function isRunning(game, names) {
     const n = p.toLowerCase();
     return names.has(n) || names.has(n.slice(0, 15));
   });
+}
+
+/**
+ * Throws unless the game is closed. Fails closed: if the process list cannot be read the error
+ * propagates, because "we could not tell" must never be treated as "not running".
+ * `readNames` is the seam the tests use; nothing else should pass it.
+ */
+export async function assertGameClosed(game, readNames = runningProcessNames) {
+  if (isRunning(game, await readNames()))
+    throw new Error(`${game.name} is running. Close it and apply again.`);
 }

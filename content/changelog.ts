@@ -15,6 +15,21 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-09-22",
+    version: "0.6.2",
+    title: "The companion checks twice",
+    changes: [
+      {
+        kind: "fixed",
+        text: "csync 0.2.1: `csync apply` and `csync launch` now refuse to write while the game is open, the same way `csync watch` always has. Close the game and run it again. Auto-switch also re-checks immediately before writing, so a game started mid-apply no longer gets its files changed underneath it.",
+      },
+      {
+        kind: "fixed",
+        text: "On Linux the companion now recognises a running game by its executable, not only by its reported name — a game that renames itself while running is no longer mistaken for a closed one.",
+      },
+    ],
+  },
+  {
     date: "2026-09-21",
     version: "0.6.1",
     title: "A cleaner welcome",
