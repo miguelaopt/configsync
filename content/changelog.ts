@@ -16,6 +16,17 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-22",
+    version: "0.7.0",
+    title: "Alpha founder offer",
+    changes: [
+      {
+        kind: "new",
+        text: "While ConfigSync is in alpha, the lifetime Pro licence is 10 € instead of 24.99 € — the same Pro, paid once, for as long as this hosted service runs. The discount is applied at checkout; the monthly plan is unchanged at 2.99 €/month.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-22",
     version: "0.6.2",
     title: "The companion checks twice",
     changes: [

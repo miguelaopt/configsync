@@ -4,7 +4,24 @@ export const PADDLE_PUBLIC = {
   environment: process.env.NEXT_PUBLIC_PADDLE_ENV === "sandbox" ? "sandbox" : "production",
 } as const;
 
-export const PRICES = { monthly: "2.99 €/month", lifetime: "24.99 € once" } as const;
+export const PRICES = {
+  monthly: "2.99 €/month",
+  lifetime: "24.99 € once",
+  /** The bare amounts, for layouts that set the period in their own type scale. */
+  monthlyAmount: "2.99 €",
+  lifetimeAmount: "24.99 €",
+} as const;
+
+/**
+ * The alpha founder offer on the lifetime licence. Shown only where the server says the discount
+ * is configured (`founderOfferEnabled`); Paddle is what actually charges.
+ *
+ * ponytail: written here rather than read back from Paddle, so the discount in the Paddle
+ * dashboard must be a **fixed 14.99 € off** the 24.99 € lifetime price to land exactly on this
+ * number. If it ever becomes a percentage, read the real amount from Paddle's price preview
+ * instead of editing this string.
+ */
+export const FOUNDER = { lifetime: "10 € once", was: PRICES.lifetimeAmount } as const;
 
 export const FEATURES = {
   free: [

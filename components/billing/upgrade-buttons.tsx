@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { getPlanAction } from "@/lib/actions/billing";
-import { PADDLE_PUBLIC, PRICES } from "@/lib/billing/public";
+import { FOUNDER, PADDLE_PUBLIC, PRICES } from "@/lib/billing/public";
 
 type PaddleJs = {
   Environment: { set: (env: "sandbox" | "production") => void };
@@ -13,6 +13,7 @@ type PaddleJs = {
   Checkout: {
     open: (o: {
       items: { priceId: string; quantity: number }[];
+      discountId?: string;
       customer?: { email: string };
       customData?: Record<string, string>;
     }) => void;
@@ -24,7 +25,14 @@ declare global {
   }
 }
 
-type Props = { email: string; userId: string; prices: { monthly: string; lifetime: string } };
+export type Prices = {
+  monthly: string;
+  lifetime: string;
+  /** Paddle discount applied to the lifetime checkout; set ⇒ the founder offer is on. */
+  lifetimeDiscountId?: string;
+};
+
+type Props = { email: string; userId: string; prices: Prices };
 
 /** Two Paddle overlay checkouts. After `checkout.completed`, polls the plan until the webhook lands. */
 export function UpgradeButtons({ email, userId, prices }: Props) {
@@ -65,7 +73,7 @@ export function UpgradeButtons({ email, userId, prices }: Props) {
     });
   }, [router]);
 
-  const open = (priceId: string) => {
+  const open = (priceId: string, discountId?: string) => {
     init(); // covers the script already being cached from an earlier page
     if (!window.Paddle) {
       toast("Checkout is still loading — try again in a second.");
@@ -73,6 +81,7 @@ export function UpgradeButtons({ email, userId, prices }: Props) {
     }
     window.Paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
+      ...(discountId ? { discountId } : {}),
       customer: { email },
       customData: { userId },
     });
@@ -94,8 +103,19 @@ export function UpgradeButtons({ email, userId, prices }: Props) {
         >
           Go Pro — {PRICES.monthly}
         </Button>
-        <Button variant="secondary" disabled={waiting} onClick={() => open(prices.lifetime)}>
-          Lifetime — {PRICES.lifetime}
+        <Button
+          variant="secondary"
+          disabled={waiting}
+          onClick={() => open(prices.lifetime, prices.lifetimeDiscountId)}
+        >
+          {prices.lifetimeDiscountId ? (
+            <>
+              Lifetime — {FOUNDER.lifetime}{" "}
+              <span className="ml-1 text-ink-3 line-through">{FOUNDER.was}</span>
+            </>
+          ) : (
+            <>Lifetime — {PRICES.lifetime}</>
+          )}
         </Button>
       </div>
     </>

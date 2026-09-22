@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
+import { FOUNDER, PRICES } from "@/lib/billing/public";
+import { founderOfferEnabled } from "@/lib/env";
 import { LogoMark } from "@/components/app/logo";
+import { FounderOffer } from "@/components/marketing/founder-offer";
 import { HeroCard, MotionProvider, Reveal, SyncCard } from "@/components/landing/motion";
 import { StructuredData } from "@/components/marketing/structured-data";
 import s from "./landing.module.css";
@@ -22,6 +25,8 @@ export default async function LandingPage() {
   return (
     <MotionProvider>
       <StructuredData />
+      {/* Everyone here is signed out — signed-in visitors were redirected to /dashboard above. */}
+      {founderOfferEnabled ? <FounderOffer /> : null}
       <div className={s.root}>
         <div aria-hidden className={s.glowTop} />
         <div aria-hidden className={s.glowRight} />
@@ -392,7 +397,22 @@ export default async function LandingPage() {
                 </div>
                 <p className={cx(s.planSub, s.planSubPro)}>For players who want the whole thing.</p>
                 <p className={s.price}>
-                  2,99 € <span className={s.priceNote}>per month, or 24,99 € once</span>
+                  {PRICES.monthlyAmount}{" "}
+                  <span className={s.priceNote}>
+                    per month, or{" "}
+                    {founderOfferEnabled ? (
+                      <>
+                        <span style={{ color: "var(--accent-text)", fontWeight: 600 }}>
+                          {FOUNDER.lifetime}
+                        </span>{" "}
+                        <span style={{ textDecoration: "line-through", opacity: 0.55 }}>
+                          {FOUNDER.was}
+                        </span>
+                      </>
+                    ) : (
+                      PRICES.lifetime
+                    )}
+                  </span>
                 </p>
                 <ul className={cx(s.features, s.featuresPro)}>
                   <li>Unlimited games and unlimited history</li>
