@@ -77,7 +77,7 @@ export function PricingTable({ viewer, prices }: Props) {
           <span className="align-middle text-[14px] font-normal text-ink-3">
             {" "}
             /month · or{" "}
-            {prices?.lifetimeDiscountId ? (
+            {prices?.lifetimeDiscountCode ? (
               <>
                 <span className="font-semibold text-accent-text">{FOUNDER.lifetime}</span>{" "}
                 <span className="line-through">{FOUNDER.was}</span>

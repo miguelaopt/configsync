@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/auth/session";
 import { getPlan } from "@/lib/billing/plan";
-import { founderOfferEnabled } from "@/lib/env";
+import { founderCode } from "@/lib/env";
 import { Backdrop, MarketingFooter, MarketingHeader } from "@/components/marketing/chrome";
 import { FounderOffer } from "@/components/marketing/founder-offer";
 
@@ -19,7 +19,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
       <div className="relative">
         <MarketingFooter />
       </div>
-      {founderOfferEnabled && !isPro ? <FounderOffer /> : null}
+      {founderCode && !isPro ? <FounderOffer code={founderCode} /> : null}
     </div>
   );
 }

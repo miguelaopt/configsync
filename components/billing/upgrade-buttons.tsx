@@ -9,11 +9,14 @@ import { FOUNDER, PADDLE_PUBLIC, PRICES } from "@/lib/billing/public";
 
 type PaddleJs = {
   Environment: { set: (env: "sandbox" | "production") => void };
-  Initialize: (o: { token: string; eventCallback?: (e: { name: string }) => void }) => void;
+  Initialize: (o: {
+    token: string;
+    eventCallback?: (e: { name: string; detail?: unknown }) => void;
+  }) => void;
   Checkout: {
     open: (o: {
       items: { priceId: string; quantity: number }[];
-      discountId?: string;
+      discountCode?: string;
       customer?: { email: string };
       customData?: Record<string, string>;
     }) => void;
@@ -28,11 +31,20 @@ declare global {
 export type Prices = {
   monthly: string;
   lifetime: string;
-  /** Paddle discount applied to the lifetime checkout; set ⇒ the founder offer is on. */
-  lifetimeDiscountId?: string;
+  /** Founder discount code, prefilled on the lifetime checkout; set ⇒ the offer is on. */
+  lifetimeDiscountCode?: string;
 };
 
 type Props = { email: string; userId: string; prices: Prices };
+
+/** Paddle sends API-shaped errors here; show the detail when there is one, not just "it failed". */
+function paddleMessage(detail: unknown): string {
+  const d = detail as { error?: { detail?: string; code?: string } } | undefined;
+  const text = d?.error?.detail ?? d?.error?.code;
+  return text
+    ? `Checkout could not open: ${text}`
+    : "Checkout could not open. Nothing was charged — try again in a minute.";
+}
 
 /** Two Paddle overlay checkouts. After `checkout.completed`, polls the plan until the webhook lands. */
 export function UpgradeButtons({ email, userId, prices }: Props) {
@@ -49,6 +61,13 @@ export function UpgradeButtons({ email, userId, prices }: Props) {
     P.Initialize({
       token: PADDLE_PUBLIC.token,
       eventCallback: (e) => {
+        // Paddle renders its own "Something went wrong" and tells us why only here. Without this
+        // the reason — an unapproved domain, a price from the other environment — is invisible.
+        if (e.name === "checkout.error" || e.name === "checkout.warning") {
+          console.error("[csync:billing] paddle", e.name, e.detail);
+          toast.error(paddleMessage(e.detail));
+          return;
+        }
         if (e.name !== "checkout.completed") return;
         setWaiting(true);
         const started = Date.now();
@@ -73,7 +92,7 @@ export function UpgradeButtons({ email, userId, prices }: Props) {
     });
   }, [router]);
 
-  const open = (priceId: string, discountId?: string) => {
+  const open = (priceId: string, discountCode?: string) => {
     init(); // covers the script already being cached from an earlier page
     if (!window.Paddle) {
       toast("Checkout is still loading — try again in a second.");
@@ -81,7 +100,7 @@ export function UpgradeButtons({ email, userId, prices }: Props) {
     }
     window.Paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
-      ...(discountId ? { discountId } : {}),
+      ...(discountCode ? { discountCode } : {}),
       customer: { email },
       customData: { userId },
     });
@@ -106,9 +125,9 @@ export function UpgradeButtons({ email, userId, prices }: Props) {
         <Button
           variant="secondary"
           disabled={waiting}
-          onClick={() => open(prices.lifetime, prices.lifetimeDiscountId)}
+          onClick={() => open(prices.lifetime, prices.lifetimeDiscountCode)}
         >
-          {prices.lifetimeDiscountId ? (
+          {prices.lifetimeDiscountCode ? (
             <>
               Lifetime — {FOUNDER.lifetime}{" "}
               <span className="ml-1 text-ink-3 line-through">{FOUNDER.was}</span>
