@@ -86,7 +86,11 @@ describe("catalog", () => {
     });
     expect(all.find((s) => s.name === "Display Mode")!.source).toHaveProperty("match");
     expect(all.find((s) => s.name === "Fire")!.source).toEqual({ file: "keys", bind: "+attack" });
-    expect(cs2.files.map((f) => f.id)).toEqual(["video", "convars", "keys"]);
+    expect(cs2.files.map((f) => f.id)).toEqual(["video", "convars", "keys", "machine"]);
+    expect(all.find((s) => s.name === "Maximum FPS In Game")!.source).toEqual({
+      file: "machine",
+      key: "fps_max",
+    });
   });
   it("rocket league marks camera settings as manual", () => {
     const rl = getCatalogGame("rocket-league")!;
