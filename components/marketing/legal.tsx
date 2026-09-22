@@ -67,14 +67,19 @@ export function LegalPage({
           {children}
           {footer === undefined ? (
             <footer className="panel flex flex-col gap-1 p-5 text-[13px] text-ink-3">
-              <span className="font-medium text-ink">{LEGAL.operator}</span>
-              {LEGAL.taxId ? <span>Tax ID {LEGAL.taxId}</span> : null}
-              <span>{LEGAL.address}</span>
+              <span className="font-medium text-ink">
+                {LEGAL.brand} — {LEGAL.place}
+              </span>
               <a href={`mailto:${LEGAL.email}`} className="w-fit text-accent-text hover:text-ink">
                 {LEGAL.email}
               </a>
               <span className="mt-2">
-                Questions about this page? Write to us — a person reads that address.
+                Questions about this page? Write to us — a person reads that address. Our full
+                business details are on the{" "}
+                <a href="/contact" className="text-accent-text hover:text-ink">
+                  contact page
+                </a>
+                .
               </span>
             </footer>
           ) : (

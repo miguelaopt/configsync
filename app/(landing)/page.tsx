@@ -5,6 +5,7 @@ import { getSession } from "@/lib/auth/session";
 import { FOUNDER, PRICES } from "@/lib/billing/public";
 import { founderCode, founderOfferEnabled } from "@/lib/env";
 import { LogoMark } from "@/components/app/logo";
+import { CookieNotice } from "@/components/marketing/cookie-notice";
 import { FounderOffer } from "@/components/marketing/founder-offer";
 import { HeroCard, MotionProvider, Reveal, SyncCard } from "@/components/landing/motion";
 import { StructuredData } from "@/components/marketing/structured-data";
@@ -26,6 +27,7 @@ export default async function LandingPage() {
     <MotionProvider>
       <StructuredData />
       {/* Everyone here is signed out — signed-in visitors were redirected to /dashboard above. */}
+      <CookieNotice />
       {founderCode ? <FounderOffer code={founderCode} /> : null}
       <div className={s.root}>
         <div aria-hidden className={s.glowTop} />

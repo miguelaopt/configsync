@@ -22,6 +22,22 @@ export default function ContactPage() {
       title="Contact"
       updated={null}
       intro={`One address, read by a person: ${LEGAL.email}. ConfigSync is run by one person, so replies are not instant — but every message is read, and nothing here is handled by a bot.`}
+      footer={
+        <footer className="panel flex flex-col gap-1 p-5 text-[13px] text-ink-3">
+          {/* The one place on the site that carries these: EU e-commerce rules want a name and a
+              geographic address reachable from any page, not repeated on every one of them. */}
+          <span className="font-medium text-ink">Who runs {LEGAL.brand}</span>
+          <span>{LEGAL.operator}</span>
+          <span>{LEGAL.address}</span>
+          <a href={`mailto:${LEGAL.email}`} className="w-fit text-accent-text hover:text-ink">
+            {LEGAL.email}
+          </a>
+          <span className="mt-2">
+            {LEGAL.merchant} is the merchant of record for purchases and issues the invoice, which
+            carries its own VAT details.
+          </span>
+        </footer>
+      }
     >
       <Section title="Support">
         <p>

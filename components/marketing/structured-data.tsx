@@ -17,8 +17,7 @@ export function StructuredData() {
         url: SITE.url,
         logo: `${SITE.url}/brand/configsync-mark.svg`,
         email: LEGAL.email,
-        founder: { "@type": "Person", name: LEGAL.operator },
-        address: { "@type": "PostalAddress", addressCountry: "PT" },
+        address: { "@type": "PostalAddress", addressLocality: "Viseu", addressCountry: "PT" },
       },
       {
         "@type": "WebSite",

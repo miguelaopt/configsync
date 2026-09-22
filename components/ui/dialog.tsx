@@ -19,11 +19,14 @@ export function DialogContent({
   title,
   description,
   size = "md",
+  chrome = "header",
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   title: React.ReactNode;
   description?: React.ReactNode;
   size?: "sm" | "md" | "lg";
+  /** "bare": the children draw their own heading; the title stays for screen readers. */
+  chrome?: "header" | "bare";
 }) {
   return (
     <DialogPrimitive.Portal>
@@ -40,23 +43,44 @@ export function DialogContent({
         )}
         {...props}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-hairline px-5 pt-4 pb-3">
-          <div className="min-w-0">
-            <DialogPrimitive.Title className="font-display text-lg leading-tight">
-              {title}
-            </DialogPrimitive.Title>
+        {chrome === "bare" ? (
+          <>
+            <DialogPrimitive.Title className="sr-only">{title}</DialogPrimitive.Title>
             {description ? (
-              <DialogPrimitive.Description className="mt-1 text-[13px] text-ink-2">
+              <DialogPrimitive.Description className="sr-only">
                 {description}
               </DialogPrimitive.Description>
             ) : null}
+            <DialogPrimitive.Close asChild>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Close"
+                className="absolute top-4 right-4 z-10"
+              >
+                <X />
+              </Button>
+            </DialogPrimitive.Close>
+          </>
+        ) : (
+          <div className="flex items-start justify-between gap-4 border-b border-hairline px-5 pt-4 pb-3">
+            <div className="min-w-0">
+              <DialogPrimitive.Title className="font-display text-lg leading-tight">
+                {title}
+              </DialogPrimitive.Title>
+              {description ? (
+                <DialogPrimitive.Description className="mt-1 text-[13px] text-ink-2">
+                  {description}
+                </DialogPrimitive.Description>
+              ) : null}
+            </div>
+            <DialogPrimitive.Close asChild>
+              <Button variant="ghost" size="icon-sm" aria-label="Close" className="-mt-1 -mr-2">
+                <X />
+              </Button>
+            </DialogPrimitive.Close>
           </div>
-          <DialogPrimitive.Close asChild>
-            <Button variant="ghost" size="icon-sm" aria-label="Close" className="-mt-1 -mr-2">
-              <X />
-            </Button>
-          </DialogPrimitive.Close>
-        </div>
+        )}
         <div className="min-h-0 flex-1 scrollbar-thin overflow-y-auto px-5 py-4">{children}</div>
       </DialogPrimitive.Content>
     </DialogPrimitive.Portal>

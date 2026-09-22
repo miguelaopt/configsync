@@ -127,9 +127,20 @@ export default function PrivacyPage() {
 
       <Section title="7. Cookies">
         <p>
-          We set strictly necessary session cookies (prefix <code>csync</code>) to keep you signed
-          in. Your theme and density preferences live in your browser’s local storage. Nothing else,
-          so no cookie banner is needed.
+          Signed out, this site sets <strong className="text-ink">no cookies at all</strong>.
+          Signing in sets strictly necessary session cookies (prefix <code>csync</code>) that keep
+          you signed in and nothing more.
+        </p>
+        <p>
+          A few choices are remembered in your browser’s own local storage rather than sent to us:
+          how dense you like the lists, which panels you collapsed, and whether you have already
+          dismissed an offer. Clearing your browser data clears them, and they never leave your
+          device.
+        </p>
+        <p>
+          There is no analytics, no advertising and no third-party cookie, so there is nothing to
+          consent to and no consent banner to click through. The notice you may see on your first
+          visit tells you this; it does not ask for permission, because none is needed.
         </p>
       </Section>
 

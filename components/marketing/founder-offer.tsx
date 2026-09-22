@@ -2,10 +2,11 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Check, Copy } from "lucide-react";
+import { ArrowRight, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
-import { FOUNDER, PRICES } from "@/lib/billing/public";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { FOUNDER } from "@/lib/billing/public";
+import { COOKIE_NOTICE_SEEN, cookieNoticeDismissed } from "./cookie-notice";
 
 const SEEN = "configsync:founder-offer";
 
@@ -15,58 +16,16 @@ const SEEN = "configsync:founder-offer";
  */
 const QUIET = ["/pricing", "/terms", "/privacy", "/refunds"];
 
-/** Copy to clipboard, reporting whether it worked — it throws on an insecure origin. */
-async function copy(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function CodeRow({ code }: { code: string }) {
-  const [state, setState] = React.useState<"idle" | "copied" | "failed">("idle");
-  React.useEffect(() => {
-    if (state === "idle") return;
-    const t = setTimeout(() => setState("idle"), 2500);
-    return () => clearTimeout(t);
-  }, [state]);
-
-  return (
-    <div>
-      {/* The code reads as what it is: a value to copy, set like the config lines the product
-          is built around, rather than as e-commerce chrome. */}
-      <div className="flex items-center gap-3 rounded-lg border border-accent/35 bg-raised px-4 py-3">
-        <code className="min-w-0 flex-1 truncate font-mono text-[18px] tracking-[0.08em] text-ink">
-          {code}
-        </code>
-        <Button
-          variant="secondary"
-          size="sm"
-          className="shrink-0"
-          onClick={async () => setState((await copy(code)) ? "copied" : "failed")}
-        >
-          {state === "copied" ? <Check aria-hidden /> : <Copy aria-hidden />}
-          {state === "copied" ? "Copied" : "Copy"}
-        </Button>
-      </div>
-      <p aria-live="polite" className="mt-2 text-[13px] text-ink-3">
-        {state === "failed"
-          ? "Copying was blocked — select the code and copy it by hand."
-          : "Use it at checkout. Opening Pro from here fills it in for you."}
-      </p>
-    </div>
-  );
-}
+const INCLUDED = ["Unlimited games", "Presets for every PC", "Full settings history"];
 
 /**
  * The alpha founder offer, once per browser.
  *
  * The server decides *whether* it applies (a discount code is configured and the viewer is not
- * already Pro) and only renders this then; the component decides *when* to open. It hands over
- * the code and sends people to /pricing rather than opening a checkout, so every payment still
- * goes through `UpgradeButtons` — one place that knows how to talk to Paddle.
+ * already Pro) and only renders this then; the component decides *when* to open. It sends people
+ * to /pricing rather than opening a checkout, so every payment still goes through
+ * `UpgradeButtons` — the one place that knows how to talk to Paddle — and so that someone who is
+ * not signed in lands somewhere that can actually sell to them.
  */
 export function FounderOffer({ code }: { code: string }) {
   const pathname = usePathname();
@@ -79,8 +38,20 @@ export function FounderOffer({ code }: { code: string }) {
     } catch {
       return; // blocked storage: we could not remember a dismissal, so never start nagging
     }
-    const t = setTimeout(() => setOpen(true), 6000);
-    return () => clearTimeout(t);
+    // Two first-visit interruptions at once is one too many: wait out the cookie notice.
+    let timer: ReturnType<typeof setTimeout>;
+    const arm = () => {
+      timer = setTimeout(() => setOpen(true), 6000);
+    };
+    if (cookieNoticeDismissed()) arm();
+    else {
+      window.addEventListener(COOKIE_NOTICE_SEEN, arm, { once: true });
+      return () => {
+        window.removeEventListener(COOKIE_NOTICE_SEEN, arm);
+        clearTimeout(timer);
+      };
+    }
+    return () => clearTimeout(timer);
   }, [pathname]);
 
   const close = () => {
@@ -95,41 +66,74 @@ export function FounderOffer({ code }: { code: string }) {
   return (
     <Dialog open={open} onOpenChange={(o) => (o ? setOpen(true) : close())}>
       <DialogContent
-        title="Alpha founder offer"
-        description="The lifetime licence is discounted while ConfigSync is in alpha."
+        chrome="bare"
+        title="Founders get Pro for life"
+        description={`The lifetime licence is ${FOUNDER.lifetime} while ConfigSync is in alpha.`}
+        className="sm:max-w-[420px]"
       >
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-6 py-1">
           <div>
-            <p className="flex items-baseline gap-3">
-              <span className="text-[40px] leading-none font-bold tracking-[-0.02em] text-ink">
-                {FOUNDER.lifetime}
-              </span>
-              <span className="text-[16px] text-ink-3 line-through">{FOUNDER.was}</span>
-            </p>
-            <p className="mt-2 text-[14px] text-ink-2">
-              Pro on every PC you play on, paid once, for as long as this service runs: unlimited
-              games, the full history of every change, and a preset per machine.
+            <span className="inline-flex rounded-md bg-accent-soft px-2.5 py-1 text-[11px] font-semibold tracking-wide text-accent-text uppercase ring-1 ring-accent/30">
+              Founders offer
+            </span>
+            <h2 className="mt-4 text-[27px] leading-[1.15] font-bold tracking-[-0.02em] text-ink">
+              Founders get Pro for life.
+            </h2>
+            <p className="mt-2 text-[15px] text-ink-2">
+              One payment. Every game, every PC, forever.
             </p>
           </div>
 
-          <CodeRow code={code} />
+          <div>
+            <p className="flex flex-wrap items-center gap-3">
+              <span className="text-[46px] leading-none font-bold tracking-[-0.03em] text-ink">
+                {FOUNDER.amount}
+              </span>
+              <span className="text-[17px] text-ink-3 line-through">{FOUNDER.was}</span>
+              <span className="rounded-md bg-accent px-2 py-1 text-[11px] font-semibold text-white">
+                {FOUNDER.off}
+              </span>
+            </p>
+            <p className="mt-2 text-[13px] text-ink-3">one-time payment</p>
+          </div>
 
-          <p className="text-[12px] text-ink-3">
-            VAT included.{" "}
+          <ul className="flex flex-col gap-2.5">
+            {INCLUDED.map((item) => (
+              <li key={item} className="flex items-center gap-3 text-[14px] text-ink">
+                <span className="flex size-[22px] shrink-0 items-center justify-center rounded-full bg-accent-soft ring-1 ring-accent/30">
+                  <Check className="size-3.5 text-accent-text" aria-hidden />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <p className="flex items-center gap-2 rounded-lg border border-line bg-raised px-3.5 py-3 text-[13px] text-ink-2">
+            <Sparkles className="size-4 shrink-0 text-accent-text" aria-hidden />
+            <span className="font-mono tracking-[0.06em] text-ink">{code}</span>
+            <span>applied automatically</span>
+            <Check className="ml-auto size-4 shrink-0 text-good" aria-hidden />
+          </p>
+
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" className="shrink-0" onClick={close}>
+              Maybe later
+            </Button>
+            <Button asChild variant="primary" size="lg" className="flex-1" onClick={close}>
+              <Link href="/pricing#pro">
+                Get lifetime Pro — {FOUNDER.amount}
+                <ArrowRight aria-hidden />
+              </Link>
+            </Button>
+          </div>
+
+          <p className="text-center text-[12px] text-ink-3">
+            VAT included ·{" "}
             <Link href="/refunds" className="text-accent-text hover:text-ink">
-              14-day refund
-            </Link>{" "}
-            on every payment, no reason needed. Monthly stays {PRICES.monthly}.
+              14-day refund guarantee
+            </Link>
           </p>
         </div>
-        <DialogFooter>
-          <Button variant="ghost" onClick={close}>
-            Not now
-          </Button>
-          <Button asChild variant="primary" onClick={close}>
-            <Link href="/pricing#pro">See what Pro includes</Link>
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
