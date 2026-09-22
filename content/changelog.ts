@@ -16,6 +16,25 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-22",
+    version: "0.11.0",
+    title: "Less of us on every page, and a straight answer about cookies",
+    changes: [
+      {
+        kind: "improved",
+        text: "The founder offer was redrawn: what you get, what it costs, and the code already applied, in one card.",
+      },
+      {
+        kind: "new",
+        text: "A one-line cookie notice on your first visit. It informs, it does not ask \u2014 signed out this site sets no cookies at all, and signing in sets only the one that keeps you signed in, so there is nothing to consent to.",
+      },
+      {
+        kind: "improved",
+        text: "Our business details no longer sit at the bottom of every page. The full name and address live on /contact, where they are meant to be reachable, and the VAT number is gone from the site \u2014 Paddle puts its own on your invoice.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-22",
     version: "0.10.1",
     title: "Payment links open",
     changes: [

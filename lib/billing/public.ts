@@ -21,7 +21,14 @@ export const PRICES = {
  * number. If it ever becomes a percentage, read the real amount from Paddle's price preview
  * instead of editing this string.
  */
-export const FOUNDER = { lifetime: "10 € once", was: PRICES.lifetimeAmount } as const;
+export const FOUNDER = {
+  lifetime: "10 € once",
+  /** Just the amount, for headlines and buttons. */
+  amount: "10 €",
+  was: PRICES.lifetimeAmount,
+  /** (24.99 − 10) / 24.99 = 59.98%, rounded. Keep in step if either amount moves. */
+  off: "60% off",
+} as const;
 
 export const FEATURES = {
   free: [

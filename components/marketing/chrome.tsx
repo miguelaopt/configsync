@@ -150,8 +150,7 @@ export function MarketingFooter() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 border-t border-line px-4 py-6 text-[12px] text-ink-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p className="flex items-center gap-2">
           <LogoMark size={16} />
-          {LEGAL.operator}
-          {LEGAL.taxId ? ` · ${LEGAL.taxId}` : ""} · {LEGAL.address}
+          {LEGAL.brand} — {LEGAL.place}
         </p>
         <p>Payments handled by {LEGAL.merchant}, our merchant of record.</p>
       </div>

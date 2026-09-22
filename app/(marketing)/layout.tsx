@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth/session";
 import { getPlan } from "@/lib/billing/plan";
 import { founderCode } from "@/lib/env";
 import { Backdrop, MarketingFooter, MarketingHeader } from "@/components/marketing/chrome";
+import { CookieNotice } from "@/components/marketing/cookie-notice";
 import { FounderOffer } from "@/components/marketing/founder-offer";
 
 /** Public pages outside the landing: the same chrome, so the brand does not change mid-visit. */
@@ -19,6 +20,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
       <div className="relative">
         <MarketingFooter />
       </div>
+      <CookieNotice />
       {founderCode && !isPro ? <FounderOffer code={founderCode} /> : null}
     </div>
   );

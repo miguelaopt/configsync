@@ -1,6 +1,14 @@
 /**
- * Business details shown on /terms, /privacy and /refunds.
- * TODO before launch: replace every placeholder below (Paddle's website review reads these pages).
+ * Business details. Most pages show `place` only — the full postal address and the operator's
+ * name are not footer decoration, they are legal disclosures, so they live where the law wants
+ * them and nowhere else:
+ *
+ * - `operator` — data controller (GDPR Art. 13) on /privacy, contract counterparty on /terms.
+ * - `address`  — geographic address (e-Commerce Directive Art. 5(1)(b)) on /contact.
+ * - `place`    — everywhere else, including the footer of every page.
+ *
+ * The VAT number is deliberately absent: Paddle is merchant of record and puts its own on the
+ * invoice, which is the document that needs one.
  */
 export const LEGAL = {
   /** Legal name of the operator (a sole trader's full name is fine). */
@@ -9,10 +17,10 @@ export const LEGAL = {
   brand: "ConfigSync",
   /** Country of establishment and governing law. */
   country: "Portugal",
-  /** TODO: postal address required by EU e-commerce rules (can be a business address service). */
+  /** Full postal address. Shown on /contact only — Art. 5(1)(b) wants it accessible, not ambient. */
   address: "Praça das Palmeiras lt120, Viseu, Portugal",
-  /** TODO: tax id (NIF). Leave empty to hide the line. */
-  taxId: "258697849",
+  /** What every other page shows instead: where the service is run from, no street. */
+  place: "Viseu, Portugal",
   /** Contact for support, privacy requests and refunds. */
   email: "hello@configsync.app",
   /** Public origin of the service. */
