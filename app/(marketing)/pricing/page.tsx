@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { getSession } from "@/lib/auth/session";
 import { getPlan } from "@/lib/billing/plan";
@@ -6,6 +7,7 @@ import { billingEnabled, env, founderOfferEnabled } from "@/lib/env";
 import { FOUNDER, PRICES } from "@/lib/billing/public";
 import { LEGAL } from "@/lib/legal";
 import { ComparisonTable, PricingTable } from "@/components/billing/pricing-table";
+import { PaddlePaymentLink } from "@/components/billing/paddle-payment-link";
 import { Button } from "@/components/ui/button";
 import { Faq } from "@/components/marketing/faq";
 
@@ -74,6 +76,10 @@ export default async function PricingPage() {
 
   return (
     <div className="flex flex-col gap-14">
+      {/* This page is Paddle's default payment link; ?_ptxn= must open a checkout. */}
+      <Suspense>
+        <PaddlePaymentLink />
+      </Suspense>
       <header className="max-w-2xl">
         <h1 className="text-[40px] leading-[1.08] font-bold tracking-[-0.03em] sm:text-[52px]">
           Two plans.

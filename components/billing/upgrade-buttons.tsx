@@ -6,27 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { getPlanAction } from "@/lib/actions/billing";
 import { FOUNDER, PADDLE_PUBLIC, PRICES } from "@/lib/billing/public";
-
-type PaddleJs = {
-  Environment: { set: (env: "sandbox" | "production") => void };
-  Initialize: (o: {
-    token: string;
-    eventCallback?: (e: { name: string; detail?: unknown }) => void;
-  }) => void;
-  Checkout: {
-    open: (o: {
-      items: { priceId: string; quantity: number }[];
-      discountCode?: string;
-      customer?: { email: string };
-      customData?: Record<string, string>;
-    }) => void;
-  };
-};
-declare global {
-  interface Window {
-    Paddle?: PaddleJs;
-  }
-}
+import { PADDLE_JS_SRC } from "@/lib/billing/paddle-js";
 
 export type Prices = {
   monthly: string;
@@ -108,11 +88,7 @@ export function UpgradeButtons({ email, userId, prices }: Props) {
 
   return (
     <>
-      <Script
-        src="https://cdn.paddle.com/paddle/v2/paddle.js"
-        strategy="afterInteractive"
-        onLoad={init}
-      />
+      <Script src={PADDLE_JS_SRC} strategy="afterInteractive" onLoad={init} />
       <div className="flex flex-col gap-2 sm:flex-row">
         <Button
           variant="primary"
