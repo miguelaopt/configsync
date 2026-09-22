@@ -16,6 +16,17 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-22",
+    version: "0.10.1",
+    title: "Payment links open",
+    changes: [
+      {
+        kind: "fixed",
+        text: "A payment link from Paddle \u2014 the kind an \u201cupdate your payment method\u201d email sends you to \u2014 now opens its checkout on the pricing page. It used to land on a page that could not open one unless you happened to be signed in on the Free plan.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-22",
     version: "0.10.0",
     title: "A code for the founder offer",
     changes: [
