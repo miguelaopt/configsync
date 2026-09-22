@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getSession } from "@/lib/auth/session";
 import { getPlan } from "@/lib/billing/plan";
-import { billingEnabled, env } from "@/lib/env";
+import { billingEnabled, env, founderOfferEnabled } from "@/lib/env";
+import { FOUNDER, PRICES } from "@/lib/billing/public";
 import { LEGAL } from "@/lib/legal";
 import { ComparisonTable, PricingTable } from "@/components/billing/pricing-table";
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,9 @@ import { Faq } from "@/components/marketing/faq";
 
 export const metadata: Metadata = {
   title: "Pricing — Free and Pro plans",
-  description:
-    "ConfigSync pricing: free for three games, forever. Pro is 2.99 €/month or 24.99 € once — unlimited games, full settings history, auto-sync on every PC and per-PC presets.",
+  description: `ConfigSync pricing: free for three games, forever. Pro is ${PRICES.monthly} or ${
+    founderOfferEnabled ? `${FOUNDER.lifetime} while ConfigSync is in alpha` : PRICES.lifetime
+  } — unlimited games, full settings history, auto-sync on every PC and per-PC presets.`,
   alternates: { canonical: "/pricing" },
 };
 
@@ -22,7 +24,9 @@ const FAQ = [
   },
   {
     q: "Monthly or lifetime — which one?",
-    a: "The same Pro either way. Monthly is 2.99 € and you can stop whenever you like; lifetime is 24.99 € once and covers Pro on this hosted service for as long as it runs. Lifetime pays for itself after about eight months.",
+    a: founderOfferEnabled
+      ? `The same Pro either way. Monthly is ${PRICES.monthlyAmount} and you can stop whenever you like; lifetime is ${FOUNDER.lifetime} while ConfigSync is in alpha, down from ${FOUNDER.was}, and covers Pro on this hosted service for as long as it runs. At the alpha price, lifetime pays for itself after about four months.`
+      : `The same Pro either way. Monthly is ${PRICES.monthlyAmount} and you can stop whenever you like; lifetime is ${PRICES.lifetime} and covers Pro on this hosted service for as long as it runs. Lifetime pays for itself after about eight months.`,
   },
   {
     q: "What happens if I cancel?",
@@ -61,7 +65,11 @@ export default async function PricingPage() {
     : null;
   const prices =
     billingEnabled && env.PADDLE_PRICE_MONTHLY && env.PADDLE_PRICE_LIFETIME
-      ? { monthly: env.PADDLE_PRICE_MONTHLY, lifetime: env.PADDLE_PRICE_LIFETIME }
+      ? {
+          monthly: env.PADDLE_PRICE_MONTHLY,
+          lifetime: env.PADDLE_PRICE_LIFETIME,
+          lifetimeDiscountId: env.PADDLE_DISCOUNT_LIFETIME,
+        }
       : null;
 
   return (

@@ -33,7 +33,11 @@ export default async function SettingsPage() {
   ]);
   const prices =
     env.PADDLE_PRICE_MONTHLY && env.PADDLE_PRICE_LIFETIME
-      ? { monthly: env.PADDLE_PRICE_MONTHLY, lifetime: env.PADDLE_PRICE_LIFETIME }
+      ? {
+          monthly: env.PADDLE_PRICE_MONTHLY,
+          lifetime: env.PADDLE_PRICE_LIFETIME,
+          lifetimeDiscountId: env.PADDLE_DISCOUNT_LIFETIME,
+        }
       : null;
 
   const sections = [

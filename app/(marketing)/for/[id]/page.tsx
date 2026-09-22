@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CATALOG, getCatalogGame, type CatalogGame } from "@/lib/catalog";
 import { SITE } from "@/lib/site";
+import { FOUNDER, PRICES } from "@/lib/billing/public";
+import { founderOfferEnabled } from "@/lib/env";
 import { GameCover } from "@/components/games/game-cover";
 import { Faq } from "@/components/marketing/faq";
 import { Badge } from "@/components/ui/badge";
@@ -79,7 +81,9 @@ export default async function GamePage({ params }: { params: Params<"id"> }) {
     },
     {
       q: "Is it free?",
-      a: `Yes: Free keeps three games with ten snapshots per preset, and the companion is included. Pro (2.99 €/month or 24.99 € once) adds unlimited games, the full history and automatic sync of every PC.`,
+      a: `Yes: Free keeps three games with ten snapshots per preset, and the companion is included. Pro (${PRICES.monthly} or ${
+        founderOfferEnabled ? `${FOUNDER.lifetime} while ConfigSync is in alpha` : PRICES.lifetime
+      }) adds unlimited games, the full history and automatic sync of every PC.`,
     },
     {
       q: "What about Steam Cloud?",

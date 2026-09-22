@@ -6,13 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { portalSessionAction } from "@/lib/actions/billing";
 import type { PlanInfo } from "@/lib/billing/plan";
-import { UpgradeButtons } from "@/components/billing/upgrade-buttons";
+import { UpgradeButtons, type Prices } from "@/components/billing/upgrade-buttons";
 
 type Props = {
   info: PlanInfo;
   email: string;
   userId: string;
-  prices: { monthly: string; lifetime: string } | null;
+  prices: Prices | null;
 };
 
 /** Current plan, upgrade buttons for Free, and the Paddle portal link for subscribers. */

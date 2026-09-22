@@ -1,9 +1,14 @@
 import { getSession } from "@/lib/auth/session";
+import { getPlan } from "@/lib/billing/plan";
+import { founderOfferEnabled } from "@/lib/env";
 import { Backdrop, MarketingFooter, MarketingHeader } from "@/components/marketing/chrome";
+import { FounderOffer } from "@/components/marketing/founder-offer";
 
 /** Public pages outside the landing: the same chrome, so the brand does not change mid-visit. */
 export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
+  // Nobody who already paid should be offered a discount on what they own.
+  const isPro = session ? (await getPlan(session.user.id)).plan === "pro" : false;
   return (
     <div className="relative flex min-h-dvh flex-col overflow-x-hidden bg-ground">
       <Backdrop />
@@ -14,6 +19,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
       <div className="relative">
         <MarketingFooter />
       </div>
+      {founderOfferEnabled && !isPro ? <FounderOffer /> : null}
     </div>
   );
 }

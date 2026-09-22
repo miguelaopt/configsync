@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Check, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { COMPARISON, FEATURES, PRICES } from "@/lib/billing/public";
-import { UpgradeButtons } from "./upgrade-buttons";
+import { COMPARISON, FEATURES, FOUNDER, PRICES } from "@/lib/billing/public";
+import { UpgradeButtons, type Prices } from "./upgrade-buttons";
 
 type Props = {
   viewer: { email: string; userId: string; plan: "free" | "pro" } | null;
   /** null when billing is disabled on this instance */
-  prices: { monthly: string; lifetime: string } | null;
+  prices: Prices | null;
 };
 
 function List({ items }: { items: readonly string[] }) {
@@ -73,10 +73,18 @@ export function PricingTable({ viewer, prices }: Props) {
           </p>
         </div>
         <p className="text-[34px] leading-none font-bold text-ink">
-          2.99 €
+          {PRICES.monthlyAmount}
           <span className="align-middle text-[14px] font-normal text-ink-3">
             {" "}
-            /month · or {PRICES.lifetime}
+            /month · or{" "}
+            {prices?.lifetimeDiscountId ? (
+              <>
+                <span className="font-semibold text-accent-text">{FOUNDER.lifetime}</span>{" "}
+                <span className="line-through">{FOUNDER.was}</span>
+              </>
+            ) : (
+              PRICES.lifetime
+            )}
           </span>
         </p>
         <List items={FEATURES.pro} />
