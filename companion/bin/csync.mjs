@@ -8,6 +8,14 @@ import { scanEpic, scanSteam } from "../lib/scan.mjs";
 import { applyPreset, readFiles } from "../lib/apply.mjs";
 import { loadState, reportable } from "../lib/state.mjs";
 import { isRunning, runningProcessNames } from "../lib/procs.mjs";
+import {
+  diffSnapshot,
+  discoverRoots,
+  loadSnapshot,
+  saveSnapshot,
+  snapshot,
+  walkConfigFiles,
+} from "../lib/discover.mjs";
 import { decide } from "../lib/sync.mjs";
 import * as autostart from "../lib/autostart.mjs";
 import { spawn } from "node:child_process";
@@ -22,6 +30,7 @@ const HELP = `csync — ConfigSync companion
   csync games                             list catalog games and whether their files were found here
   csync watch [--interval 30] [--once]    keep every game's files equal to the preset chosen for this PC (Pro); --install / --uninstall autostart
   csync launch <game> -- <command…>       apply the game's Default preset, then run the command (Steam launch options)
+  csync discover [game] [--diff]          find an unsupported game's config files, then show which keys a setting change moved
 
 Close the game before import/apply. Steam Cloud may restore old files for some games.`;
 
@@ -247,7 +256,71 @@ async function launch() {
   child.on("exit", (code) => process.exit(code ?? 0));
 }
 
-const commands = { login, scan, games, import: importCmd, apply, watch, launch };
+/** Installed games, Steam and Epic together, newest scan each time. */
+const installed = () =>
+  [...scanSteam(), ...scanEpic()].sort((a, b) => a.name.localeCompare(b.name));
+
+/**
+ * Catalog research, offline and without an account: snapshot a game's config files, change one
+ * setting in the game, and `--diff` names the exact keys that moved.
+ */
+async function discover() {
+  const query = args.join(" ").toLowerCase();
+  const games = installed();
+  if (!query) {
+    for (const g of games) {
+      const roots = discoverRoots(g);
+      const files = roots.reduce((n, r) => n + walkConfigFiles(r.path).length, 0);
+      console.log(
+        `${g.source.padEnd(5)} ${String(g.appId).padEnd(10)} ${g.name} — ${files} config ${files === 1 ? "file" : "files"} in ${roots.length} ${roots.length === 1 ? "place" : "places"}`,
+      );
+    }
+    console.log(`\n${games.length} games. Run: ${cli} discover "<name>" to start on one.`);
+    return;
+  }
+  const matches = games.filter(
+    (g) => g.name.toLowerCase().includes(query) || String(g.appId).toLowerCase() === query,
+  );
+  if (matches.length === 0) throw new Error(`No installed game matches "${args.join(" ")}".`);
+  if (matches.length > 1)
+    throw new Error(`"${args.join(" ")}" matches ${matches.map((g) => g.name).join(", ")}.`);
+  const game = matches[0];
+  const roots = discoverRoots(game);
+  if (roots.length === 0)
+    throw new Error(
+      `Found no config folders for ${game.name}. It may keep settings in its cloud profile rather than on disk.`,
+    );
+
+  if (!flag("diff")) {
+    const snap = snapshot(game);
+    const n = Object.keys(snap.files).length;
+    const where = saveSnapshot(game, snap);
+    console.log(`${game.name}:`);
+    for (const r of roots) console.log(`  ${r.label}: ${r.path}`);
+    console.log(`\nRemembered ${n} config ${n === 1 ? "file" : "files"} in ${where}.`);
+    console.log(
+      `Now open ${game.name}, change ONE setting, quit the game, then run:\n  ${cli} discover "${game.name}" --diff`,
+    );
+    return;
+  }
+
+  const previous = loadSnapshot(game);
+  if (!previous)
+    throw new Error(`Nothing remembered for ${game.name} yet. Run it without --diff first.`);
+  const changes = diffSnapshot(previous, snapshot(game));
+  if (changes.length === 0)
+    return console.log(
+      `Nothing changed since ${previous.at}. Did the game write its files? Most only save on quit.`,
+    );
+  for (const c of changes) {
+    console.log(`\n${c.path}`);
+    for (const l of c.removed) console.log(`  - ${l.trim()}`);
+    for (const l of c.added) console.log(`  + ${l.trim()}`);
+  }
+  console.log(`\nThe + lines are the keys that setting writes. Send them in and it can be mapped.`);
+}
+
+const commands = { login, scan, games, import: importCmd, apply, watch, launch, discover };
 if (!cmd || !commands[cmd]) {
   console.log(HELP);
   process.exit(cmd ? 2 : 0);

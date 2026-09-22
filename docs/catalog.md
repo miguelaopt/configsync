@@ -72,10 +72,29 @@ default is what gets written — so make sure `options` cover every value the ga
 
 ## Finding keys
 
-Change one setting in the game, quit, and diff the file. CS2 writes only keys that differ from
-its defaults to `cs2_user_keys_0_slot0.vcfg`, so a default binding never appears there. Rocket
-League repeats keys across `[SystemSettingsBucketN]` sections; only the first
-`[SystemSettings]` section is read.
+`csync discover` does the diffing. It needs no account and no catalog entry — it is meant for
+games that are not in the catalog yet:
+
+```bash
+csync discover                        # installed games + where config lives
+csync discover "Apex Legends"         # remember those files as they are
+#  → change ONE setting in the game, then quit it
+csync discover "Apex Legends" --diff  # the lines that setting wrote
+```
+
+The `+` lines are the keys that setting writes. It compares text, not parsed values, so it works
+for formats the catalog cannot read yet. Snapshots live beside the token, 0600, and are never
+uploaded.
+
+By hand, the same thing: change one setting in the game, quit, and diff the file.
+
+Two quirks the diff will show you either way. CS2 writes only keys that differ from its defaults
+to `cs2_user_keys_0_slot0.vcfg`, so a default binding never appears there. Rocket League repeats
+keys across `[SystemSettingsBucketN]` sections; only the first `[SystemSettings]` section is read.
+
+Some games keep settings nowhere a diff can reach: Rocket League's camera, audio and deadzone
+values are in the binary `SaveDataEpic/*.save` files, which is why they are manual-entry in the
+catalog. If `discover` shows nothing after a change, that is usually the reason.
 
 ## Testing a new game
 

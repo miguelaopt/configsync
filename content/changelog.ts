@@ -16,6 +16,17 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-22",
+    version: "0.9.0",
+    title: "Help us support the games you play",
+    changes: [
+      {
+        kind: "new",
+        text: "csync 0.3.0: the new `csync discover` command finds the config files of any game you have installed — including games ConfigSync does not support yet — and, after you change one setting in the game, shows you exactly which lines it wrote. Send those lines in and the game can be mapped properly. It needs no account, and nothing leaves your PC.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-22",
     version: "0.8.1",
     title: "Two more CS2 settings sync themselves",
     changes: [

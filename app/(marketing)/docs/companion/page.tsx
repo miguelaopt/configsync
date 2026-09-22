@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, Section } from "@/components/marketing/legal";
+import { LEGAL } from "@/lib/legal";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -135,6 +136,31 @@ export default function CompanionDocsPage() {
         </ul>
       </Section>
 
+      <Section title="Help us support a game you play">
+        <p>
+          A game can only be read and written once we know which key in which file holds each
+          setting, and the honest way to learn that is to change one setting and see what moved.{" "}
+          <Cmd>csync discover</Cmd> does that for you, for any game you have installed:
+        </p>
+        <Code>{`csync discover                        # installed games + where config lives
+csync discover "Apex Legends"         # remember those files as they are
+#  → change ONE setting in the game, then quit it
+csync discover "Apex Legends" --diff  # the lines that setting wrote`}</Code>
+        <p>
+          The last command prints the lines that changed — which is exactly the key that setting
+          writes. Send those lines to{" "}
+          <a href={`mailto:${LEGAL.email}`} className="text-accent-text hover:text-ink">
+            {LEGAL.email}
+          </a>{" "}
+          and the game can be mapped properly.
+        </p>
+        <p>
+          It works signed out and sends nothing anywhere: what it remembers stays in a file on your
+          own machine, readable only by you. Look at the diff before sharing it — it is plain text,
+          and you decide what goes in the email.
+        </p>
+      </Section>
+
       <Section title="Commands">
         <div className="overflow-x-auto">
           <table className="w-full text-[13px]">
@@ -156,6 +182,10 @@ export default function CompanionDocsPage() {
                   "Pro. Keep the files equal to this PC's preset.",
                 ],
                 ["csync launch <game> -- <command…>", "Apply, then run the command."],
+                [
+                  "csync discover [game] [--diff]",
+                  "Find an unsupported game's config files and which keys a setting writes.",
+                ],
               ].map(([cmd, what]) => (
                 <tr key={cmd}>
                   <td className="py-2 pr-4 align-top font-mono whitespace-nowrap text-ink">
