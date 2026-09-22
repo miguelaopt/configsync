@@ -16,6 +16,21 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-22",
+    version: "0.8.0",
+    title: "Two pages that were missing",
+    changes: [
+      {
+        kind: "new",
+        text: "/docs/import-export explains exactly what a ConfigSync export contains, what is deliberately left out of it, and what happens to a preset you already have when you import one with the same name.",
+      },
+      {
+        kind: "new",
+        text: "/contact: one address, and what to expect when you write about support, an invoice, a refund, your data, a security report or a game you want in the catalog.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-22",
     version: "0.7.0",
     title: "Alpha founder offer",
     changes: [
