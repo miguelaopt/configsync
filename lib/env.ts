@@ -20,7 +20,7 @@ const base = z.object({
   PADDLE_WEBHOOK_SECRET: z.string().optional(),
   PADDLE_PRICE_MONTHLY: z.string().optional(),
   PADDLE_PRICE_LIFETIME: z.string().optional(),
-  PADDLE_DISCOUNT_LIFETIME: z.string().optional(),
+  PADDLE_DISCOUNT_CODE: z.string().optional(),
   AI_VISION_PROVIDER: z.enum(["anthropic"]).optional(),
   AI_VISION_API_KEY: z.string().optional(),
   AI_VISION_MODEL: z.string().default("claude-opus-5"),
@@ -40,7 +40,7 @@ function load() {
     PADDLE_WEBHOOK_SECRET: process.env.PADDLE_WEBHOOK_SECRET || undefined,
     PADDLE_PRICE_MONTHLY: process.env.PADDLE_PRICE_MONTHLY || undefined,
     PADDLE_PRICE_LIFETIME: process.env.PADDLE_PRICE_LIFETIME || undefined,
-    PADDLE_DISCOUNT_LIFETIME: process.env.PADDLE_DISCOUNT_LIFETIME || undefined,
+    PADDLE_DISCOUNT_CODE: process.env.PADDLE_DISCOUNT_CODE || undefined,
     AI_VISION_PROVIDER: process.env.AI_VISION_PROVIDER || undefined,
     AI_VISION_API_KEY: process.env.AI_VISION_API_KEY || undefined,
     AI_VISION_MODEL: process.env.AI_VISION_MODEL || undefined,
@@ -56,7 +56,11 @@ export const env = load();
 export const githubOAuthEnabled = Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET);
 /** No Paddle configured ⇒ no plans: every account is Pro (self-hosting). */
 export const billingEnabled = Boolean(env.PADDLE_API_KEY && env.PADDLE_WEBHOOK_SECRET);
-/** The alpha founder discount on the lifetime licence. Unset ⇒ nothing anywhere mentions it. */
-export const founderOfferEnabled = Boolean(billingEnabled && env.PADDLE_DISCOUNT_LIFETIME);
+/**
+ * The alpha founder discount code on the lifetime licence, or null. Unset ⇒ nothing anywhere
+ * mentions a discount. It is meant to be read out and typed, so it is not a secret.
+ */
+export const founderCode = billingEnabled ? (env.PADDLE_DISCOUNT_CODE ?? null) : null;
+export const founderOfferEnabled = founderCode !== null;
 /** Whether the screenshot importer is offered at all. Off ⇒ the UI never mentions it. */
 export const screenshotAssistantEnabled = Boolean(env.AI_VISION_PROVIDER);

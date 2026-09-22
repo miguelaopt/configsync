@@ -68,7 +68,7 @@ export default async function PricingPage() {
       ? {
           monthly: env.PADDLE_PRICE_MONTHLY,
           lifetime: env.PADDLE_PRICE_LIFETIME,
-          lifetimeDiscountId: env.PADDLE_DISCOUNT_LIFETIME,
+          lifetimeDiscountCode: env.PADDLE_DISCOUNT_CODE,
         }
       : null;
 

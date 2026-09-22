@@ -16,6 +16,21 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-22",
+    version: "0.10.0",
+    title: "A code for the founder offer",
+    changes: [
+      {
+        kind: "improved",
+        text: "The alpha founder offer now comes as a code you can copy, keep and pass on, instead of a discount that only worked if you arrived the right way. Opening Pro from the offer still fills it in for you.",
+      },
+      {
+        kind: "fixed",
+        text: "When a checkout cannot open, the reason is shown instead of a blank \u201cSomething went wrong\u201d. Nothing is ever charged when that happens.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-22",
     version: "0.9.0",
     title: "Help us support the games you play",
     changes: [
