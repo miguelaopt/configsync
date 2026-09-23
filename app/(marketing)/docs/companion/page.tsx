@@ -167,14 +167,15 @@ csync discover "Apex Legends" --diff  # the lines that setting wrote`}</Code>
             <tbody className="divide-y divide-line">
               {[
                 ["csync login <url>", "Save a token for this machine."],
+                ["csync status [--json]", "What this PC is connected to and what each game runs."],
                 [
                   "csync scan [--push]",
                   "List installed Steam / Epic / Heroic games; --push updates the vault.",
                 ],
                 ["csync games", "Catalog games and which of their files exist here."],
-                ["csync import <game> [--name …]", "Read the files into a new preset."],
+                ["csync import <game> [--name …] [--json]", "Read the files into a new preset."],
                 [
-                  "csync apply <game> <preset> [--dry-run]",
+                  "csync apply <game> <preset> [--dry-run] [--json]",
                   "Write a preset into the files, after a backup.",
                 ],
                 [

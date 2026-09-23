@@ -15,6 +15,17 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-09-23",
+    version: "0.12.0",
+    title: "The companion answers in JSON",
+    changes: [
+      {
+        kind: "new",
+        text: "csync 0.4.0: a new `csync status` shows what this PC is connected to and which preset each game should run. With `--json`, it and `csync apply` and `csync import` answer in JSON, so other tools \u2014 including the desktop app being built \u2014 can drive the companion.",
+      },
+    ],
+  },
+  {
     date: "2026-09-22",
     version: "0.11.0",
     title: "Less of us on every page, and a straight answer about cookies",

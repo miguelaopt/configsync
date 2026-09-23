@@ -22,17 +22,23 @@ From a repo checkout, `pnpm csync <command>` runs the source without building an
 
 ## Commands
 
-| Command                                   | What it does                                                                                                                                |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| `csync login <url>`                       | Verify a token against `GET /api/companion/me` and save it. Token can be piped.                                                             |
-| `csync scan [--push]`                     | List Steam and Epic games installed here; `--push` replaces this device's list.                                                             |
-| `csync games`                             | List catalog games and which of their files were found on this machine.                                                                     |
-| `csync import <game> [--name "…"]`        | Read the found files into a **new** preset. Prints the preset URL and warnings.                                                             |
-| `csync apply <game> <preset> [--dry-run]` | Write a preset into the files. Backs up first; `--dry-run` only prints changes.                                                             |
-| `csync watch [--interval 30] [--once]`    | **Pro.** Keep every game's files equal to the preset chosen for this PC, or its Default (see below). `--install` / `--uninstall` autostart. |
-| `csync launch <game> -- <command…>`       | Apply the game's Default preset, then run the command. For Steam launch options and Heroic wrappers.                                        |
+| Command                                            | What it does                                                                                                                                |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `csync login <url>`                                | Verify a token against `GET /api/companion/me` and save it. Token can be piped.                                                             |
+| `csync status [--json]`                            | What this PC is connected to, and the preset each game should run. `--json` answers the whole desktop window in one call.                   |
+| `csync scan [--push]`                              | List Steam and Epic games installed here; `--push` replaces this device's list.                                                             |
+| `csync games`                                      | List catalog games and which of their files were found on this machine.                                                                     |
+| `csync import <game> [--name "…"] [--json]`        | Read the found files into a **new** preset. Prints the preset URL and warnings.                                                             |
+| `csync apply <game> <preset> [--dry-run] [--json]` | Write a preset into the files. Backs up first; `--dry-run` only prints changes.                                                             |
+| `csync watch [--interval 30] [--once]`             | **Pro.** Keep every game's files equal to the preset chosen for this PC, or its Default (see below). `--install` / `--uninstall` autostart. |
+| `csync launch <game> -- <command…>`                | Apply the game's Default preset, then run the command. For Steam launch options and Heroic wrappers.                                        |
 
 `<game>` is a catalog id (`cs2`, `rocket-league`); `<preset>` is the slug in the preset's URL.
+
+With `--json` the command prints one JSON object and nothing else, and a failure prints
+`{"error": "…"}` to **stdout** with a non-zero exit — so a caller never has to read prose off
+stderr. `csync status --json` is the contract the desktop app is built on; see
+[the design](superpowers/specs/2026-09-23-windows-desktop-app-design.md).
 
 ## Background sync (`csync watch`, Pro)
 
