@@ -3,7 +3,7 @@
   "productName": "ConfigSync",
   "mainBinaryName": "ConfigSync",
   "version": "../../package.json",
-  "identifier": "app.configsync.desktop",
+  "identifier": "ConfigSync",
   "build": {
     "frontendDist": "../ui"
   },
@@ -34,6 +34,7 @@
     "shortDescription": "Your game settings, on every PC you play on.",
     "windows": {
       "wix": {
+        "upgradeCode": "8c8b4fba-c658-5e17-9ce6-48fe2c5cce77",
         "bannerPath": "wix/banner.bmp",
         "dialogImagePath": "wix/dialog.bmp"
       }
