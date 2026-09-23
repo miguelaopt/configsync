@@ -16,6 +16,21 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-23",
+    version: "0.12.2",
+    title: "Applying by hand is remembered",
+    changes: [
+      {
+        kind: "fixed",
+        text: "csync 0.5.0: applying this PC's own preset with `csync apply` is now recorded, so `csync status` says when it was applied instead of “never”.",
+      },
+      {
+        kind: "improved",
+        text: "`csync login` accepts `--json` and reads a piped token from the first line, so other tools can connect the companion without a terminal.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-23",
     version: "0.12.1",
     title: "Refunds take Pro back",
     changes: [

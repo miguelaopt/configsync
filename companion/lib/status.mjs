@@ -41,7 +41,7 @@ export async function status(config) {
  * A new account has none at all, and the window still has to render — so a 404 is an answer,
  * while anything else is a failure worth surfacing.
  */
-async function targetFor(client, gameId, device) {
+export async function targetFor(client, gameId, device) {
   try {
     const t = await client.get(
       `/default?game=${encodeURIComponent(gameId)}&device=${encodeURIComponent(device)}`,
