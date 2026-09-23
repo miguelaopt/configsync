@@ -18,7 +18,13 @@ export function api({ url, token }) {
     } catch {
       json = null;
     }
-    if (!res.ok) throw new Error(json?.error ?? `${res.status} ${res.statusText}`);
+    if (!res.ok) {
+      // The status is how callers tell an expected 404 (no Default preset yet) from a real
+      // failure. Matching on the message text would break the first time it is reworded.
+      const error = new Error(json?.error ?? `${res.status} ${res.statusText}`);
+      error.status = res.status;
+      throw error;
+    }
     return json;
   }
   return {
