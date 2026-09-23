@@ -1,29 +1,42 @@
 {
-  "$schema": "https://schema.tauri.app/config/2",
-  "productName": "ConfigSync",
-  "version": "../../package.json",
-  "identifier": "app.configsync.desktop",
-  "build": { "frontendDist": "../ui" },
-  "app": {
-    "withGlobalTauri": true,
-    "windows": [
-      {
-        "label": "main",
-        "title": "ConfigSync",
-        "width": 440,
-        "height": 640,
-        "minWidth": 380,
-        "minHeight": 480
-      }
-    ],
-    "security": {
-      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost"
-    }
-  },
-  "bundle": {
-    "active": true,
-    "targets": ["msi"],
-    "externalBin": ["binaries/csync"],
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.ico"]
-  }
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "The main window: run the csync sidecar with the JSON contract, open links.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        { "name": "binaries/csync", "sidecar": true, "args": ["status", "--json"] },
+        {
+          "name": "binaries/csync",
+          "sidecar": true,
+          "args": [
+            "apply",
+            { "validator": "^[a-z0-9-]{1,64}$" },
+            { "validator": "^[a-z0-9-]{1,80}$" },
+            "--json"
+          ]
+        },
+        {
+          "name": "binaries/csync",
+          "sidecar": true,
+          "args": ["import", { "validator": "^[a-z0-9-]{1,64}$" }, "--json"]
+        }
+      ]
+    },
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "binaries/csync",
+          "sidecar": true,
+          "args": ["login", "https://configsync.app", "--json"]
+        }
+      ]
+    },
+    "shell:allow-stdin-write"
+  ]
 }
