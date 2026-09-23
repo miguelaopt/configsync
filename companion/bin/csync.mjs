@@ -17,6 +17,7 @@ import {
   walkConfigFiles,
 } from "../lib/discover.mjs";
 import { decide } from "../lib/sync.mjs";
+import { status } from "../lib/status.mjs";
 import * as autostart from "../lib/autostart.mjs";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -24,6 +25,7 @@ import { fileURLToPath } from "node:url";
 const HELP = `csync — ConfigSync companion
 
   csync login <url>                       pair this machine with your vault (paste a token from Settings → Companion)
+  csync status [--json]                   what this PC is connected to, and the preset each game should run
   csync scan [--push]                     list installed Steam/Epic games; --push sends them to the vault
   csync import <game> [--name "…"]        read the game's config files into a new preset (game: cs2, rocket-league…)
   csync apply <game> <preset> [--dry-run] write a preset into the game's config files (backs up first)
@@ -56,11 +58,15 @@ const args = rest.filter((a, i) => !a.startsWith("--") && !(i > 0 && rest[i - 1]
 
 function need() {
   const c = loadConfig();
-  if (!c) {
-    console.error("Not logged in. Run: csync login <url>");
-    process.exit(2);
-  }
+  if (!c) fail(`Not logged in. Run: ${cli} login <url>`, 2);
   return c;
+}
+
+/** One exit path, so `--json` callers never have to read prose off stderr. */
+function fail(message, code = 1) {
+  if (flag("json")) console.log(JSON.stringify({ error: message }));
+  else console.error(message);
+  process.exit(code);
 }
 
 /** Interactive prompt on a terminal; piped stdin (`echo $TOKEN | csync login …`) is read to EOF. */
@@ -320,12 +326,33 @@ async function discover() {
   console.log(`\nThe + lines are the keys that setting writes. Send them in and it can be mapped.`);
 }
 
-const commands = { login, scan, games, import: importCmd, apply, watch, launch, discover };
+/** One call the desktop app can read, and a quick answer for a person at a terminal. */
+async function statusCmd() {
+  const s = await status(loadConfig());
+  if (flag("json")) return console.log(JSON.stringify(s, null, 2));
+  if (!s.loggedIn) return console.log(`Not logged in. Run: ${cli} login <url>`);
+  console.log(`${s.device} — ${s.user.email} (${s.plan})`);
+  for (const g of s.games) {
+    const where = g.installed ? `${g.files} files` : "not installed here";
+    const target = g.target ? g.target.presetName : "no Default preset";
+    const at = g.applied?.at ? ` · applied ${g.applied.at}` : "";
+    console.log(`  ${g.name} — ${where} · ${target}${at}`);
+  }
+}
+
+const commands = {
+  login,
+  status: statusCmd,
+  scan,
+  games,
+  import: importCmd,
+  apply,
+  watch,
+  launch,
+  discover,
+};
 if (!cmd || !commands[cmd]) {
   console.log(HELP);
   process.exit(cmd ? 2 : 0);
 }
-commands[cmd]().catch((e) => {
-  console.error(`Error: ${e.message}`);
-  process.exit(1);
-});
+commands[cmd]().catch((e) => fail(flag("json") ? e.message : `Error: ${e.message}`));
