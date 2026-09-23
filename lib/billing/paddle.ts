@@ -61,7 +61,12 @@ export const paddleEventSchema = z.object({
     subscription_id: z.string().nullish(),
     custom_data: z.object({ userId: z.string().min(1).max(64).optional() }).nullish(),
     current_billing_period: z.object({ ends_at: z.string() }).nullish(),
-    items: z.array(z.object({ price: z.object({ id: z.string() }) })).optional(),
+    /**
+     * Transactions carry `price.id`, which is how a lifetime purchase is recognised. Adjustments
+     * carry items too, but theirs have `item_id`/`amount`/`totals` and no price at all — so this
+     * must not require one, or a refund is rejected as an unexpected shape and never recorded.
+     */
+    items: z.array(z.object({ price: z.object({ id: z.string() }).nullish() })).optional(),
   }),
 });
 export type PaddleEvent = z.infer<typeof paddleEventSchema>;
@@ -93,7 +98,7 @@ export function applyPaddleEvent(
     };
   }
   if (event.event_type === "transaction.completed") {
-    if (!lifetimePriceId || !d.items?.some((i) => i.price.id === lifetimePriceId)) return null;
+    if (!lifetimePriceId || !d.items?.some((i) => i.price?.id === lifetimePriceId)) return null;
     return {
       userId,
       source: "lifetime",

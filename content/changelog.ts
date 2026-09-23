@@ -16,6 +16,17 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-23",
+    version: "0.12.1",
+    title: "Refunds take Pro back",
+    changes: [
+      {
+        kind: "fixed",
+        text: "A refund now removes Pro, as the refund policy says it does. The billing webhook was rejecting Paddle's refund notifications before reading them, so a refunded account kept Pro indefinitely.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-23",
     version: "0.12.0",
     title: "The companion answers in JSON",
     changes: [
