@@ -24,3 +24,11 @@ test("a dry run is allowed while the game is running — it only reads", async (
     /No Fake Game config files found/,
   );
 });
+
+test("a dry run reports nothing written, in the shape the JSON contract expects", async () => {
+  const game = { name: "Fake Game", processNames: ["nothing-is-called-this"], files: [] };
+  await assert.rejects(
+    () => applyPreset({ url: "http://127.0.0.1:1", token: "t" }, game, "default", { dryRun: true }),
+    /No Fake Game config files found/,
+  );
+});

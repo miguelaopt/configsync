@@ -58,7 +58,9 @@ export async function applyPreset(
     if (!r.files[id]) continue;
     copyFileSync(path, `${path}.bak-${stamp}`);
     writeFileSync(path, r.files[id]);
-    wrote.push(path);
+    // { id, path }, not the bare path: callers that report to a GUI must be able to name the
+    // file without leaking where it lives on disk.
+    wrote.push({ id, path });
     log(`Wrote ${path} (backup: ${path}.bak-${stamp})`);
   }
   if (version) recordApplied(game.id, { presetSlug, version });
