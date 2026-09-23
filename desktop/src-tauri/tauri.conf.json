@@ -1,9 +1,12 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "ConfigSync",
+  "mainBinaryName": "ConfigSync",
   "version": "../../package.json",
   "identifier": "app.configsync.desktop",
-  "build": { "frontendDist": "../ui" },
+  "build": {
+    "frontendDist": "../ui"
+  },
   "app": {
     "withGlobalTauri": true,
     "windows": [
@@ -24,6 +27,16 @@
     "active": true,
     "targets": ["msi"],
     "externalBin": ["binaries/csync"],
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.ico"]
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.ico"],
+    "publisher": "ConfigSync",
+    "homepage": "https://configsync.app",
+    "copyright": "© 2026 Miguel Ferreira",
+    "shortDescription": "Your game settings, on every PC you play on.",
+    "windows": {
+      "wix": {
+        "bannerPath": "wix/banner.bmp",
+        "dialogImagePath": "wix/dialog.bmp"
+      }
+    }
   }
 }
