@@ -27,8 +27,8 @@ const HELP = `csync — ConfigSync companion
   csync login <url>                       pair this machine with your vault (paste a token from Settings → Companion)
   csync status [--json]                   what this PC is connected to, and the preset each game should run
   csync scan [--push]                     list installed Steam/Epic games; --push sends them to the vault
-  csync import <game> [--name "…"]        read the game's config files into a new preset (game: cs2, rocket-league…)
-  csync apply <game> <preset> [--dry-run] write a preset into the game's config files (backs up first)
+  csync import <game> [--name "…"] [--json]         read the game's config files into a new preset (game: cs2, rocket-league…)
+  csync apply <game> <preset> [--dry-run] [--json]  write a preset into the game's config files (backs up first)
   csync games                             list catalog games and whether their files were found here
   csync watch [--interval 30] [--once]    keep every game's files equal to the preset chosen for this PC (Pro); --install / --uninstall autostart
   csync launch <game> -- <command…>       apply the game's Default preset, then run the command (Steam launch options)
@@ -127,18 +127,30 @@ async function games() {
 async function importCmd() {
   const c = need();
   const g = await catalogGame(c, args[0]);
-  console.log(`Reading ${g.name} files:`);
-  const { files } = readFiles(g);
-  if (Object.keys(files).length === 0) {
-    console.error("No config files found. Is the game installed and has it been run once?");
-    process.exit(1);
-  }
+  const json = flag("json");
+  if (!json) console.log(`Reading ${g.name} files:`);
+  const { files } = readFiles(g, json ? { log: () => {} } : {});
+  if (Object.keys(files).length === 0)
+    fail("No config files found. Is the game installed and has it been run once?");
   const r = await api(c).post("/import", {
     catalogId: g.id,
     device: c.device,
     files,
     name: opt("name"),
   });
+  if (json)
+    return console.log(
+      JSON.stringify(
+        {
+          url: r.url,
+          missingFiles: r.missingFiles,
+          unmappedSettings: r.unmappedSettings.length,
+          warnings: r.warnings,
+        },
+        null,
+        2,
+      ),
+    );
   console.log(`\nCreated preset: ${c.url}${r.url}`);
   if (r.missingFiles.length)
     console.log(`Files not found (defaults kept): ${r.missingFiles.join(", ")}`);
@@ -152,10 +164,29 @@ async function importCmd() {
 async function apply() {
   const c = need();
   const [gameId, presetSlug] = args;
-  if (!presetSlug) return console.error("Usage: csync apply <game> <preset-slug> [--dry-run]");
+  const json = flag("json");
+  if (!presetSlug) fail(`Usage: ${cli} apply <game> <preset-slug> [--dry-run]`, 2);
   const g = await catalogGame(c, gameId);
-  console.log(`Reading current ${g.name} files:`);
-  await applyPreset(c, g, presetSlug, { dryRun: flag("dry-run") });
+  if (!json) console.log(`Reading current ${g.name} files:`);
+  const r = await applyPreset(c, g, presetSlug, {
+    dryRun: flag("dry-run"),
+    log: json ? () => {} : console.log,
+  });
+  if (json)
+    // Logical ids only. The window has no use for absolute paths, and they are the most
+    // personal thing the companion touches.
+    return console.log(
+      JSON.stringify(
+        {
+          wrote: r.wrote.map((w) => w.id),
+          changed: r.changed,
+          skipped: r.skipped,
+          backups: r.wrote.length,
+        },
+        null,
+        2,
+      ),
+    );
   console.log(flag("dry-run") ? "\nDry run: nothing written." : "\nDone.");
 }
 
