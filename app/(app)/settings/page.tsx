@@ -88,7 +88,7 @@ export default async function SettingsPage() {
             id="companion"
             icon={<Laptop />}
             title="Companion"
-            subtitle="The CLI on your gaming PCs, its tokens and the PCs it has seen."
+            subtitle="The app or CLI on your gaming PCs, its tokens and the PCs it has seen."
           >
             <CompanionCard tokens={tokens} devices={devices} appUrl={env.BETTER_AUTH_URL} />
           </Panel>

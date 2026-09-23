@@ -1,9 +1,18 @@
-# Builds the Windows app (.msi) so it can be tried on a PC with no repo, Rust or Node on it:
-# download the "configsync-msi" artifact from the run's summary page.
+# Builds the Windows app (.msi). On a PR: download the "configsync-msi" artifact from the run's
+# summary page to try it. On main: it replaces ConfigSync.msi on the "desktop" release, which the
+# image build fetches into public/ (docker/Dockerfile) so the site serves /ConfigSync.msi.
 name: Desktop
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "desktop/**"
+      - "companion/**"
+      - "package.json" # the app's version
+      - "scripts/desktop-sidecar.mjs"
+      - ".github/workflows/desktop.yml"
   pull_request:
     paths:
       - "desktop/**"
@@ -36,6 +45,8 @@ jobs:
     needs: companion
     runs-on: windows-latest
     timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -55,3 +66,13 @@ jobs:
             desktop/src-tauri/target/release/bundle/msi/*.msi
             desktop/src-tauri/Cargo.lock
           retention-days: 14
+      - name: Publish to the desktop release
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp desktop/src-tauri/target/release/bundle/msi/*.msi ConfigSync.msi
+          gh release view desktop >/dev/null 2>&1 ||
+            gh release create desktop --latest=false --title "Windows app" --notes "Served as configsync.app/ConfigSync.msi."
+          gh release upload desktop ConfigSync.msi --clobber

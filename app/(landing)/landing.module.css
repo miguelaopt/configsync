@@ -202,6 +202,11 @@
   background: linear-gradient(180deg, #6f61ba, #524889);
   box-shadow: 0 10px 30px rgba(110, 96, 186, 0.4);
 }
+.ctaIcon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
 .ctaMd {
   padding: 11px 18px;
   border-radius: 10px;
