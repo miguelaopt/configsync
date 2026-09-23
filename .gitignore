@@ -55,3 +55,6 @@ next-env.d.ts
 /public/csync-*
 /public/csync.tgz
 /public/install.sh
+desktop/src-tauri/target/
+desktop/src-tauri/gen/
+desktop/src-tauri/binaries/

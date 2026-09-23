@@ -1,0 +1,57 @@
+# Builds the Windows app (.msi) so it can be tried on a PC with no repo, Rust or Node on it:
+# download the "configsync-msi" artifact from the run's summary page.
+name: Desktop
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "desktop/**"
+      - "companion/**"
+      - "scripts/desktop-sidecar.mjs"
+      - ".github/workflows/desktop.yml"
+
+jobs:
+  companion:
+    name: csync.exe
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:companion
+      - uses: actions/upload-artifact@v4
+        with:
+          name: csync-windows
+          path: public/csync-windows-x64.exe
+          retention-days: 1
+
+  msi:
+    name: ConfigSync.msi
+    needs: companion
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: csync-windows
+          path: public
+      - run: node --test "desktop/test/**/*.test.js"
+      - run: pnpm desktop:build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: configsync-msi
+          path: |
+            desktop/src-tauri/target/release/bundle/msi/*.msi
+            desktop/src-tauri/Cargo.lock
+          retention-days: 14

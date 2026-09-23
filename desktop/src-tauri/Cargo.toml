@@ -1,0 +1,14 @@
+[package]
+name = "configsync-desktop"
+# Placeholder: the app's version comes from the root package.json via tauri.conf.json.
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+tauri-plugin-opener = "2"

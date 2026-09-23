@@ -24,6 +24,8 @@ export default defineConfig([
     "test-results/**",
     "drizzle/**",
     ".cache/**",
+    "desktop/src-tauri/target/**",
+    "desktop/src-tauri/gen/**",
     "public/**",
   ]),
 ]);
