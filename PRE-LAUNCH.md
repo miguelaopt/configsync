@@ -13,7 +13,7 @@ Work top to bottom. The blockers genuinely block.
 - [ ] **Check the companion binaries.** After deploying, `https://configsync.app/csync-windows-x64.exe`
       and `/csync-linux-x64` download (about 90 MB and 120 MB) and `/install.sh` is a script.
       Then follow `TEST-WINDOWS.md` on the Windows boot.
-- [ ] **Rotate the Anthropic API key.** The key currently in the server's `.env` was shown in
+- [x] **Rotate the Anthropic API key.** Done 2026-09-24. The key currently in the server's `.env` was shown in
       plain text in a chat session on 2026-09-19. console.anthropic.com → API keys → revoke it,
       create a new one with a monthly spend limit, then replace it on the server (commands below).
 - [ ] **Read `/refunds` → "If we stop running the Service".** It promises 60 days' notice and a
@@ -49,7 +49,7 @@ Code signing is the one thing that removes the SmartScreen warning: an OV certif
 
 ## 2. Paddle
 
-- [ ] **Domain approved.** Still rejected twice with the generic "offline/login wall" email.
+- [x] **Domain approved.** Verified 2026-09-24. Still rejected twice with the generic "offline/login wall" email.
       Reply to that email asking for a human review, pointing at `https://configsync.app` —
       it is now a real public page, and `/pricing`, `/terms`, `/privacy`, `/refunds` all load
       without an account.
@@ -61,11 +61,11 @@ Code signing is the one thing that removes the SmartScreen warning: an OV certif
 - [ ] **Prices match the site.** Paddle's Monthly is 2.99 EUR recurring and Lifetime is
       24.99 EUR one-time, both tax-inclusive. `/pricing` says the same, from
       `lib/billing/public.ts`.
-- [ ] **One real purchase, end to end.** Private window → new account → `/pricing` → Monthly →
+- [x] **One real purchase, end to end.** Done 2026-09-24. Private window → new account → `/pricing` → Monthly →
       pay with your own card. Then:
   - Header shows **Pro**, Settings → Plan shows the subscription.
   - `docker compose logs app | grep csync:billing` has no warnings.
-- [ ] **One real refund.** Paddle → that transaction → Refund (full). Within seconds the account
+- [x] **One real refund.** Done 2026-09-24. Paddle → that transaction → Refund (full). Within seconds the account
       drops to Free. **If it does not, the two `adjustment.*` events are not really subscribed.**
 - [ ] Repeat once for Lifetime if you want to see the `lifetime` source, and refund that too.
 - [ ] Delete the test account afterwards.

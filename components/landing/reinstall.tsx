@@ -44,7 +44,7 @@ const OUTPUT = [
   "Done.",
 ];
 
-export function Reinstall({ photo }: { photo?: React.ReactNode }) {
+export function Reinstall() {
   const reduced = useReducedMotion();
   const [seen, setSeen] = React.useState(0);
   const steps = React.useRef<(HTMLDivElement | null)[]>([]);
@@ -74,12 +74,6 @@ export function Reinstall({ photo }: { photo?: React.ReactNode }) {
       data-scene="story"
     >
       <div className={s.stage}>
-        {photo ? (
-          // Your desk, lit while the setup is yours; the room goes dark while it is wiped.
-          <div aria-hidden className={s.storyPhoto} data-on={step === 0 || step === 4}>
-            {photo}
-          </div>
-        ) : null}
         <div className={s.storyHead}>
           <h2 id="story-title" className={s.h2}>
             {STEPS[step]!.title}

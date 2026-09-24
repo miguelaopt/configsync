@@ -10,11 +10,11 @@ a card, a dashboard login)
 
 ## 1. Blocking revenue
 
-- [ ] **Paddle domain approval** — **owner**. Rejected twice with the generic "offline / login
+- [x] **Paddle domain approval** — done, verified 2026-09-24. Rejected twice with the generic "offline / login
       wall" email. Reply asking for a human review: `/`, `/pricing`, `/terms`, `/privacy` and
       `/refunds` are all public 200s now, and pricing matches the Paddle catalogue. No sale can
       happen until this clears.
-- [ ] **Prove a refund revokes Pro** — **owner**. `adjustment.created` and `adjustment.updated`
+- [x] **Prove a refund revokes Pro** — done 2026-09-24 (real purchase refunded, Pro dropped). `adjustment.created` and `adjustment.updated`
       are on the destination (Miguel, 2026-09-20); it has never been observed end to end. Buy Monthly with
       a real card, refund it in Paddle, watch the badge drop to Free within seconds and
       `docker compose logs app | grep csync:billing` stay clean. If it does not drop, the two
@@ -32,10 +32,10 @@ a card, a dashboard login)
   Organization / WebSite / SoftwareApplication / FAQPage, per-game pages, the companion guide and
   the changelog. Search Console verified + sitemap submitted, GitHub repo homepage set
   (2026-09-20). Left:
-  - [ ] **Bing Webmaster Tools** — **owner**. Import from Search Console; covers DuckDuckGo too.
+  - [x] **Bing Webmaster Tools** — done 2026-09-24. Import from Search Console; covers DuckDuckGo too.
   - [ ] Check the link preview by pasting `https://configsync.app` into a Discord DM and into X's
         compose box. Expect the purple card, not a grey box.
-  - [ ] `/contact` and `/docs/import-export` — the last two pages in `TODO_CRIT_2009.md`.
+  - [x] `/contact` and `/docs/import-export` — shipped in 0.8.0.
 - [ ] **A reason to link to the site.** Nothing here ranks without inbound links: a post in the
       CS2 / Rocket League config corners of Reddit, a short YouTube walkthrough of `csync watch`,
       or a public profile worth sharing. This is the real SEO work; the tags above only make it

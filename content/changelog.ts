@@ -16,6 +16,17 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-24",
+    version: "0.13.2",
+    title: "Game cards with character",
+    changes: [
+      {
+        kind: "improved",
+        text: "The game cards on the home page each have their own look, in the game's colour: contour lines for Counter-Strike 2, field lines and a boost glow for Rocket League, and the ConfigSync dot grid for any other game.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-24",
     version: "0.13.1",
     title: "Account first, then the Windows app",
     changes: [

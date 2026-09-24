@@ -1932,111 +1932,7 @@
   }
 }
 
-/* ================================================================ v3 background layers */
-
-/* Hero config wall: real config lines drifting behind the frame's content. */
-.wall {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  padding: 0 24px;
-  overflow: hidden;
-  color: rgb(233 233 237 / 0.05);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 2;
-  pointer-events: none;
-  mask-image:
-    linear-gradient(to bottom, transparent, #000 16%, #000 72%, transparent),
-    linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  mask-composite: intersect;
-}
-.wallCol {
-  display: flex;
-  flex-direction: column;
-  white-space: pre;
-  animation: wallDrift linear infinite;
-}
-.wallCol > span::before {
-  content: attr(data-l);
-}
-.wallCol:nth-child(even) {
-  animation-direction: reverse;
-}
-@keyframes wallDrift {
-  to {
-    transform: translateY(-50%);
-  }
-}
-.frame[data-paused="true"] .wallCol {
-  animation-play-state: paused;
-}
-/* A line the editor just changed: a fast attack (240 ms) in lavender, then a slow return. */
-.wallLive {
-  animation: wallGlow 1600ms var(--ease-out);
-}
-@keyframes wallGlow {
-  15% {
-    color: rgb(183 166 255 / 0.95);
-  }
-}
-.root[data-rich="true"] .frame > .bloom {
-  top: 42%;
-  left: 34%;
-}
-
-/* The reinstall: your desk, in two brand colours, behind the first and last steps. */
-.stage {
-  isolation: isolate;
-}
-.storyPhoto {
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 100vw;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateX(-50%);
-  transition: opacity 900ms ease;
-}
-.storyPhoto[data-on="true"] {
-  opacity: 1;
-}
-.storyPhoto::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgb(22 24 38 / 0.5), rgb(22 24 38 / 0.72) 55%, var(--ground)),
-    linear-gradient(90deg, rgb(22 24 38 / 0.7), transparent 60%);
-}
-.storyImg {
-  object-fit: cover;
-  filter: url(#cs-duotone) brightness(0.85) contrast(1.05);
-  transform: scale(1.1);
-}
-@supports (animation-timeline: view()) {
-  .story {
-    view-timeline-name: --story;
-  }
-  /* About 0.8 of the scroll speed: the photo drifts against the page while the stage is pinned. */
-  .storyImg {
-    animation: photoDrift linear both;
-    animation-timeline: --story;
-  }
-}
-@keyframes photoDrift {
-  from {
-    transform: translateY(-4%) scale(1.1);
-  }
-  to {
-    transform: translateY(4%) scale(1.1);
-  }
-}
+/* ---------------------------------------------------------------- game tile textures */
 
 /* Game tiles: abstract textures in each game's own catalog accent. */
 .gameCode,
@@ -2107,16 +2003,6 @@
   }
 }
 
-/* Grain over everything: one turbulence tile, painted once and repeated. */
-.grain {
-  position: fixed;
-  z-index: 3;
-  inset: 0;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  pointer-events: none;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .gameTile:hover .texCs2 {
     transform: translate(-10px, -6px) scale(1.03);
@@ -2136,15 +2022,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wallCol,
-  .wallLive,
-  .storyImg,
   .texSvg > * {
-    animation: none !important;
+    animation: none;
   }
   .tex,
-  .texRl::before,
-  .storyPhoto {
+  .texRl::before {
     transition: none;
   }
 }
