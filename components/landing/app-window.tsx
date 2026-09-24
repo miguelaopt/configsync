@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import s from "@/app/(landing)/v2/v2.module.css";
+import s from "@/app/(landing)/landing.module.css";
 import { Odometer } from "./odometer";
 
 /**

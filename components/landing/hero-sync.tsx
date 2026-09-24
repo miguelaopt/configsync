@@ -1,7 +1,9 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
-import s from "@/app/(landing)/v2/v2.module.css";
+import { Download } from "lucide-react";
+import { SITE } from "@/lib/site";
+import s from "@/app/(landing)/landing.module.css";
 import { Crosshair, XHAIR_COLORS, XHAIR_START, type Xhair } from "./crosshair";
 import { useReducedMotion } from "./use-reduced-motion";
 
@@ -65,7 +67,7 @@ export function HeroSync({ freeGames, dock }: { freeGames: number; dock: React.R
   };
 
   return (
-    <section className={s.hero} aria-labelledby="hero-title">
+    <section className={s.hero} aria-labelledby="hero-title" data-scene="hero">
       <div className={s.frame}>
         <div aria-hidden className={s.bloom} />
         <div className={s.heroTop}>
@@ -85,14 +87,14 @@ export function HeroSync({ freeGames, dock }: { freeGames: number; dock: React.R
               <Link href="/sign-up" className={`${s.btn} ${s.btnPrimary}`}>
                 Create a free account
               </Link>
-              <a href="#product" className={`${s.btn} ${s.btnGhost}`}>
-                Try the demo
+              <a href={SITE.windowsApp} download className={`${s.btn} ${s.btnGhost}`}>
+                <Download aria-hidden className={s.icon} /> Download for Windows
               </a>
             </div>
             <ul className={s.chips} aria-label="In short">
+              <li>Windows 10 and 11</li>
               <li>Free for {freeGames} games</li>
               <li>No trackers</li>
-              <li>Export anytime</li>
             </ul>
           </div>
         </div>

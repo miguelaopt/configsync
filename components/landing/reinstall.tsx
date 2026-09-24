@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import s from "@/app/(landing)/v2/v2.module.css";
+import s from "@/app/(landing)/landing.module.css";
 import { Odometer } from "./odometer";
 import { useReducedMotion } from "./use-reduced-motion";
 
@@ -66,7 +66,13 @@ export function Reinstall() {
   const wiped = step >= 1 && step < 4;
 
   return (
-    <section id="how" className={s.story} data-static={reduced} aria-labelledby="story-title">
+    <section
+      id="how"
+      className={s.story}
+      data-static={reduced}
+      aria-labelledby="story-title"
+      data-scene="story"
+    >
       <div className={s.stage}>
         <div className={s.storyHead}>
           <h2 id="story-title" className={s.h2}>

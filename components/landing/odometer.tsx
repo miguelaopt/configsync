@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import s from "@/app/(landing)/v2/v2.module.css";
+import s from "@/app/(landing)/landing.module.css";
 
 /**
  * A value whose digits roll to their new position, like a mechanical counter. Pure CSS: each digit
