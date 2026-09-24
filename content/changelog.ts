@@ -15,9 +15,9 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
-    date: "2026-09-23",
+    date: "2026-09-24",
     version: "0.13.0",
-    title: "ConfigSync for Windows",
+    title: "ConfigSync for Windows, and a new home page",
     changes: [
       {
         kind: "new",
@@ -30,6 +30,10 @@ export const CHANGELOG: ChangelogEntry[] = [
       {
         kind: "improved",
         text: "`csync login` accepts `--json` and reads a piped token from the first line, so other tools can connect the companion without a terminal.",
+      },
+      {
+        kind: "improved",
+        text: "A new home page you can play with: edit a crosshair and watch it sync to a second PC, scroll through a reinstall being undone by one command, and click through presets, compare and history before you sign up.",
       },
     ],
   },
