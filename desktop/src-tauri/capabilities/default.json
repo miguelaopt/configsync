@@ -1,0 +1,42 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "The main window: run the csync sidecar with the JSON contract, open links.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        { "name": "binaries/csync", "sidecar": true, "args": ["status", "--json"] },
+        {
+          "name": "binaries/csync",
+          "sidecar": true,
+          "args": [
+            "apply",
+            { "validator": "^[a-z0-9-]{1,64}$" },
+            { "validator": "^[a-z0-9-]{1,80}$" },
+            "--json"
+          ]
+        },
+        {
+          "name": "binaries/csync",
+          "sidecar": true,
+          "args": ["import", { "validator": "^[a-z0-9-]{1,64}$" }, "--json"]
+        }
+      ]
+    },
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "binaries/csync",
+          "sidecar": true,
+          "args": ["login", "https://configsync.app", "--json"]
+        }
+      ]
+    },
+    "shell:allow-stdin-write"
+  ]
+}

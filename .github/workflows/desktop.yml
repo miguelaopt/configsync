@@ -1,0 +1,78 @@
+# Builds the Windows app (.msi). On a PR: download the "configsync-msi" artifact from the run's
+# summary page to try it. On main: it replaces ConfigSync.msi on the "desktop" release, which the
+# image build fetches into public/ (docker/Dockerfile) so the site serves /ConfigSync.msi.
+name: Desktop
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "desktop/**"
+      - "companion/**"
+      - "package.json" # the app's version
+      - "scripts/desktop-sidecar.mjs"
+      - ".github/workflows/desktop.yml"
+  pull_request:
+    paths:
+      - "desktop/**"
+      - "companion/**"
+      - "scripts/desktop-sidecar.mjs"
+      - ".github/workflows/desktop.yml"
+
+jobs:
+  companion:
+    name: csync.exe
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:companion
+      - uses: actions/upload-artifact@v4
+        with:
+          name: csync-windows
+          path: public/csync-windows-x64.exe
+          retention-days: 1
+
+  msi:
+    name: ConfigSync.msi
+    needs: companion
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: csync-windows
+          path: public
+      - run: node --test "desktop/test/**/*.test.js"
+      - run: pnpm desktop:build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: configsync-msi
+          path: |
+            desktop/src-tauri/target/release/bundle/msi/*.msi
+            desktop/src-tauri/Cargo.lock
+          retention-days: 14
+      - name: Publish to the desktop release
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp desktop/src-tauri/target/release/bundle/msi/*.msi ConfigSync.msi
+          gh release view desktop >/dev/null 2>&1 ||
+            gh release create desktop --latest=false --title "Windows app" --notes "Served as configsync.app/ConfigSync.msi."
+          gh release upload desktop ConfigSync.msi --clobber

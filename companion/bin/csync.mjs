@@ -17,14 +17,14 @@ import {
   walkConfigFiles,
 } from "../lib/discover.mjs";
 import { decide } from "../lib/sync.mjs";
-import { status } from "../lib/status.mjs";
+import { status, targetFor } from "../lib/status.mjs";
 import * as autostart from "../lib/autostart.mjs";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const HELP = `csync — ConfigSync companion
 
-  csync login <url>                       pair this machine with your vault (paste a token from Settings → Companion)
+  csync login <url> [--json]              pair this machine with your vault (paste a token from Settings → Companion)
   csync status [--json]                   what this PC is connected to, and the preset each game should run
   csync scan [--push]                     list installed Steam/Epic games; --push sends them to the vault
   csync import <game> [--name "…"] [--json]         read the game's config files into a new preset (game: cs2, rocket-league…)
@@ -69,12 +69,17 @@ function fail(message, code = 1) {
   process.exit(code);
 }
 
-/** Interactive prompt on a terminal; piped stdin (`echo $TOKEN | csync login …`) is read to EOF. */
+/** Interactive prompt on a terminal; piped stdin (`echo $TOKEN | csync login …`) is read by line. */
 async function askToken(url) {
   if (!stdin.isTTY) {
-    let s = "";
-    for await (const chunk of stdin) s += chunk;
-    return s.trim();
+    // First line only: the desktop app writes the token and a newline but cannot close stdin,
+    // so reading to EOF would wait forever. `echo $TOKEN | csync login …` still works.
+    const rl = createInterface({ input: stdin });
+    for await (const line of rl) {
+      rl.close();
+      return line.trim();
+    }
+    return "";
   }
   // Muted output: the token is a secret and should not land in the terminal scrollback.
   stdout.write(`Token from ${url}/settings#companion (input hidden): `);
@@ -88,11 +93,12 @@ async function askToken(url) {
 
 async function login() {
   const url = args[0];
-  if (!url) return console.error("Usage: csync login <url>");
+  if (!url) fail(`Usage: ${cli} login <url> [--json]`, 2);
   const token = await askToken(url);
-  if (!token) return console.error("No token given.");
+  if (!token) fail("No token given.", 2);
   const me = await api({ url, token }).get("/me");
   const path = saveConfig({ url, token });
+  if (flag("json")) return console.log(JSON.stringify({ email: me.user.email }, null, 2));
   console.log(`Logged in as ${me.user.email}. Saved to ${path}`);
 }
 
@@ -167,10 +173,14 @@ async function apply() {
   const json = flag("json");
   if (!presetSlug) fail(`Usage: ${cli} apply <game> <preset-slug> [--dry-run]`, 2);
   const g = await catalogGame(c, gameId);
+  // Applying this PC's own target by hand counts as applied, so `status` (and the window) can
+  // say when. Any other preset is a one-off and leaves the record alone, as before.
+  const target = flag("dry-run") ? null : await targetFor(api(c), g.id, c.device);
   if (!json) console.log(`Reading current ${g.name} files:`);
   const r = await applyPreset(c, g, presetSlug, {
     dryRun: flag("dry-run"),
     log: json ? () => {} : console.log,
+    version: target?.presetSlug === presetSlug ? target.version : undefined,
   });
   if (json)
     // Logical ids only. The window has no use for absolute paths, and they are the most

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Download } from "lucide-react";
+import { SITE } from "@/lib/site";
 import { getSession } from "@/lib/auth/session";
 import { FOUNDER, PRICES } from "@/lib/billing/public";
 import { founderCode, founderOfferEnabled } from "@/lib/env";
@@ -82,14 +84,15 @@ export default async function LandingPage() {
                   back.
                 </p>
                 <div className={s.heroActions}>
-                  <Link href="/sign-up" className={cx(s.cta, s.ctaLg)}>
+                  <a href={SITE.windowsApp} download className={cx(s.cta, s.ctaLg)}>
+                    <Download aria-hidden className={s.ctaIcon} /> Download for Windows
+                  </a>
+                  <Link href="/sign-up" className={s.ghost}>
                     Create a free account
-                  </Link>
-                  <Link href="/sign-in" className={s.ghost}>
-                    Sign in
                   </Link>
                 </div>
                 <p className={s.heroNotes}>
+                  <span>Windows 10 and 11</span>
                   <span>Free for three games</span>
                   <span>No trackers</span>
                   <span>Export any time</span>
