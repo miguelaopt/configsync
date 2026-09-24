@@ -15,6 +15,21 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-09-24",
+    version: "0.14.0",
+    title: "A new home page",
+    changes: [
+      {
+        kind: "improved",
+        text: "The home page was redrawn around what ConfigSync actually does: your preset, written into the game's own config file on each PC, with a backup first and never while the game is running. Click through the presets to see which lines of the file each one changes.",
+      },
+      {
+        kind: "fixed",
+        text: "The home page no longer calls the Windows app “coming soon”. It is out, and the page now shows what it does.",
+      },
+    ],
+  },
+  {
     date: "2026-09-23",
     version: "0.13.0",
     title: "ConfigSync for Windows",
