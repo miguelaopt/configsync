@@ -5,6 +5,28 @@ import s from "@/app/(landing)/landing.module.css";
 import { Crosshair, XHAIR_COLORS, XHAIR_START, type Xhair } from "./crosshair";
 import { useReducedMotion } from "./use-reduced-motion";
 
+/** The crosshair win-01 is editing, for the lines of the config wall that show it. */
+const LiveXhair = React.createContext<Xhair>(XHAIR_START);
+
+/** Wall lines that mirror the crosshair editor, by convar. */
+const LIVE: Record<string, (x: Xhair) => string> = {
+  cl_crosshairsize: (x) => x.size.toFixed(1),
+  cl_crosshairgap: (x) => x.gap.toFixed(1),
+  cl_crosshairthickness: (x) => x.thickness.toFixed(1),
+  cl_crosshairdot: (x) => String(x.dot),
+};
+
+/** One line of the config wall that follows the editor: it glows and takes the new value. */
+export function LiveLine({ k }: { k: string }) {
+  const x = React.useContext(LiveXhair);
+  const v = LIVE[k]?.(x) ?? "";
+  // Glow only once the visitor has changed something, not on the first paint.
+  const [first] = React.useState(v);
+  const [touched, setTouched] = React.useState(false);
+  if (v !== first && !touched) setTouched(true);
+  return <span key={v} className={touched ? s.wallLive : undefined} data-l={`"${k}"  "${v}"`} />;
+}
+
 /** How long a change takes to travel the connector between the two machines. */
 const TRAVEL = 360;
 
@@ -16,7 +38,16 @@ const half = (v: number) => Math.round(v * 2) / 2;
  * pulse, and thinkpad-x1 takes the value when the pulse lands. While a pulse is in flight, newer
  * edits wait and go out as the next pulse, so a fast drag still ends on the exact last value.
  */
-export function HeroSync({ freeGames, dock }: { freeGames: number; dock: React.ReactNode }) {
+export function HeroSync({
+  freeGames,
+  dock,
+  wall,
+}: {
+  freeGames: number;
+  dock: React.ReactNode;
+  /** The v3 config wall; rendered behind the frame's content, fed the live crosshair. */
+  wall?: React.ReactNode;
+}) {
   const reduced = useReducedMotion();
   const [local, setLocal] = React.useState<Xhair>(XHAIR_START);
   const [remote, setRemote] = React.useState<Xhair>(XHAIR_START);
@@ -47,6 +78,16 @@ export function HeroSync({ freeGames, dock }: { freeGames: number; dock: React.R
 
   const synced = local === remote;
 
+  // The wall's drift runs only while the hero is on screen.
+  const frameRef = React.useRef<HTMLDivElement>(null);
+  const [onScreen, setOnScreen] = React.useState(true);
+  React.useEffect(() => {
+    if (!wall || !frameRef.current) return;
+    const io = new IntersectionObserver(([e]) => setOnScreen(e!.isIntersecting));
+    io.observe(frameRef.current);
+    return () => io.disconnect();
+  }, [wall]);
+
   // Drag on win-01's screen: sideways for the gap, up and down for the length.
   const drag = React.useRef<{ x: number; y: number; from: Xhair } | null>(null);
   const onDown = (e: React.PointerEvent) => {
@@ -66,8 +107,9 @@ export function HeroSync({ freeGames, dock }: { freeGames: number; dock: React.R
 
   return (
     <section className={s.hero} aria-labelledby="hero-title" data-scene="hero">
-      <div className={s.frame}>
+      <div ref={frameRef} className={s.frame} data-paused={!onScreen}>
         <div aria-hidden className={s.bloom} />
+        {wall ? <LiveXhair.Provider value={local}>{wall}</LiveXhair.Provider> : null}
         <div className={s.heroTop}>
           <h1 id="hero-title" className={s.h1}>
             <span className={s.sr}>Stop rebuilding your setup.</span>
