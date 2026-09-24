@@ -7,6 +7,7 @@ import {
   ArrowUp,
   ChevronDown,
   Copy,
+  Info,
   ListChecks,
   MoreHorizontal,
   Pencil,
@@ -18,6 +19,7 @@ import {
 } from "lucide-react";
 import type { Game, Preset, Setting, UserPreferences } from "@/lib/db/schema";
 import type { CategoryWithSettings } from "@/lib/data/presets";
+import type { SettingFileInfo } from "@/lib/catalog";
 import {
   deleteCategoryAction,
   deleteSettingAction,
@@ -56,6 +58,7 @@ import {
 import { SettingControl, isWideControl } from "./setting-control";
 import { SettingDialog } from "./setting-dialog";
 import { CategoryDialog } from "./category-dialog";
+import { SettingDetails } from "./setting-details";
 import { plural } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 
@@ -64,6 +67,8 @@ type Props = {
   preset: Preset;
   categories: CategoryWithSettings[];
   preferences: UserPreferences;
+  /** Setting name → where a catalog game keeps it on disk; null for games outside the catalog. */
+  files?: Record<string, SettingFileInfo> | null;
 };
 
 type Drafts = Record<string, SettingValue | null>;
@@ -82,7 +87,7 @@ const settingToDoc = (s: Setting, value?: SettingValue | null) => ({
   defaultValue: (s.defaultValue as SettingValue | null) ?? null,
 });
 
-export function PresetEditor({ game, preset, categories, preferences }: Props) {
+export function PresetEditor({ game, preset, categories, preferences, files = null }: Props) {
   const router = useRouter();
   const copyFormat = preferences.copyFormat ?? "plain";
   const [drafts, setDrafts] = React.useState<Drafts>({});
@@ -360,6 +365,8 @@ export function PresetEditor({ game, preset, categories, preferences }: Props) {
                 selectMode={selectMode}
                 selected={selected}
                 toggleSelected={toggleSelected}
+                files={files}
+                catalogGame={Boolean(game.catalogId)}
                 onMove={(dir) =>
                   move(categories, category.id, dir, (ids) =>
                     reorderCategoriesAction(preset.id, ids),
@@ -431,6 +438,8 @@ type SectionProps = {
   selectMode: boolean;
   selected: Set<string>;
   toggleSelected: (id: string) => void;
+  files: Record<string, SettingFileInfo> | null;
+  catalogGame: boolean;
   onMove: (dir: -1 | 1) => void;
   onMoveSetting: (id: string, dir: -1 | 1) => void;
 };
@@ -448,6 +457,8 @@ function CategorySection({
   selectMode,
   selected,
   toggleSelected,
+  files,
+  catalogGame,
   onMove,
   onMoveSetting,
 }: SectionProps) {
@@ -600,6 +611,9 @@ function CategorySection({
                 selectMode={selectMode}
                 checked={selected.has(setting.id)}
                 onToggleSelected={() => toggleSelected(setting.id)}
+                category={category.name}
+                file={files?.[setting.name] ?? null}
+                catalogGame={catalogGame}
                 canMoveUp={i > 0}
                 canMoveDown={i < category.settings.length - 1}
                 onMove={(dir) => onMoveSetting(setting.id, dir)}
@@ -665,6 +679,9 @@ type RowProps = {
   selectMode: boolean;
   checked: boolean;
   onToggleSelected: () => void;
+  category: string;
+  file: SettingFileInfo | null;
+  catalogGame: boolean;
   canMoveUp: boolean;
   canMoveDown: boolean;
   onMove: (dir: -1 | 1) => void;
@@ -680,12 +697,16 @@ function SettingRow({
   selectMode,
   checked,
   onToggleSelected,
+  category,
+  file,
+  catalogGame,
   canMoveUp,
   canMoveDown,
   onMove,
 }: RowProps) {
   const router = useRouter();
   const [editing, setEditing] = React.useState(false);
+  const [details, setDetails] = React.useState(false);
   const [confirmDelete, setConfirmDelete] = React.useState(false);
   const controlId = `setting-${setting.id}-control`;
   const wide = isWideControl(setting.type);
@@ -720,14 +741,26 @@ function SettingRow({
           />
         ) : null}
         <div className={cn("min-w-0 flex-1")}>
-          <label htmlFor={controlId} className="flex items-center gap-1.5 text-[14px] text-ink">
-            <span className="truncate">{setting.name}</span>
+          <div className="flex items-center gap-1.5 text-[14px] text-ink">
+            {selectMode ? (
+              <span className="truncate">{setting.name}</span>
+            ) : (
+              // The control carries its own aria-label; the name opens the details.
+              <button
+                type="button"
+                onClick={() => setDetails(true)}
+                className="cursor-pointer truncate rounded-sm text-left underline-offset-4 hover:underline"
+                aria-label={`Details for ${setting.name}`}
+              >
+                {setting.name}
+              </button>
+            )}
             {dirty ? (
               <span className="inline-flex items-center gap-1 text-[11px] text-accent">
                 <span className="size-1.5 rounded-full bg-accent" aria-hidden /> edited
               </span>
             ) : null}
-          </label>
+          </div>
           {setting.description ? (
             <p className="truncate text-xs text-ink-3">{setting.description}</p>
           ) : null}
@@ -769,6 +802,9 @@ function SettingRow({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onSelect={() => setDetails(true)}>
+                <Info /> Details
+              </DropdownMenuItem>
               <DropdownMenuItem onSelect={() => setEditing(true)}>
                 <Pencil /> Edit…
               </DropdownMenuItem>
@@ -808,6 +844,18 @@ function SettingRow({
         ) : null}
       </div>
       {setting.notes ? <p className="-mt-1 pb-2 pl-3 text-xs text-ink-3">{setting.notes}</p> : null}
+      <SettingDetails
+        open={details}
+        onOpenChange={setDetails}
+        setting={setting}
+        value={value}
+        category={category}
+        file={file}
+        catalogGame={catalogGame}
+        onReset={onChange}
+        onEdit={() => setEditing(true)}
+        onCopy={() => copyOne(copyFormat)}
+      />
       <SettingDialog
         open={editing}
         onOpenChange={setEditing}

@@ -3,10 +3,9 @@
 A guided tour for the person who has to run, test and ship this thing. It complements the
 reference docs in `docs/` (linked where they go deeper) and is written for a fresh machine.
 
-Status as of 2026-09-19: `main` has the foundation, auto-switch and public profiles. Two PRs
-are open and stacked: **#5** AI screenshot importer (`feat/ai-screenshot-importer`) and **#6**
-per-PC presets (`feat/multi-pc-sync`, on top of #5). Everything below describes the code with
-both merged.
+> **Historical (written 2026-09-19, around PRs #5–#6).** The feature tour and the test matrix
+> below still hold; the release state, deploy details and what is left do not. For those read
+> `PROJECT_STATE.md` (what is live) and `TODO.md` (what is next).
 
 ---
 

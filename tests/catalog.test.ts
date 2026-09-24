@@ -4,6 +4,7 @@ import {
   catalogToExportFile,
   catalogToGameDoc,
   getCatalogGame,
+  settingFiles,
   type CatalogGame,
 } from "@/lib/catalog";
 import { exportFileSchema } from "@/lib/import-export/schema";
@@ -114,5 +115,30 @@ describe("presetFingerprint", () => {
   });
   it("every catalog game declares processNames", () => {
     for (const g of CATALOG) expect(g.processNames.length).toBeGreaterThan(0);
+  });
+});
+
+describe("settingFiles", () => {
+  const cs2 = settingFiles("cs2");
+
+  it("names the file and key of a plain setting", () => {
+    expect(cs2["Mouse Sensitivity"]).toEqual({
+      file: "cs2_user_convars_0_slot0.vcfg",
+      keys: ["sensitivity"],
+      bind: false,
+    });
+  });
+
+  it("lists both keys of a resolution and every key a choice can write", () => {
+    expect(cs2["Resolution"]?.keys).toEqual(["setting.defaultres", "setting.defaultresheight"]);
+    expect(cs2["Display Mode"]?.keys).toEqual(["setting.fullscreen", "setting.nowindowborder"]);
+  });
+
+  it("marks key binds", () => {
+    expect(cs2["Move Forward"]).toMatchObject({ file: "cs2_user_keys_0_slot0.vcfg", bind: true });
+  });
+
+  it("is empty for a game outside the catalog", () => {
+    expect(settingFiles("not-a-game")).toEqual({});
   });
 });
