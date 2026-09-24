@@ -16,6 +16,21 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-24",
+    version: "0.13.1",
+    title: "Account first, then the Windows app",
+    changes: [
+      {
+        kind: "improved",
+        text: "The Windows app now downloads from your dashboard and Settings, next to the token it asks for on first launch. The home page shows what it does and starts you with an account.",
+      },
+      {
+        kind: "fixed",
+        text: "The sign-in and sign-up pages show their artwork again, and it loads faster.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-24",
     version: "0.13.0",
     title: "ConfigSync for Windows, and a new home page",
     changes: [

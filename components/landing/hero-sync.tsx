@@ -1,8 +1,6 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
-import { Download } from "lucide-react";
-import { SITE } from "@/lib/site";
 import s from "@/app/(landing)/landing.module.css";
 import { Crosshair, XHAIR_COLORS, XHAIR_START, type Xhair } from "./crosshair";
 import { useReducedMotion } from "./use-reduced-motion";
@@ -87,8 +85,8 @@ export function HeroSync({ freeGames, dock }: { freeGames: number; dock: React.R
               <Link href="/sign-up" className={`${s.btn} ${s.btnPrimary}`}>
                 Create a free account
               </Link>
-              <a href={SITE.windowsApp} download className={`${s.btn} ${s.btnGhost}`}>
-                <Download aria-hidden className={s.icon} /> Download for Windows
+              <a href="#product" className={`${s.btn} ${s.btnGhost}`}>
+                Try the demo
               </a>
             </div>
             <ul className={s.chips} aria-label="In short">

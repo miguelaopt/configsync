@@ -10,12 +10,13 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
       <aside className="relative hidden overflow-hidden bg-[#0c0d14] lg:block">
+        {/* A pre-sized WebP (80 KB), served as is: the production image has no sharp, and the
+            optimizer hung on this 4 MB PNG once its cache was empty, leaving the panel blank. */}
         <Image
-          src="/brand/auth-backdrop.png"
+          src="/brand/auth-backdrop.webp"
           alt=""
           fill
-          sizes="50vw"
-          quality={90}
+          unoptimized
           loading="eager"
           className="object-cover"
         />

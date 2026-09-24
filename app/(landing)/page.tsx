@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Archivo } from "next/font/google";
-import { ArrowUpRight, Download } from "lucide-react";
-import { SITE } from "@/lib/site";
+import { ArrowUpRight } from "lucide-react";
 import { getSession } from "@/lib/auth/session";
 import { CATALOG, getCatalogGame } from "@/lib/catalog";
 import { CHANGELOG } from "@/content/changelog";
@@ -116,11 +115,11 @@ export default async function LandingPage() {
               backups, same rule: nothing is written while the game is running.
             </p>
             <div className={s.winActions}>
-              <a href={SITE.windowsApp} download className={`${s.btn} ${s.btnPrimary}`}>
-                <Download aria-hidden className={s.icon} /> Download for Windows
-              </a>
+              <Link href="/sign-up" className={`${s.btn} ${s.btnPrimary}`}>
+                Create a free account
+              </Link>
               <span className={`${s.mono} ${s.dim} ${s.fileMeta}`}>
-                ConfigSync.msi · Windows 10 and 11
+                Download it from your dashboard after you sign up
               </span>
             </div>
           </div>
@@ -240,9 +239,7 @@ export default async function LandingPage() {
         <section id="pricing" className={s.section} data-scene="pricing">
           <div className={s.priceHead}>
             <h2 className={s.h2}>Free does the job. Pro does it for you.</h2>
-            <a href={SITE.windowsApp} download className={s.badge}>
-              <Download aria-hidden className={s.badgeIcon} /> Windows app, on both plans
-            </a>
+            <span className={s.badge}>Windows app included on both plans</span>
           </div>
           <div className={s.plans}>
             <div className={s.plan}>
@@ -308,9 +305,6 @@ export default async function LandingPage() {
             <Link href="/sign-up" className={`${s.btn} ${s.btnPrimary} ${s.btnLg}`}>
               Create a free account
             </Link>
-            <a href={SITE.windowsApp} download className={`${s.btn} ${s.btnGhost} ${s.btnLg}`}>
-              <Download aria-hidden className={s.icon} /> Download for Windows
-            </a>
           </div>
         </section>
       </main>
