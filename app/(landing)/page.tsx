@@ -19,6 +19,7 @@ import { HeroSync } from "@/components/landing/hero-sync";
 import { Reinstall } from "@/components/landing/reinstall";
 import { AppWindow } from "@/components/landing/app-window";
 import { Scenes } from "@/components/landing/scenes";
+import { GameTexture } from "@/components/landing/game-texture";
 import s from "./landing.module.css";
 
 /** Wide display face for headlines only; everything else stays Geist / Geist Mono. */
@@ -43,6 +44,8 @@ function fileBacked(id: string) {
   return {
     settings: settings.filter((x) => x.source?.file).length,
     files: g?.files.length ?? 0,
+    /** The game's own accent from the catalog, as its pages use it. */
+    accent: g?.accentColor ?? "#9184d9",
   };
 }
 
@@ -176,7 +179,12 @@ export default async function LandingPage() {
         <section id="games" className={s.section} data-scene="games">
           <h2 className={s.h2}>Two real menus. Room for any game.</h2>
           <div className={s.games}>
-            <Link href="/for/cs2" className={s.gameTile}>
+            <Link
+              href="/for/cs2"
+              className={s.gameTile}
+              style={{ "--game": cs2.accent } as React.CSSProperties}
+            >
+              <GameTexture game="cs2" />
               <span className={s.gameCode}>CS2</span>
               <span className={s.gameFoot}>
                 <span className={s.gameName}>Counter-Strike 2</span>
@@ -189,7 +197,12 @@ export default async function LandingPage() {
               </span>
               <ArrowUpRight aria-hidden className={s.gameArrow} />
             </Link>
-            <Link href="/for/rocket-league" className={s.gameTile}>
+            <Link
+              href="/for/rocket-league"
+              className={s.gameTile}
+              style={{ "--game": rl.accent } as React.CSSProperties}
+            >
+              <GameTexture game="rl" />
               <span className={s.gameCode}>RL</span>
               <span className={s.gameFoot}>
                 <span className={s.gameName}>Rocket League</span>
@@ -203,6 +216,7 @@ export default async function LandingPage() {
               <ArrowUpRight aria-hidden className={s.gameArrow} />
             </Link>
             <Link href="/sign-up" className={`${s.gameTile} ${s.gameAny}`}>
+              <GameTexture game="any" />
               <span className={s.gameAnyCode}>+ Any game</span>
               <span className={s.gameAnyText}>
                 Add it, name the settings you care about, keep presets and history the same way.
