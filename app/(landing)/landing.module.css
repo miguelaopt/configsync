@@ -209,10 +209,6 @@
   border-radius: 10px;
   font-size: 13.5px;
 }
-.icon {
-  width: 16px;
-  height: 16px;
-}
 .btnLg {
   height: 56px;
   padding: 0 30px;
@@ -1934,9 +1930,4 @@
   .swatch {
     transition: none;
   }
-}
-
-.badgeIcon {
-  width: 13px;
-  height: 13px;
 }
