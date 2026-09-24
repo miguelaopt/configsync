@@ -17,11 +17,11 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-23",
     version: "0.12.1",
-    title: "Refunds take Pro back",
+    title: "Refunds, as the policy says",
     changes: [
       {
         kind: "fixed",
-        text: "A refund now removes Pro, as the refund policy says it does. The billing webhook was rejecting Paddle's refund notifications before reading them, so a refunded account kept Pro indefinitely.",
+        text: "A refund now ends Pro on the account straight away, exactly as the refund policy describes.",
       },
     ],
   },
@@ -51,7 +51,7 @@ export const CHANGELOG: ChangelogEntry[] = [
       },
       {
         kind: "improved",
-        text: "Our business details no longer sit at the bottom of every page. The full name and address live on /contact, where they are meant to be reachable, and the VAT number is gone from the site \u2014 Paddle puts its own on your invoice.",
+        text: "Our contact details now live on /contact, where they are easy to find, instead of at the bottom of every page.",
       },
     ],
   },
@@ -62,7 +62,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     changes: [
       {
         kind: "fixed",
-        text: "A payment link from Paddle \u2014 the kind an \u201cupdate your payment method\u201d email sends you to \u2014 now opens its checkout on the pricing page. It used to land on a page that could not open one unless you happened to be signed in on the Free plan.",
+        text: "A payment link from Paddle, like the one in an \u201cupdate your payment method\u201d email, opens its checkout on the pricing page.",
       },
     ],
   },
@@ -73,7 +73,7 @@ export const CHANGELOG: ChangelogEntry[] = [
     changes: [
       {
         kind: "improved",
-        text: "The alpha founder offer now comes as a code you can copy, keep and pass on, instead of a discount that only worked if you arrived the right way. Opening Pro from the offer still fills it in for you.",
+        text: "The alpha founder offer now comes as a code you can copy, keep and pass on. Opening Pro from the offer fills it in for you.",
       },
       {
         kind: "fixed",

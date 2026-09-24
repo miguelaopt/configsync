@@ -103,6 +103,11 @@ in the changelog entry (`csync 0.2.0`).
 
 Nothing to write for refactors, tests, docs or CI-only changes.
 
+The changelog is public. Say what the user can now do, never how it was broken: no internal
+causes (webhooks, rejected requests), no security or billing flaws, nothing about business or tax
+details (VAT, addresses). A fix reads as the behaviour that now holds, e.g. "A refund now ends Pro
+on the account".
+
 ## Commands
 
 ```bash
