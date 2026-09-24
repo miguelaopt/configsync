@@ -73,7 +73,11 @@
 }
 /* Hero: a lavender wash off the top edge. */
 .scene[data-name="hero"] {
-  background: radial-gradient(ellipse 70% 55% at 50% -10%, rgb(145 132 217 / 0.28), transparent 70%);
+  background: radial-gradient(
+    ellipse 70% 55% at 50% -10%,
+    rgb(145 132 217 / 0.28),
+    transparent 70%
+  );
 }
 /* The reinstall: the room goes dark, one cold band of light and faint scanlines, like a screen. */
 .scene[data-name="story"] {
