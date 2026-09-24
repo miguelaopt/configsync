@@ -24,6 +24,9 @@ ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
 # binaries they are built from are downloaded once and kept in the build cache.
 RUN apk add --no-cache tar xz unzip
 RUN --mount=type=cache,target=/app/.cache pnpm build:companion
+# The Windows app is built on a Windows runner (.github/workflows/desktop.yml) and published to the
+# "desktop" release; the build fails loudly if it is missing rather than shipping a dead link.
+ADD --chmod=644 https://github.com/miguelaopt/configsync/releases/download/desktop/ConfigSync.msi public/ConfigSync.msi
 RUN pnpm build
 
 FROM node:22-alpine AS runner

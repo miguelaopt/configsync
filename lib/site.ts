@@ -6,4 +6,6 @@ export const SITE = {
   url: process.env.NEXT_PUBLIC_APP_URL || "https://configsync.app",
   /** From package.json at build time (next.config.ts). Bump it there, with a changelog entry. */
   version: process.env.NEXT_PUBLIC_APP_VERSION ?? "0.0.0",
+  /** The Windows app installer, fetched into public/ at image build (docker/Dockerfile). */
+  windowsApp: "/ConfigSync.msi",
 };

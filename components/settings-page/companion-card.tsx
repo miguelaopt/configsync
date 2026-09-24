@@ -11,7 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ConfirmDialog } from "@/components/ui/alert-dialog";
-import { Copy } from "lucide-react";
+import { Copy, Download } from "lucide-react";
+import { SITE } from "@/lib/site";
 import { copyWithToast } from "@/lib/copy/use-copy";
 import { plural, timeAgo } from "@/lib/utils/format";
 
@@ -79,16 +80,26 @@ export function CompanionCard({
         <p className="text-ink">
           Install the companion on your gaming PC — nothing else to install.
         </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button asChild variant="primary" size="lg">
+            <a href={SITE.windowsApp} download>
+              <Download /> Download for Windows
+            </a>
+          </Button>
+          <span className="text-ink-3">
+            The app: install it, paste a token from below, done. Windows may warn about an unknown
+            app the first time: More info → Run anyway.
+          </span>
+        </div>
         <Install
-          title="Windows"
+          title="Windows, from the command line"
           steps={[
             <>
               Download{" "}
               <a href="/csync-windows-x64.exe" className="text-accent-text hover:text-ink" download>
                 csync.exe
               </a>{" "}
-              and put it somewhere it can stay, e.g. <Mono>C:\Tools\csync.exe</Mono>. Windows may
-              warn about an unknown app the first time: More info → Run anyway.
+              and put it somewhere it can stay, e.g. <Mono>C:\Tools\csync.exe</Mono>.
             </>,
             <>
               Open PowerShell in that folder and run the commands below (use{" "}

@@ -1,0 +1,118 @@
+/* The app's palette, from app/globals.css. Dark only, like the web app. */
+:root {
+  --ground: #161826;
+  --surface: #1c1f30;
+  --line: #2a2d42;
+  --ink: #e9e9ed;
+  --ink-2: #a9aac0;
+  --ink-3: #8f93ab;
+  --accent: #9184d9;
+  --accent-ink: #f2f0ff;
+  --accent-text: #b7a6ff;
+  --good: #4ade80;
+  --bad: #f2736a;
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font:
+    14px/1.45 system-ui,
+    "Segoe UI",
+    sans-serif;
+}
+main {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+header.panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+h1 {
+  font-size: 15px;
+  margin: 0;
+}
+.muted {
+  color: var(--ink-3);
+}
+.pill {
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+}
+.pill.pro {
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+.game {
+  display: grid;
+  gap: 4px;
+}
+.game.dim {
+  opacity: 0.5;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.actions {
+  display: flex;
+  gap: 6px;
+}
+button {
+  font: inherit;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+input {
+  font: inherit;
+  width: 100%;
+  color: var(--ink);
+  background: var(--ground);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.result.ok {
+  color: var(--good);
+}
+.result.bad {
+  color: var(--bad);
+}
+.stack {
+  display: grid;
+  gap: 10px;
+}
+.result:empty {
+  display: none;
+}

@@ -46,6 +46,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm check
       - run: node --test "companion/test/**/*.test.mjs"
+      - run: node --test "desktop/test/**/*.test.js"
       - run: pnpm build
       - run: pnpm db:migrate
       - run: pnpm exec playwright install --with-deps chromium

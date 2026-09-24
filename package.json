@@ -1,6 +1,6 @@
 {
   "name": "configsync",
-  "version": "0.12.2",
+  "version": "0.13.0",
   "private": true,
   "description": "Your game settings. One place. Save, organize, compare, copy and export settings for any game.",
   "license": "FSL-1.1-MIT",
@@ -26,7 +26,10 @@
     "db:studio": "drizzle-kit studio",
     "check": "pnpm typecheck && pnpm lint && pnpm test",
     "csync": "node companion/bin/csync.mjs",
-    "build:companion": "node scripts/build-companion.mjs"
+    "build:companion": "node scripts/build-companion.mjs",
+    "desktop:sidecar": "node scripts/desktop-sidecar.mjs",
+    "desktop:dev": "node scripts/desktop-sidecar.mjs && cd desktop && pnpm dlx @tauri-apps/cli@2 dev",
+    "desktop:build": "node scripts/desktop-sidecar.mjs && cd desktop && pnpm dlx @tauri-apps/cli@2 build"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.126.0",

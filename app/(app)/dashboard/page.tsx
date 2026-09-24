@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DiscoverPanel, Panel, SyncPill } from "@/components/dashboard/panels";
 import { EmptyVault } from "@/components/dashboard/empty-vault";
+import { WindowsAppCard } from "@/components/app/windows-app";
 import { plural, timeAgo } from "@/lib/utils/format";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -103,7 +104,10 @@ export default async function DashboardPage() {
       </div>
 
       {empty ? (
-        <EmptyVault catalog={catalog} owned={owned} />
+        <>
+          <EmptyVault catalog={catalog} owned={owned} />
+          <WindowsAppCard className="mt-5 max-w-md" />
+        </>
       ) : (
         <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_336px]">
           {/* Main column */}
@@ -323,6 +327,7 @@ export default async function DashboardPage() {
 
           {/* Rail */}
           <aside className="flex min-w-0 flex-col gap-5">
+            <WindowsAppCard />
             <DiscoverPanel
               items={[
                 {
