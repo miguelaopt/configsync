@@ -921,7 +921,25 @@
     {
       "category": "Stream Safe",
       "name": "Anonymize My Name To Others",
-      "type": "text",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Off",
+          "value": "Off"
+        },
+        {
+          "label": "Teammates Only",
+          "value": "Teammates Only"
+        },
+        {
+          "label": "Opponents Only",
+          "value": "Opponents Only"
+        },
+        {
+          "label": "Everyone",
+          "value": "Everyone"
+        }
+      ],
       "aliases": ["Streamer Mode - Username Anonymization"]
     },
     {
@@ -1485,7 +1503,25 @@
     {
       "category": "Gameplay",
       "name": "Suppressed Honor Duel Notifications",
-      "type": "text"
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "Challenges",
+          "value": "Challenges"
+        },
+        {
+          "label": "Spectate",
+          "value": "Spectate"
+        },
+        {
+          "label": "All",
+          "value": "All"
+        }
+      ]
     },
     {
       "category": "Camera",
@@ -1574,7 +1610,25 @@
     {
       "category": "Controls",
       "name": "Control Presets",
-      "type": "text"
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Standard",
+          "value": "Standard"
+        },
+        {
+          "label": "Legacy",
+          "value": "Legacy"
+        },
+        {
+          "label": "Modern",
+          "value": "Modern"
+        },
+        {
+          "label": "Custom",
+          "value": "Custom"
+        }
+      ]
     },
     {
       "category": "Gameplay",
