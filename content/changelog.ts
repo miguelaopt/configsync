@@ -16,6 +16,21 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-25",
+    version: "0.14.2",
+    title: "Rocket League's whole menu from screenshots",
+    changes: [
+      {
+        kind: "improved",
+        text: "Import from screenshot knows Rocket League's full settings menu: gameplay, interface, chat, training and every key binding arrive with their real choices and ranges, filed under the menu's own sections, and renamed labels such as FOV still land on the setting you have.",
+      },
+      {
+        kind: "fixed",
+        text: "A new Rocket League game offers the choices the game really has for Render Quality, Texture Detail, World Detail, Effect Intensity and Controller Vibration, and the full ranges for the deadzones and vibration intensity.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-25",
     version: "0.14.1",
     title: "A whole settings menu from screenshots",
     changes: [

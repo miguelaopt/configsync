@@ -50,6 +50,7 @@ export const catalogMenuSettingSchema = z.object({
   options: settingDocSchema.shape.options,
   min: settingDocSchema.shape.min,
   max: settingDocSchema.shape.max,
+  step: settingDocSchema.shape.step,
   unit: settingDocSchema.shape.unit,
   aliases: aliasesSchema,
 });

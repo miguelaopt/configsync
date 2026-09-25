@@ -84,17 +84,34 @@ describe("catalog", () => {
     expect(doc.presets[0]!.categories[0]!.settings[0]).not.toHaveProperty("aliases");
     expect(exportFileSchema.safeParse(buildExportFile([doc], "game")).success).toBe(true);
   });
-  it("cs2's menu names settings the preset lacks, once each, never a preset setting again", () => {
-    const cs2 = getCatalogGame("cs2")!;
-    const norm = (n: string) => n.toLowerCase().replace(/[^a-z0-9]+/g, "");
-    const preset = cs2.presets[0]!.categories.flatMap((c) => c.settings);
-    const presetNames = new Set(preset.flatMap((s) => [s.name, ...(s.aliases ?? [])]).map(norm));
-    const menuNames = cs2.menu.flatMap((m) => [m.name, ...(m.aliases ?? [])]).map(norm);
-    expect(cs2.menu.length).toBeGreaterThan(100);
-    expect(menuNames.filter((n) => presetNames.has(n))).toEqual([]);
-    expect(new Set(menuNames).size).toBe(menuNames.length);
-    expect(preset.find((s) => s.name === "Wait for Vertical Sync")!.aliases).toContain("V-Sync");
-    expect(cs2.menu.find((m) => m.name === "Display")).toMatchObject({ category: "Video" });
+  it.each(["cs2", "rocket-league"])(
+    "%s's menu names settings the preset lacks, once per category, never a preset setting again",
+    (id) => {
+      const game = getCatalogGame(id)!;
+      const norm = (n: string) => n.toLowerCase().replace(/[^a-z0-9]+/g, "");
+      const preset = game.presets[0]!.categories.flatMap((c) => c.settings);
+      const presetNames = new Set(preset.flatMap((s) => [s.name, ...(s.aliases ?? [])]).map(norm));
+      const menuNames = game.menu.flatMap((m) =>
+        [m.name, ...(m.aliases ?? [])].map((n) => `${norm(m.category)}/${norm(n)}`),
+      );
+      expect(game.menu.length).toBeGreaterThan(100);
+      expect(menuNames.filter((n) => presetNames.has(n.split("/")[1]!))).toEqual([]);
+      expect(new Set(menuNames).size).toBe(menuNames.length);
+    },
+  );
+  it("records the other names settings go by", () => {
+    const names = (id: string) =>
+      new Map(
+        getCatalogGame(id)!
+          .presets[0]!.categories.flatMap((c) => c.settings)
+          .map((s) => [s.name, s.aliases ?? []]),
+      );
+    expect(names("cs2").get("Wait for Vertical Sync")).toContain("V-Sync");
+    expect(names("rocket-league").get("Field of View")).toContain("FOV");
+    expect(names("rocket-league").get("Game Music Volume")).toContain("Music - Gameplay");
+    expect(getCatalogGame("cs2")!.menu.find((m) => m.name === "Display")).toMatchObject({
+      category: "Video",
+    });
   });
   it("cs2 maps resolution, display mode and a keybind", () => {
     const cs2 = getCatalogGame("cs2")!;
