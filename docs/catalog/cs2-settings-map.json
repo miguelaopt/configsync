@@ -1,0 +1,4600 @@
+{
+  "source": {
+    "repo": "SteamTracking/GameTracking-CS2",
+    "commit": "3fc98e763328f7d1627405b389d1b6b69c5b0e38"
+  },
+  "mappings": [
+    {
+      "name": "Brightness",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "r_fullscreen_gamma"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 1,
+        "max": 4,
+        "stored": "inverted"
+      },
+      "evidence": [
+        "settings_video.xml:75: \"Brightness\" (Video › Video)",
+        "convar \"r_fullscreen_gamma\"",
+        "dump: r_fullscreen_gamma 2.2 (archive snapshot_ignored)",
+        "present in your cs2_machine_convars.vcfg"
+      ],
+      "todo": "Inverted slider: confirm how the on-screen value maps to the stored one."
+    },
+    {
+      "name": "Color Mode",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "unknown",
+      "evidence": [],
+      "todo": "Not in the game's current settings layouts: gone from the menu, or set somewhere else."
+    },
+    {
+      "name": "Display Mode",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video"
+      },
+      "valueType": "enum",
+      "values": {
+        "Windowed": "0",
+        "Fullscreen": "1",
+        "Fullscreen Windowed": "2"
+      },
+      "evidence": [
+        "settings_video.xml:44: \"Display Mode\" (Video › Video)",
+        "no convar in the layout; handled by CSGODisplayModeSelectionChanged()",
+        "catalog maps it by hand; nothing in the layout to compare its values with"
+      ]
+    },
+    {
+      "name": "Aspect Ratio",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.aspectratiomode"
+      },
+      "valueType": "enum",
+      "values": {
+        "Normal 4:3": "0",
+        "Widescreen 16:9": "1",
+        "Widescreen 16:10": "2"
+      },
+      "evidence": [
+        "settings_video.xml:53: \"Aspect Ratio\" (Video › Video)",
+        "no convar in the layout; handled by CSGOAspectRatioSelectionChanged()",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Resolution",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": true,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video"
+      },
+      "valueType": "enum",
+      "values": {
+        "": "0"
+      },
+      "evidence": [
+        "settings_video.xml:62: \"Resolution\" (Video › Video)",
+        "no convar in the layout; handled by CSGOResolutionSelectionChanged()",
+        "catalog maps it by hand; nothing in the layout to compare its values with"
+      ]
+    },
+    {
+      "name": "Refresh Rate",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": true,
+      "status": "manual",
+      "classification": "video_config",
+      "valueType": "enum",
+      "values": {
+        "": "0"
+      },
+      "evidence": [
+        "settings_video.xml:69: \"Refresh Rate\" (Video › Video)",
+        "no convar in the layout; handled by CSGOResolutionSelectionChanged()"
+      ],
+      "todo": "The game sets this in code: find the key with csync discover (the values above are what it stores)."
+    },
+    {
+      "name": "Laptop Power Savings",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": true,
+      "status": "manual",
+      "classification": "unknown",
+      "evidence": [],
+      "todo": "Not in the game's current settings layouts: gone from the menu, or set somewhere else."
+    },
+    {
+      "name": "NVIDIA Reflex Low Latency",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": true,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.r_low_latency"
+      },
+      "valueType": "enum",
+      "values": {
+        "Disabled": "0",
+        "Enabled": "1",
+        "Enabled + Boost": "2"
+      },
+      "evidence": [
+        "settings_video.xml:148: \"NVIDIA Reflex Low Latency\" (Video › Frame Pacing)",
+        "no convar in the layout; handled by CSGOVideoChanged('reflex')",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Wait for Vertical Sync",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.mat_vsync"
+      },
+      "valueType": "enum",
+      "values": {
+        "Disabled": "0",
+        "Enabled": "1"
+      },
+      "evidence": [
+        "settings_video.xml:126: \"V-Sync\" (Video › Frame Pacing)",
+        "no convar in the layout; handled by CSGOVideoChanged('vsync')",
+        "catalog maps it by hand; nothing in the layout to compare its values with"
+      ]
+    },
+    {
+      "name": "Multisampling Anti-Aliasing Mode",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video"
+      },
+      "valueType": "enum",
+      "values": {
+        "": "1"
+      },
+      "evidence": [
+        "settings_video.xml:184: \"Multisampling Anti-Aliasing Mode\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('aa')",
+        "catalog maps it by hand; nothing in the layout to compare its values with"
+      ]
+    },
+    {
+      "name": "Global Shadow Quality",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.videocfg_shadow_quality"
+      },
+      "valueType": "enum",
+      "values": {
+        "Low": "0",
+        "Medium": "1",
+        "High": "2",
+        "Very High": "3"
+      },
+      "evidence": [
+        "settings_video.xml:192: \"Global Shadow Quality\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Dynamic Shadows",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.videocfg_dynamic_shadows"
+      },
+      "valueType": "enum",
+      "values": {
+        "Sun Only": "0",
+        "All": "1"
+      },
+      "evidence": [
+        "settings_video.xml:202: \"Dynamic Shadows\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Model / Texture Detail",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.videocfg_texture_detail"
+      },
+      "valueType": "enum",
+      "values": {
+        "Low": "0",
+        "Medium": "1",
+        "High": "2"
+      },
+      "evidence": [
+        "settings_video.xml:210: \"Model / Texture Detail\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Texture Filtering Mode",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.r_texturefilteringquality"
+      },
+      "valueType": "enum",
+      "values": {
+        "Bilinear": "0",
+        "Trilinear": "1",
+        "Anisotropic 2X": "2",
+        "Anisotropic 4X": "3",
+        "Anisotropic 8X": "4",
+        "Anisotropic 16X": "5"
+      },
+      "evidence": [
+        "settings_video.xml:219: \"Texture Filtering Mode\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Shader Detail",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.shaderquality"
+      },
+      "valueType": "enum",
+      "values": {
+        "Low": "0",
+        "High": "1"
+      },
+      "evidence": [
+        "settings_video.xml:231: \"Shader Detail\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Particle Detail",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.videocfg_particle_detail"
+      },
+      "valueType": "enum",
+      "values": {
+        "Low": "0",
+        "Medium": "1",
+        "High": "2",
+        "Very High": "3"
+      },
+      "evidence": [
+        "settings_video.xml:239: \"Particle Detail\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Ambient Occlusion",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.videocfg_ao_detail"
+      },
+      "valueType": "enum",
+      "values": {
+        "Disabled": "0",
+        "Medium": "2",
+        "High": "3"
+      },
+      "evidence": [
+        "settings_video.xml:249: \"Ambient Occlusion\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "catalog's stored values differ from the layout's"
+      ],
+      "todo": "Stored values disagree: check with csync discover."
+    },
+    {
+      "name": "High Dynamic Range",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.videocfg_hdr_detail"
+      },
+      "valueType": "enum",
+      "values": {
+        "Performance": "3",
+        "Quality": "-1"
+      },
+      "evidence": [
+        "settings_video.xml:258: \"High Dynamic Range\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "catalog's stored values differ from the layout's"
+      ],
+      "todo": "Stored values disagree: check with csync discover."
+    },
+    {
+      "name": "FidelityFX Super Resolution",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "video_config",
+      "source": {
+        "file": "video",
+        "key": "setting.videocfg_fsr_detail"
+      },
+      "valueType": "enum",
+      "values": {
+        "Performance": "4",
+        "Balanced": "3",
+        "Quality": "2",
+        "Ultra Quality": "1",
+        "Disabled (Highest Quality)": "0"
+      },
+      "evidence": [
+        "settings_video.xml:266: \"FidelityFX Super Resolution\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOVideoChanged('fsr')",
+        "catalog's stored values match the layout's"
+      ]
+    },
+    {
+      "name": "Maximum FPS In Game",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "fps_max"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 64,
+        "max": 1000
+      },
+      "evidence": [
+        "settings_video.xml:156: \"Maximum FPS In Game\" (Video › Frame Pacing)",
+        "found by the catalog's own key",
+        "convar \"fps_max\"",
+        "dump: fps_max 120 (archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Maximum FPS In Menus",
+      "category": "Video",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "fps_max_ui"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 64,
+        "max": 1000
+      },
+      "evidence": [
+        "settings_video.xml:160: \"Maximum FPS In Menus\" (Video › Frame Pacing)",
+        "convar \"fps_max_ui\"",
+        "dump: fps_max_ui 0 (archive)"
+      ]
+    },
+    {
+      "name": "Mouse Sensitivity",
+      "category": "Keyboard / Mouse",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "sensitivity"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.1,
+        "max": 8
+      },
+      "evidence": [
+        "settings_kbmouse.xml:88: \"Mouse Sensitivity\" (Keyboard / Mouse › Keyboard & Mouse Settings)",
+        "found by the catalog's own key",
+        "convar \"sensitivity\"",
+        "dump: sensitivity 1.25 (clientdll archive userinfo per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Zoom Sensitivity Multiplier",
+      "category": "Keyboard / Mouse",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "zoom_sensitivity_ratio"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.01,
+        "max": 3
+      },
+      "evidence": [
+        "settings_kbmouse.xml:90: \"Zoom Sensitivity Multiplier\" (Keyboard / Mouse › Keyboard & Mouse Settings)",
+        "found by the catalog's own key",
+        "convar \"zoom_sensitivity_ratio\"",
+        "dump: zoom_sensitivity_ratio 1 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Mouse Acceleration",
+      "category": "Keyboard / Mouse",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "unknown",
+      "evidence": [],
+      "todo": "Not in the game's current settings layouts: gone from the menu, or set somewhere else."
+    },
+    {
+      "name": "Reverse Mouse Buttons",
+      "category": "Keyboard / Mouse",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "unknown",
+      "evidence": [],
+      "todo": "Not in the game's current settings layouts: gone from the menu, or set somewhere else."
+    },
+    {
+      "name": "Move Forward",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+forward"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:101: \"Move Forward\" (Keyboard / Mouse › Movement Keys)",
+        "found by the catalog's own key",
+        "binds \"+forward\""
+      ]
+    },
+    {
+      "name": "Move Left",
+      "gameLabel": "Move Left (strafe)",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+left"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:105: \"Move Left (strafe)\" (Keyboard / Mouse › Movement Keys)",
+        "found by the catalog's own key",
+        "binds \"+left\""
+      ]
+    },
+    {
+      "name": "Move Back",
+      "gameLabel": "Move Backward",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+back"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:103: \"Move Backward\" (Keyboard / Mouse › Movement Keys)",
+        "found by the catalog's own key",
+        "binds \"+back\""
+      ]
+    },
+    {
+      "name": "Move Right",
+      "gameLabel": "Move Right (strafe)",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+right"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:107: \"Move Right (strafe)\" (Keyboard / Mouse › Movement Keys)",
+        "found by the catalog's own key",
+        "binds \"+right\""
+      ]
+    },
+    {
+      "name": "Walk",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+sprint"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:109: \"Walk\" (Keyboard / Mouse › Movement Keys)",
+        "found by the catalog's own key",
+        "binds \"+sprint\""
+      ]
+    },
+    {
+      "name": "Jump",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+jump"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:113: \"Jump\" (Keyboard / Mouse › Movement Keys)",
+        "found by the catalog's own key",
+        "binds \"+jump\""
+      ]
+    },
+    {
+      "name": "Duck",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+duck"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:111: \"Duck\" (Keyboard / Mouse › Movement Keys)",
+        "found by the catalog's own key",
+        "binds \"+duck\""
+      ]
+    },
+    {
+      "name": "Fire",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+attack"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:124: \"Fire\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"+attack\""
+      ]
+    },
+    {
+      "name": "Secondary Fire",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+attack2"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:126: \"Secondary Fire\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"+attack2\""
+      ]
+    },
+    {
+      "name": "Reload",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+reload"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:128: \"Reload\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"+reload\""
+      ]
+    },
+    {
+      "name": "Use",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+use"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:122: \"Use\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"+use\""
+      ]
+    },
+    {
+      "name": "Drop Weapon",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "drop"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:138: \"Drop Weapon\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"drop\""
+      ]
+    },
+    {
+      "name": "Inspect Weapon",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+lookatweapon"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:140: \"Inspect Weapon\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"+lookatweapon\""
+      ]
+    },
+    {
+      "name": "Switch Hands",
+      "gameLabel": "Switch Viewmodel Left/Right Hand",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "switchhands"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:142: \"Switch Viewmodel Left/Right Hand\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"switchhands\""
+      ]
+    },
+    {
+      "name": "Primary Weapon",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "slot1"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:150: \"Primary Weapon\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"slot1\""
+      ]
+    },
+    {
+      "name": "Secondary Weapon",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "slot2"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:152: \"Secondary Weapon\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"slot2\""
+      ]
+    },
+    {
+      "name": "Melee Weapon",
+      "gameLabel": "Melee Weapons",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "slot3"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:154: \"Melee Weapons\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"slot3\""
+      ]
+    },
+    {
+      "name": "Cycle Grenades",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "slot4"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:156: \"Cycle Grenades\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"slot4\""
+      ]
+    },
+    {
+      "name": "Explosives & Traps",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "slot5"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:158: \"Explosives & Traps\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"slot5\""
+      ]
+    },
+    {
+      "name": "Previous Weapon",
+      "gameLabel": "Select Previous Weapon",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "invprev"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:132: \"Select Previous Weapon\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"invprev\""
+      ]
+    },
+    {
+      "name": "Next Weapon",
+      "gameLabel": "Select Next Weapon",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "invnext"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:134: \"Select Next Weapon\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"invnext\""
+      ]
+    },
+    {
+      "name": "Last Weapon Used",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "lastinv"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:136: \"Last Weapon Used\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"lastinv\""
+      ]
+    },
+    {
+      "name": "Buy Menu",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "buymenu"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:144: \"Buy Menu\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"buymenu\""
+      ]
+    },
+    {
+      "name": "Scoreboard",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+showscores"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:185: \"Scoreboard\" (Keyboard / Mouse › UI Keys)",
+        "found by the catalog's own key",
+        "binds \"+showscores\""
+      ]
+    },
+    {
+      "name": "Chat Message",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "messagemode"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:217: \"Chat Message\" (Keyboard / Mouse › Communication Options)",
+        "found by the catalog's own key",
+        "binds \"messagemode\""
+      ]
+    },
+    {
+      "name": "Team Message",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "messagemode2"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:215: \"Team Message\" (Keyboard / Mouse › Communication Options)",
+        "found by the catalog's own key",
+        "binds \"messagemode2\""
+      ]
+    },
+    {
+      "name": "Use Microphone",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+voicerecord"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:219: \"Use Microphone\" (Keyboard / Mouse › Communication Options)",
+        "found by the catalog's own key",
+        "binds \"+voicerecord\""
+      ]
+    },
+    {
+      "name": "Player Ping",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "player_ping"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:204: \"Player Ping\" (Keyboard / Mouse › Communication Options)",
+        "found by the catalog's own key",
+        "binds \"player_ping\""
+      ]
+    },
+    {
+      "name": "Graffiti Menu",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "+spray_menu"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:176: \"Graffiti Menu\" (Keyboard / Mouse › Weapon Keys)",
+        "found by the catalog's own key",
+        "binds \"+spray_menu\""
+      ]
+    },
+    {
+      "name": "Toggle Console",
+      "category": "Keybinds",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "keybind",
+      "source": {
+        "file": "keys",
+        "bind": "toggleconsole"
+      },
+      "valueType": "keybind",
+      "evidence": [
+        "settings_kbmouse.xml:195: \"Toggle Console\" (Keyboard / Mouse › UI Keys)",
+        "found by the catalog's own key",
+        "binds \"toggleconsole\""
+      ]
+    },
+    {
+      "name": "Crosshair Style",
+      "gameLabel": "Style",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshairstyle"
+      },
+      "valueType": "enum",
+      "values": {
+        "Static Cross": "4",
+        "Static Circle": "3",
+        "Static Square": "8",
+        "Dot Only": "6",
+        "Dynamic Cross": "0",
+        "Dynamic Circle": "1",
+        "Dynamic Cross (Classic)": "2",
+        "Dynamic Cross (Legacy/Shot Feedback)": "5",
+        "Dynamic Quad": "7"
+      },
+      "evidence": [
+        "settings_crosshair.xml:34: \"Style\" (Crosshair › Style Settings)",
+        "found by the catalog's own key",
+        "convar \"cl_crosshairstyle\"",
+        "dump: cl_crosshairstyle 7 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Follow Recoil",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_recoil"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:118: \"Follow Recoil\" (Crosshair › Crosshair Settings)",
+        "found by the catalog's own key",
+        "convar \"cl_crosshair_recoil\"",
+        "dump: cl_crosshair_recoil true (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Center Dot",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshairdot"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:69: \"Center Dot\" (Crosshair › Style Settings)",
+        "found by the catalog's own key",
+        "convar \"cl_crosshairdot\"",
+        "dump: cl_crosshairdot false (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Length",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_length"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "evidence": [
+        "settings_crosshair.xml:76: \"Length\" (Crosshair › Style Settings)",
+        "convar \"cl_crosshair_length\"",
+        "dump: cl_crosshair_length 8 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog maps \"cl_crosshairsize\": conflict"
+      ],
+      "todo": "The catalog and the game disagree on the key."
+    },
+    {
+      "name": "Thickness",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_thickness"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 31
+      },
+      "evidence": [
+        "settings_crosshair.xml:64: \"Thickness\" (Crosshair › Style Settings)",
+        "convar \"cl_crosshair_thickness\"",
+        "dump: cl_crosshair_thickness 2 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog maps \"cl_crosshairthickness\": conflict"
+      ],
+      "todo": "The catalog and the game disagree on the key."
+    },
+    {
+      "name": "Gap",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_gap"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 128
+      },
+      "evidence": [
+        "settings_crosshair.xml:80: \"Gap\" (Crosshair › Style Settings)",
+        "convar \"cl_crosshair_gap\"",
+        "dump: cl_crosshair_gap 4 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog maps \"cl_crosshairgap\": conflict"
+      ],
+      "todo": "The catalog and the game disagree on the key."
+    },
+    {
+      "name": "Outline",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_drawoutline"
+      },
+      "valueType": "enum",
+      "values": {
+        "Full Outline": "1",
+        "Half Outline": "2",
+        "No Outline": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:56: \"Outline\" (Crosshair › Style Settings)",
+        "found by the catalog's own key",
+        "convar \"cl_crosshair_drawoutline\"",
+        "dump: cl_crosshair_drawoutline 1 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Outline Thickness",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_outlinethickness"
+      },
+      "evidence": ["dump: no convar \"cl_crosshair_outlinethickness\" in this CS2 build"],
+      "todo": "The catalog's key no longer exists in the game: this setting moved or was removed."
+    },
+    {
+      "name": "Color",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshaircolor"
+      },
+      "evidence": ["dump: no convar \"cl_crosshaircolor\" in this CS2 build"],
+      "todo": "The catalog's key no longer exists in the game: this setting moved or was removed."
+    },
+    {
+      "name": "Alpha",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshaircolor_a"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "evidence": [
+        "candidate: the colour picker's alpha; cl_crosshairalpha is hidden",
+        "dump: cl_crosshaircolor_a 255 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "replaces the catalog's \"cl_crosshairalpha\""
+      ],
+      "todo": "Inferred from the dump: one csync discover round confirms it."
+    },
+    {
+      "name": "T Style",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_t"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:97: \"T Style\" (Crosshair › Style Settings)",
+        "found by the catalog's own key",
+        "convar \"cl_crosshair_t\"",
+        "dump: cl_crosshair_t false (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Deployed Weapon Gap",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshairgap_useweaponvalue"
+      },
+      "evidence": ["dump: no convar \"cl_crosshairgap_useweaponvalue\" in this CS2 build"],
+      "todo": "The catalog's key no longer exists in the game: this setting moved or was removed."
+    },
+    {
+      "name": "Sniper Crosshair Width",
+      "gameLabel": "Sniper crosshair thickness",
+      "category": "Crosshair",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_sniper_width"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 1,
+        "max": 6
+      },
+      "evidence": [
+        "settings_crosshair.xml:221: \"Sniper crosshair thickness\" (Crosshair › Sniper Sights)",
+        "found by the catalog's own key",
+        "convar \"cl_crosshair_sniper_width\"",
+        "dump: cl_crosshair_sniper_width 1 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Radar Centers The Player",
+      "category": "Radar",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_radar_always_centered"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:479: \"Radar Centers The Player\" (Game › Radar / Tablet)",
+        "found by the catalog's own key",
+        "convar \"cl_radar_always_centered\"",
+        "dump: cl_radar_always_centered true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Radar Is Rotating",
+      "category": "Radar",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_radar_rotate"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:487: \"Radar Is Rotating\" (Game › Radar / Tablet)",
+        "found by the catalog's own key",
+        "convar \"cl_radar_rotate\"",
+        "dump: cl_radar_rotate true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Radar HUD Size",
+      "category": "Radar",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_radar_scale"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.8,
+        "max": 1.3
+      },
+      "evidence": [
+        "settings_game.xml:514: \"Radar Hud Size\" (Game › Radar / Tablet)",
+        "found by the catalog's own key",
+        "convar \"cl_hud_radar_scale\"",
+        "dump: cl_hud_radar_scale 1 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Radar Map Zoom",
+      "category": "Radar",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_radar_scale"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.25,
+        "max": 1
+      },
+      "evidence": [
+        "settings_game.xml:518: \"Radar Map Zoom\" (Game › Radar / Tablet)",
+        "found by the catalog's own key",
+        "convar \"cl_radar_scale\"",
+        "dump: cl_radar_scale 0.7 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Toggle Shape With Scoreboard",
+      "category": "Radar",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_radar_square_with_scoreboard"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:531: \"Toggle Square Shape With Scoreboard\" (Game › Radar / Tablet)",
+        "found by the catalog's own key",
+        "convar \"cl_radar_square_with_scoreboard\"",
+        "dump: cl_radar_square_with_scoreboard true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "HUD Scale",
+      "category": "HUD",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "hud_scaling"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.9,
+        "max": 1.1
+      },
+      "evidence": [
+        "settings_game.xml:139: \"HUD Scale\" (Game › Hud)",
+        "found by the catalog's own key",
+        "convar \"hud_scaling\"",
+        "dump: hud_scaling 1 (clientdll archive)",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "HUD Color",
+      "category": "HUD",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_color"
+      },
+      "valueType": "enum",
+      "values": {
+        "Team Color": "0",
+        "Teammate Color": "12",
+        "White": "1",
+        "Bright White": "2",
+        "Light Blue": "3",
+        "Blue": "4",
+        "Purple": "5",
+        "Red": "6",
+        "Orange": "7",
+        "Yellow": "8",
+        "Green": "9",
+        "Aqua": "10",
+        "Pink": "11"
+      },
+      "evidence": [
+        "settings_game.xml:144: \"HUD Color\" (Game › Hud)",
+        "found by the catalog's own key",
+        "convar \"cl_hud_color\"",
+        "dump: cl_hud_color 0 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Master Volume",
+      "category": "Audio",
+      "where": "preset",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:37: \"Master Volume\" (Audio › Audio)",
+        "found by the catalog's own key",
+        "convar \"volume\"",
+        "dump: volume 1 (archive)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Audio Device",
+      "category": "Audio",
+      "where": "preset",
+      "perMachine": true,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "sound_device_override"
+      },
+      "valueType": "enum",
+      "evidence": [
+        "settings_audio.xml:43: \"Audio Device\" (Audio › Audio)",
+        "convar \"sound_device_override\"",
+        "dump: sound_device_override \"\" (archive release)"
+      ]
+    },
+    {
+      "name": "EQ Profile",
+      "category": "Audio",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_headphone_eq"
+      },
+      "valueType": "enum",
+      "values": {
+        "Natural": "0",
+        "Crisp": "1",
+        "Smooth": "2"
+      },
+      "evidence": [
+        "settings_audio.xml:57: \"EQ Profile\" (Audio › Audio)",
+        "convar \"snd_headphone_eq\"",
+        "dump: snd_headphone_eq 0 (clientdll archive clientcmd_can_execute)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "L/R Isolation",
+      "category": "Audio",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_spatialize_lerp"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "fraction"
+      },
+      "evidence": [
+        "settings_audio.xml:65: \"L/R Isolation\" (Audio › Audio)",
+        "convar \"snd_spatialize_lerp\"",
+        "dump: snd_spatialize_lerp 0 (archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "slider shows the stored fraction as a percentage"
+      ]
+    },
+    {
+      "name": "Perspective Correction",
+      "category": "Audio",
+      "where": "preset",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_steamaudio_enable_perspective_correction"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_audio.xml:70: \"Perspective Correction\" (Audio › Audio)",
+        "found by the catalog's own key",
+        "convar \"snd_steamaudio_enable_perspective_correction\"",
+        "dump: snd_steamaudio_enable_perspective_correction false (archive release)",
+        "present in your cs2_machine_convars.vcfg",
+        "catalog already maps the same key"
+      ]
+    },
+    {
+      "name": "Enable Voice",
+      "category": "Audio",
+      "where": "preset",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "unknown",
+      "valueType": "enum",
+      "values": {
+        "Disabled": "0",
+        "Push To Talk": "1",
+        "Open Microphone": "2"
+      },
+      "evidence": [
+        "settings_audio.xml:97: \"Voice/Microphone Mode\" (Audio › Voice)",
+        "no convar in the layout; handled by CSGOVoiceEnable()"
+      ],
+      "todo": "The game sets this in code: find the key with csync discover (the values above are what it stores)."
+    },
+    {
+      "name": "Display",
+      "category": "Video",
+      "where": "menu",
+      "perMachine": true,
+      "status": "manual",
+      "classification": "video_config",
+      "valueType": "enum",
+      "values": {
+        "": "0"
+      },
+      "evidence": [
+        "settings_video.xml:37: \"Display\" (Video › Video)",
+        "no convar in the layout; handled by CSGODisplaySelectionChanged()"
+      ],
+      "todo": "The game sets this in code: find the key with csync discover (the values above are what it stores)."
+    },
+    {
+      "name": "Boost Player Contrast",
+      "category": "Video",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "r_player_visibility_mode"
+      },
+      "valueType": "enum",
+      "range": {},
+      "evidence": [
+        "settings_video.xml:111: \"Boost Player Contrast\" (Video › Advanced Video)",
+        "no convar in the layout; handled by CSGOVideoChanged('')",
+        "candidate: the only player-visibility convar; its 0/1 match the dropdown's values",
+        "dump: r_player_visibility_mode 1 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ],
+      "todo": "Inferred from the dump: one csync discover round confirms it.",
+      "values": {
+        "Disabled": "0",
+        "Enabled": "1"
+      }
+    },
+    {
+      "name": "NVIDIA G-Sync",
+      "category": "Video",
+      "where": "menu",
+      "perMachine": true,
+      "status": "manual",
+      "classification": "video_config",
+      "valueType": "enum",
+      "values": {
+        "Disabled": "0",
+        "Enabled": "1"
+      },
+      "evidence": [
+        "settings_video.xml:139: \"NVIDIA G-Sync\" (Video › Frame Pacing)",
+        "no convar in the layout"
+      ],
+      "todo": "The game sets this in code: find the key with csync discover (the values above are what it stores)."
+    },
+    {
+      "name": "AMD Radeon Anti-Lag 2",
+      "category": "Video",
+      "where": "menu",
+      "perMachine": true,
+      "status": "manual",
+      "classification": "unknown",
+      "evidence": [],
+      "todo": "Not in the game's current settings layouts: gone from the menu, or set somewhere else."
+    },
+    {
+      "name": "Current Video Values Preset",
+      "category": "Video",
+      "where": "menu",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "video_config",
+      "valueType": "enum",
+      "values": {
+        "Low": "0",
+        "Medium": "1",
+        "High": "2",
+        "Very High": "3",
+        "Custom": "9999999"
+      },
+      "evidence": [
+        "settings_video.xml:172: \"Current Video Values Preset\" (Video › Presets)",
+        "no convar in the layout; handled by CSGOPresetChanged();"
+      ],
+      "todo": "The game sets this in code: find the key with csync discover (the values above are what it stores)."
+    },
+    {
+      "name": "Horizontal Adjustment",
+      "category": "Video",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "safezonex"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "evidence": [
+        "popup_hud_edge_positions.xml:16: the HUD Edge Positions popup's X slider (convar \"safezonex\")",
+        "dump: safezonex 1 (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Vertical Adjustment",
+      "category": "Video",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "safezoney"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.8,
+        "max": 1
+      },
+      "evidence": [
+        "popup_hud_edge_positions.xml:20: the HUD Edge Positions popup's Y slider (convar \"safezoney\")",
+        "dump: safezoney 1 (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Play Audio When Game In Background",
+      "category": "Audio",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_mute_losefocus"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "0",
+        "No": "1"
+      },
+      "evidence": [
+        "settings_audio.xml:78: \"Play Audio When Game In Background\" (Audio › Audio)",
+        "convar \"snd_mute_losefocus\"",
+        "dump: snd_mute_losefocus true (archive snapshot_ignored)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Other Player Voice Volume",
+      "category": "Audio",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_voipvolume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:92: \"Other Player Voice Volume\" (Audio › Voice)",
+        "convar \"snd_voipvolume\"",
+        "dump: snd_voipvolume 1 (archive snapshot_ignored)",
+        "present in your cs2_machine_convars.vcfg"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Voice Input Audio Device",
+      "category": "Audio",
+      "where": "menu",
+      "perMachine": true,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "voice_device_override"
+      },
+      "valueType": "enum",
+      "evidence": [
+        "settings_audio.xml:110: \"Voice Input Audio Device\" (Audio › Voice)",
+        "convar \"voice_device_override\"",
+        "dump: voice_device_override \"\" (archive release)"
+      ]
+    },
+    {
+      "name": "Hear My Own Voice",
+      "category": "Audio",
+      "where": "menu",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "machine_config",
+      "valueType": "enum",
+      "values": {
+        "On": "1",
+        "Off": "0"
+      },
+      "evidence": [
+        "settings_audio.xml:124: \"Hear My Own Voice\" (Audio › Voice)",
+        "convar \"voice_loopback_no_networking\"",
+        "dump: voice_loopback_no_networking false (userinfo)"
+      ],
+      "todo": "The convar isn't saved (no archive flag): the game keeps it elsewhere or not at all."
+    },
+    {
+      "name": "Streamlined Push To Talk",
+      "category": "Audio",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "voice_always_sample_mic"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_audio.xml:132: \"Streamlined Push To Talk\" (Audio › Voice)",
+        "convar \"voice_always_sample_mic\"",
+        "dump: voice_always_sample_mic false (archive)"
+      ]
+    },
+    {
+      "name": "Microphone Trigger Threshold",
+      "category": "Audio",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "voice_threshold"
+      },
+      "valueType": "number",
+      "range": {
+        "min": -120,
+        "max": -0.001
+      },
+      "evidence": [
+        "settings_audio.xml:139: \"Microphone Trigger Threshold\" (Audio › Voice)",
+        "convar \"voice_threshold\"",
+        "dump: voice_threshold -120 (clientdll archive)"
+      ]
+    },
+    {
+      "name": "Main Menu Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_menumusic_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:175: \"Main Menu Volume\" (Audio › Music)",
+        "convar \"snd_menumusic_volume\"",
+        "dump: snd_menumusic_volume 0.04 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Round Start Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_roundstart_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:179: \"Round Start Volume\" (Audio › Music)",
+        "convar \"snd_roundstart_volume\"",
+        "dump: snd_roundstart_volume 0 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Round Action Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_roundaction_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:183: \"Round Action Volume\" (Audio › Music)",
+        "convar \"snd_roundaction_volume\"",
+        "dump: snd_roundaction_volume 0 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Round End Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_roundend_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:187: \"Round End Volume\" (Audio › Music)",
+        "convar \"snd_roundend_volume\"",
+        "dump: snd_roundend_volume 0.16 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "MVP Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_mvp_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:191: \"MVP Volume\" (Audio › Music)",
+        "convar \"snd_mvp_volume\"",
+        "dump: snd_mvp_volume 0.16 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Bomb / Hostage Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_mapobjective_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:195: \"Bomb/Hostage Volume\" (Audio › Music)",
+        "convar \"snd_mapobjective_volume\"",
+        "dump: snd_mapobjective_volume 0.04 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Ten Second Warning Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_tensecondwarning_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:199: \"Ten Second Warning Volume\" (Audio › Music)",
+        "convar \"snd_tensecondwarning_volume\"",
+        "dump: snd_tensecondwarning_volume 0.04 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Death Camera Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_deathcamera_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:203: \"Death Camera Volume\" (Audio › Music)",
+        "convar \"snd_deathcamera_volume\"",
+        "dump: snd_deathcamera_volume 0.16 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Mute MVP Music when players on both teams are alive",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_mute_mvp_music_live_players"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_audio.xml:345: \"Mute MVP Music when players on both teams are alive\" (Audio › Music)",
+        "convar \"snd_mute_mvp_music_live_players\"",
+        "dump: snd_mute_mvp_music_live_players false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Competitive EQ",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_eq_competitive"
+      },
+      "valueType": "enum",
+      "values": {
+        "Default": "-1",
+        "Natural": "0",
+        "Crisp": "1",
+        "Smooth": "2"
+      },
+      "evidence": [
+        "settings_audio.xml:360: \"Competitive EQ\" (Audio › Game Mode EQ)",
+        "convar \"snd_eq_competitive\"",
+        "dump: snd_eq_competitive -1 (developmentonly clientdll archive)"
+      ]
+    },
+    {
+      "name": "Casual EQ",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_eq_casual"
+      },
+      "valueType": "enum",
+      "values": {
+        "Default": "-1",
+        "Natural": "0",
+        "Crisp": "1",
+        "Smooth": "2"
+      },
+      "evidence": [
+        "settings_audio.xml:370: \"Casual EQ\" (Audio › Game Mode EQ)",
+        "convar \"snd_eq_casual\"",
+        "dump: snd_eq_casual -1 (developmentonly clientdll archive)"
+      ]
+    },
+    {
+      "name": "Deathmatch EQ",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_eq_deathmatch"
+      },
+      "valueType": "enum",
+      "values": {
+        "Default": "-1",
+        "Natural": "0",
+        "Crisp": "1",
+        "Smooth": "2"
+      },
+      "evidence": [
+        "settings_audio.xml:380: \"Deathmatch EQ\" (Audio › Game Mode EQ)",
+        "convar \"snd_eq_deathmatch\"",
+        "dump: snd_eq_deathmatch -1 (developmentonly clientdll archive)"
+      ]
+    },
+    {
+      "name": "Arms Race EQ",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_eq_arms_race"
+      },
+      "valueType": "enum",
+      "values": {
+        "Default": "-1",
+        "Natural": "0",
+        "Crisp": "1",
+        "Smooth": "2"
+      },
+      "evidence": [
+        "settings_audio.xml:390: \"Arms Race EQ\" (Audio › Game Mode EQ)",
+        "convar \"snd_eq_arms_race\"",
+        "dump: snd_eq_arms_race -1 (developmentonly clientdll archive)"
+      ]
+    },
+    {
+      "name": "Enable Developer Console",
+      "category": "Game",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "con_enable"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:61: \"Enable Developer Console\" (Game › Game)",
+        "convar \"con_enable\"",
+        "dump: con_enable false (archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Max Acceptable Matchmaking Ping",
+      "category": "Game",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "mm_dedicated_search_maxping"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 25,
+        "max": 350
+      },
+      "evidence": [
+        "settings_game.xml:78: \"Max Acceptable Matchmaking Ping\" (Game › Game)",
+        "convar \"mm_dedicated_search_maxping\"",
+        "dump: mm_dedicated_search_maxping 150 (archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Max Acceptable Game Traffic Bandwidth",
+      "category": "Game",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "rate"
+      },
+      "valueType": "enum",
+      "values": {
+        "Extremely restricted": "98304",
+        "Below 1.0 Mbps": "131072",
+        "Up to 1.5 Mbps": "196608",
+        "Up to 2.0 Mbps": "262144",
+        "Up to 2.5 Mbps": "327680",
+        "3 Mbps": "393216",
+        "4 Mbps": "524288",
+        "Unrestricted": "786432"
+      },
+      "evidence": [
+        "settings_game.xml:89: \"Max Acceptable Game Traffic Bandwidth\" (Game › Game)",
+        "convar \"rate\"",
+        "dump: rate 80000 (archive userinfo)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Buffering to smooth over packet loss / jitter",
+      "category": "Game",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_net_buffer_ticks"
+      },
+      "valueType": "enum",
+      "values": {
+        "None": "0",
+        "1 tick": "1",
+        "2 ticks": "2"
+      },
+      "evidence": [
+        "settings_game.xml:103: \"Buffering to smooth over packet loss / jitter\" (Game › Game)",
+        "convar \"cl_net_buffer_ticks\"",
+        "dump: cl_net_buffer_ticks 0 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Install Counter-Strike Workshop Tools",
+      "category": "Game",
+      "where": "menu",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "unknown",
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:112: \"Install Counter-Strike Workshop Tools\" (Game › Game)",
+        "convar \"install_dlc_workshoptools\""
+      ],
+      "todo": "The layout names a convar the dump doesn't have."
+    },
+    {
+      "name": "Large Player Count",
+      "category": "HUD",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_teamcounter_playercount_instead_of_avatars"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:163: \"Large Player Count\" (Game › Hud)",
+        "convar \"cl_teamcounter_playercount_instead_of_avatars\"",
+        "dump: cl_teamcounter_playercount_instead_of_avatars false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Community Notification Location",
+      "category": "HUD",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "ui_steam_overlay_notification_position"
+      },
+      "valueType": "enum",
+      "values": {
+        "Top Left": "topleft",
+        "Bottom Left": "bottomleft",
+        "Bottom Right": "bottomright",
+        "Top Right": "topright"
+      },
+      "evidence": [
+        "settings_game.xml:171: \"Community Notification Location\" (Game › Hud)",
+        "convar \"ui_steam_overlay_notification_position\"",
+        "dump: ui_steam_overlay_notification_position \"bottomleft\" (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Community Notification Horizontal Offset",
+      "category": "HUD",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "ui_steam_overlay_notification_position_horz"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "evidence": [
+        "settings_game.xml:180: \"Community Notification Horizontal Offset\" (Game › Hud)",
+        "convar \"ui_steam_overlay_notification_position_horz\"",
+        "dump: ui_steam_overlay_notification_position_horz 0 (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Community Notification Vertical Offset",
+      "category": "HUD",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "ui_steam_overlay_notification_position_vert"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "evidence": [
+        "settings_game.xml:184: \"Community Notification Vertical Offset\" (Game › Hud)",
+        "convar \"ui_steam_overlay_notification_position_vert\"",
+        "dump: ui_steam_overlay_notification_position_vert 0 (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Glow Weapon with Rarity Color",
+      "category": "HUD",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_weapon_selection_rarity_color"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:189: \"Glow Weapon with Rarity Color\" (Game › Hud)",
+        "convar \"cl_weapon_selection_rarity_color\"",
+        "dump: cl_weapon_selection_rarity_color false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Show Team ID Through Walls",
+      "category": "Team",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_teamid_overhead_mode"
+      },
+      "valueType": "enum",
+      "values": {
+        "Pips, Names, Health, and Equipment": "3",
+        "Pips, Names, and Health": "2",
+        "Pips": "1",
+        "Off": "0"
+      },
+      "evidence": [
+        "settings_game.xml:219: \"Show Team ID Through Walls\" (Game › Team)",
+        "convar \"cl_teamid_overhead_mode\"",
+        "dump: cl_teamid_overhead_mode 3 (clientdll archive release)"
+      ]
+    },
+    {
+      "name": "Show Player Colors in Competitive",
+      "category": "Team",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_teammate_colors_show"
+      },
+      "valueType": "enum",
+      "values": {
+        "Show Colors": "1",
+        "Colors and Letters": "2",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:229: \"Show Player Colors in Competitive\" (Game › Team)",
+        "convar \"cl_teammate_colors_show\"",
+        "dump: cl_teammate_colors_show 1 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Use Player Colors on Team ID",
+      "category": "Team",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_teamid_overhead_colors_show"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:238: \"Use Player Colors on Team ID\" (Game › Team)",
+        "convar \"cl_teamid_overhead_colors_show\"",
+        "dump: cl_teamid_overhead_colors_show true (clientdll archive release)"
+      ]
+    },
+    {
+      "name": "Friends Lobby Default Permissions",
+      "category": "Team",
+      "where": "menu",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "unknown",
+      "valueType": "enum",
+      "values": {
+        "Friends Need Invites": "0",
+        "All Friends Can Join": "1"
+      },
+      "evidence": [
+        "settings_game.xml:246: \"Friends Lobby Default Permissions\" (Game › Team)",
+        "convar \"lobby_default_privacy_bits\""
+      ],
+      "todo": "The layout names a convar the dump doesn't have."
+    },
+    {
+      "name": "Looking to Play when Counter-Strike Starts",
+      "category": "Team",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "ui_setting_advertiseforhire_auto"
+      },
+      "valueType": "enum",
+      "values": {
+        "Disabled": "0",
+        "Remember Last State": "1",
+        "Automatic": "2"
+      },
+      "evidence": [
+        "settings_game.xml:254: \"Looking to Play when Counter-Strike Starts\" (Game › Team)",
+        "convar \"ui_setting_advertiseforhire_auto\"",
+        "dump: ui_setting_advertiseforhire_auto 1 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Player Pings",
+      "category": "Communication",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_player_ping_mute"
+      },
+      "valueType": "enum",
+      "values": {
+        "Display and Play Sound": "0",
+        "Display Without Sound": "1",
+        "Disabled": "2"
+      },
+      "evidence": [
+        "settings_game.xml:271: \"Player Pings\" (Game › Communication)",
+        "convar \"cl_player_ping_mute\"",
+        "dump: cl_player_ping_mute 0 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Mute Enemy Team",
+      "category": "Communication",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_mute_enemy_team"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:280: \"Mute Enemy Team\" (Game › Communication)",
+        "convar \"cl_mute_enemy_team\"",
+        "dump: cl_mute_enemy_team false (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Mute All But Friends",
+      "category": "Communication",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_mute_all_but_friends_and_party"
+      },
+      "valueType": "enum",
+      "values": {
+        "No": "0",
+        "Only in non-competitive modes": "1",
+        "Always": "2"
+      },
+      "evidence": [
+        "settings_game.xml:288: \"Mute All But Friends\" (Game › Communication)",
+        "convar \"cl_mute_all_but_friends_and_party\"",
+        "dump: cl_mute_all_but_friends_and_party 0 (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Allow Animated Avatars",
+      "category": "Communication",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_allow_animated_avatars"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:307: \"Allow Animated Avatars\" (Game › Communication)",
+        "convar \"cl_allow_animated_avatars\"",
+        "dump: cl_allow_animated_avatars true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Hide Avatar Images and Customized Items",
+      "category": "Communication",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hide_avatar_images"
+      },
+      "valueType": "enum",
+      "values": {
+        "Show All": "0",
+        "Hide All": "1",
+        "Show Only Friends": "2"
+      },
+      "evidence": [
+        "settings_game.xml:315: \"Hide Avatar Images and Customized Items\" (Game › Communication)",
+        "convar \"cl_hide_avatar_images\"",
+        "dump: cl_hide_avatar_images 0 (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Clean Player Names",
+      "category": "Communication",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_sanitize_player_names"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:324: \"Clean Player Names\" (Game › Communication)",
+        "convar \"cl_sanitize_player_names\"",
+        "dump: cl_sanitize_player_names false (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Spectator/Map Vote Number Selection Method",
+      "category": "Spectator / Scoreboard",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "spec_usenumberkeys_nobinds"
+      },
+      "valueType": "enum",
+      "values": {
+        "Use Number Keys": "1",
+        "Use Weapon Slots": "0"
+      },
+      "evidence": [
+        "settings_game.xml:339: \"Spectator/Map Vote Number Selection Method\" (Game › Spectator / Scoreboard)",
+        "convar \"spec_usenumberkeys_nobinds\"",
+        "dump: spec_usenumberkeys_nobinds true (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Scoreboard Mouse Enable / End of Match Scoreboard Toggle",
+      "category": "Spectator / Scoreboard",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_scoreboard_mouse_enable_binding"
+      },
+      "valueType": "enum",
+      "values": {
+        "Secondary Fire": "+attack2",
+        "Duck": "+duck",
+        "Jump": "+jump",
+        "Drop Weapon": "drop",
+        "Last Weapon Used": "lastinv",
+        "Radio Message": "radio",
+        "Use": "+use"
+      },
+      "evidence": [
+        "settings_game.xml:347: \"Scoreboard Mouse Enable / End of Match Scoreboard Toggle\" (Game › Spectator / Scoreboard)",
+        "convar \"cl_scoreboard_mouse_enable_binding\"",
+        "dump: cl_scoreboard_mouse_enable_binding \"+attack2\" (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "End of Match Local Player Defeat Animation",
+      "category": "Spectator / Scoreboard",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "eom_local_player_defeat_anim_enabled"
+      },
+      "valueType": "enum",
+      "values": {
+        "Enabled": "1",
+        "Disabled": "0"
+      },
+      "evidence": [
+        "settings_game.xml:360: \"End of Match Local Player Defeat Animation\" (Game › Spectator / Scoreboard)",
+        "convar \"eom_local_player_defeat_anim_enabled\"",
+        "dump: eom_local_player_defeat_anim_enabled true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Survivors Always On",
+      "category": "Spectator / Scoreboard",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_scoreboard_survivors_always_on"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:368: \"Survivors Always On\" (Game › Spectator / Scoreboard)",
+        "convar \"cl_scoreboard_survivors_always_on\"",
+        "dump: cl_scoreboard_survivors_always_on false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Smooth Spectator Camera",
+      "category": "Spectator / Scoreboard",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_obs_interp_enable"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:376: \"Smooth Spectator Camera\" (Game › Spectator / Scoreboard)",
+        "convar \"cl_obs_interp_enable\"",
+        "dump: cl_obs_interp_enable true (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Smooth Spectator Camera Speed",
+      "category": "Spectator / Scoreboard",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_obs_interp_speed"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.25,
+        "max": 2.5
+      },
+      "evidence": [
+        "settings_game.xml:383: \"Smooth Spectator Camera Speed\" (Game › Spectator / Scoreboard)",
+        "convar \"cl_obs_interp_speed\"",
+        "dump: cl_obs_interp_speed 1 (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Delay Sniper Rifle Un-Scope after Shot",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_sniper_delay_unscope"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:199: \"Delay Sniper Rifle Un-Scope after Shot\" (Crosshair › Sniper Sights)",
+        "convar \"cl_sniper_delay_unscope\"",
+        "dump: cl_sniper_delay_unscope false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Auto Re-Zoom Sniper Rifle after Shot",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_sniper_auto_rezoom"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:215: \"Auto Re-Zoom Sniper Rifle after Shot\" (Crosshair › Sniper Sights)",
+        "convar \"cl_sniper_auto_rezoom\"",
+        "dump: cl_sniper_auto_rezoom true (clientdll archive userinfo per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Detach Silencer on M4A1-S and USP-S",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_silencer_mode"
+      },
+      "valueType": "enum",
+      "values": {
+        "Secondary Fire": "1",
+        "Disabled": "0"
+      },
+      "evidence": [
+        "settings_game.xml:395: \"Detach Silencer on M4A1-S and USP-S\" (Game › Item)",
+        "convar \"cl_silencer_mode\"",
+        "dump: cl_silencer_mode 0 (clientdll archive userinfo per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Viewmodel Position",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "viewmodel_presetpos"
+      },
+      "valueType": "enum",
+      "values": {
+        "Desktop": "1",
+        "Classic": "2"
+      },
+      "evidence": [
+        "settings_game.xml:403: \"Viewmodel Position\" (Game › Item)",
+        "convar \"viewmodel_presetpos\"",
+        "dump: viewmodel_presetpos 1 (clientdll archive)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Preferred Viewmodel Left/Right Handedness",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_prefer_lefthanded"
+      },
+      "valueType": "enum",
+      "values": {
+        "Right": "0",
+        "Left": "1"
+      },
+      "evidence": [
+        "settings_game.xml:411: \"Preferred Viewmodel Left/Right Handedness\" (Game › Item)",
+        "convar \"cl_prefer_lefthanded\"",
+        "dump: cl_prefer_lefthanded false (clientdll archive userinfo per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "First Person Tracers",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "r_drawtracers_firstperson"
+      },
+      "valueType": "enum",
+      "values": {
+        "Enabled": "1",
+        "Disabled": "0"
+      },
+      "evidence": [
+        "settings_game.xml:423: \"First Person Tracers\" (Game › Item)",
+        "convar \"r_drawtracers_firstperson\"",
+        "dump: r_drawtracers_firstperson true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Always Show Inventory",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_showloadout"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:431: \"Always Show Inventory\" (Game › Item)",
+        "convar \"cl_showloadout\"",
+        "dump: cl_showloadout true (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Open Buy Menu With Use Key",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_use_opens_buy_menu"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:439: \"Open Buy Menu With Use Key\" (Game › Item)",
+        "convar \"cl_use_opens_buy_menu\"",
+        "dump: cl_use_opens_buy_menu false (clientdll archive userinfo per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Buy Menu Number Keys",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_buywheel_nonumberpurchasing"
+      },
+      "valueType": "enum",
+      "values": {
+        "Number Keys Buy Items": "0",
+        "Ignored, Handled by Game": "1"
+      },
+      "evidence": [
+        "settings_game.xml:447: \"Buy Menu Number Keys\" (Game › Item)",
+        "convar \"cl_buywheel_nonumberpurchasing\"",
+        "dump: cl_buywheel_nonumberpurchasing false (clientdll archive per_user release)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Buy Menu Donation Key",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_buywheel_donate_key"
+      },
+      "valueType": "enum",
+      "values": {
+        "Left Control": "0",
+        "Left Alt": "1",
+        "Left Shift": "2"
+      },
+      "evidence": [
+        "settings_game.xml:455: \"Buy Menu Donation Key\" (Game › Item)",
+        "convar \"cl_buywheel_donate_key\"",
+        "dump: cl_buywheel_donate_key 0 (clientdll archive per_user release)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Last Weapon on Radial Weapon Tap",
+      "category": "Item",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_quickinventory_lastinv"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:464: \"Last Weapon on Radial Weapon Tap\" (Game › Item)",
+        "convar \"cl_quickinventory_lastinv\"",
+        "dump: cl_quickinventory_lastinv true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Radar Hud Map Blends With Background",
+      "category": "Radar",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_radar_map_additive"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:495: \"Radar Hud Map Blends With Background\" (Game › Radar / Tablet)",
+        "convar \"cl_hud_radar_map_additive\"",
+        "dump: cl_hud_radar_map_additive true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Radar Hud Background Opacity",
+      "category": "Radar",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_radar_background_alpha"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "evidence": [
+        "settings_game.xml:510: \"Radar Hud Background Opacity\" (Game › Radar / Tablet)",
+        "convar \"cl_hud_radar_background_alpha\"",
+        "dump: cl_hud_radar_background_alpha 0.627 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Radar Map Alternate Zoom",
+      "category": "Radar",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_radar_scale_alternate"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.25,
+        "max": 1
+      },
+      "evidence": [
+        "settings_game.xml:522: \"Radar Map Alternate Zoom\" (Game › Radar / Tablet)",
+        "convar \"cl_radar_scale_alternate\"",
+        "dump: cl_radar_scale_alternate 1 (clientdll archive release)"
+      ]
+    },
+    {
+      "name": "Predict Body Shot Effects",
+      "category": "Damage Prediction",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_predict_body_shot_fx"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:565: \"Predict Body Shot Effects\" (Game › Damage Prediction)",
+        "convar \"cl_predict_body_shot_fx\"",
+        "dump: cl_predict_body_shot_fx false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Predict Head Shot Effects",
+      "category": "Damage Prediction",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_predict_head_shot_fx"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:575: \"Predict Head Shot Effects\" (Game › Damage Prediction)",
+        "convar \"cl_predict_head_shot_fx\"",
+        "dump: cl_predict_head_shot_fx false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Predict Kill Ragdolls",
+      "category": "Damage Prediction",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_predict_kill_ragdolls"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:585: \"Predict Kill Ragdolls\" (Game › Damage Prediction)",
+        "convar \"cl_predict_kill_ragdolls\"",
+        "dump: cl_predict_kill_ragdolls true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Show frame time and FPS",
+      "category": "Telemetry",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_telemetry_frametime_show"
+      },
+      "valueType": "enum",
+      "values": {
+        "Never": "0",
+        "If conditions are poor": "1",
+        "Always": "2"
+      },
+      "evidence": [
+        "settings_game.xml:601: \"Show frame time and FPS\" (Game › Telemetry)",
+        "convar \"cl_hud_telemetry_frametime_show\"",
+        "dump: cl_hud_telemetry_frametime_show 1 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Frame time warning threshold",
+      "category": "Telemetry",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_telemetry_frametime_poor"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 1,
+        "max": 100
+      },
+      "evidence": [
+        "settings_game.xml:610: \"Frame time warning threshold\" (Game › Telemetry)",
+        "convar \"cl_hud_telemetry_frametime_poor\"",
+        "dump: cl_hud_telemetry_frametime_poor 100 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Show ping",
+      "category": "Telemetry",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_telemetry_ping_show"
+      },
+      "valueType": "enum",
+      "values": {
+        "Never": "0",
+        "If conditions are poor": "1",
+        "Always": "2"
+      },
+      "evidence": [
+        "settings_game.xml:616: \"Show ping\" (Game › Telemetry)",
+        "convar \"cl_hud_telemetry_ping_show\"",
+        "dump: cl_hud_telemetry_ping_show 1 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Show network problems (ticks missed due to loss / jitter)",
+      "category": "Telemetry",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_telemetry_net_misdelivery_show"
+      },
+      "valueType": "enum",
+      "values": {
+        "Never": "0",
+        "If conditions are poor": "1",
+        "Always": "2"
+      },
+      "evidence": [
+        "settings_game.xml:625: \"Show network problems (ticks missed due to loss / jitter)\" (Game › Telemetry)",
+        "convar \"cl_hud_telemetry_net_misdelivery_show\"",
+        "dump: cl_hud_telemetry_net_misdelivery_show 1 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Network tick miss rate warning threshold",
+      "category": "Telemetry",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_telemetry_net_misdelivery_poor"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 2
+      },
+      "evidence": [
+        "settings_game.xml:633: \"Network tick miss rate warning threshold\" (Game › Telemetry)",
+        "convar \"cl_hud_telemetry_net_misdelivery_poor\"",
+        "dump: cl_hud_telemetry_net_misdelivery_poor 2 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Show network jitter / misdelivery graph",
+      "category": "Telemetry",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_telemetry_net_quality_graph_show"
+      },
+      "valueType": "enum",
+      "values": {
+        "Never": "0",
+        "If conditions are poor": "1",
+        "Always": "2"
+      },
+      "evidence": [
+        "settings_game.xml:638: \"Show network jitter / misdelivery graph\" (Game › Telemetry)",
+        "convar \"cl_hud_telemetry_net_quality_graph_show\"",
+        "dump: cl_hud_telemetry_net_quality_graph_show 0 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Use the detailed network quality display",
+      "category": "Telemetry",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_telemetry_net_detailed"
+      },
+      "valueType": "enum",
+      "values": {
+        "Never": "0",
+        "If conditions are poor": "1",
+        "Always": "2"
+      },
+      "evidence": [
+        "settings_game.xml:647: \"Use the detailed network quality display\" (Game › Telemetry)",
+        "convar \"cl_hud_telemetry_net_detailed\"",
+        "dump: cl_hud_telemetry_net_detailed 0 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Friendly Fire Reticle Warning",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_crosshair_friendly_warning"
+      },
+      "valueType": "enum",
+      "values": {
+        "Always Off": "0",
+        "Always On": "1"
+      },
+      "evidence": [
+        "settings_crosshair.xml:110: \"Friendly Fire Reticle Warning\" (Crosshair › Crosshair Settings)",
+        "convar \"cl_crosshair_friendly_warning\"",
+        "dump: cl_crosshair_friendly_warning 1 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Red",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshaircolor_r"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "evidence": [
+        "candidate: the crosshair colour picker's red channel",
+        "dump: cl_crosshaircolor_r 0 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ],
+      "todo": "Inferred from the dump: one csync discover round confirms it."
+    },
+    {
+      "name": "Green",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshaircolor_g"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "evidence": [
+        "candidate: the crosshair colour picker's green channel",
+        "dump: cl_crosshaircolor_g 255 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ],
+      "todo": "Inferred from the dump: one csync discover round confirms it."
+    },
+    {
+      "name": "Blue",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshaircolor_b"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "evidence": [
+        "candidate: the crosshair colour picker's blue channel",
+        "dump: cl_crosshaircolor_b 0 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ],
+      "todo": "Inferred from the dump: one csync discover round confirms it."
+    },
+    {
+      "name": "Split Distance",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_dynamic_splitdist"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 127
+      },
+      "evidence": [
+        "settings_crosshair.xml:87: \"Split Distance\" (Crosshair › Style Settings)",
+        "convar \"cl_crosshair_dynamic_splitdist\"",
+        "dump: cl_crosshair_dynamic_splitdist 3 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Inner Split Alpha",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_dynamic_splitalpha_innermod"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "evidence": [
+        "settings_crosshair.xml:89: \"Inner Split Alpha\" (Crosshair › Style Settings)",
+        "convar \"cl_crosshair_dynamic_splitalpha_innermod\"",
+        "dump: cl_crosshair_dynamic_splitalpha_innermod 0 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Outer Split Alpha",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_dynamic_splitalpha_outermod"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.3,
+        "max": 1
+      },
+      "evidence": [
+        "settings_crosshair.xml:91: \"Outer Split Alpha\" (Crosshair › Style Settings)",
+        "convar \"cl_crosshair_dynamic_splitalpha_outermod\"",
+        "dump: cl_crosshair_dynamic_splitalpha_outermod 1 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Split Size Ratio",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_dynamic_maxdist_splitratio"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "evidence": [
+        "settings_crosshair.xml:93: \"Split Size Ratio\" (Crosshair › Style Settings)",
+        "convar \"cl_crosshair_dynamic_maxdist_splitratio\"",
+        "dump: cl_crosshair_dynamic_maxdist_splitratio 1 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Dynamic Spread Limit",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_crosshair_dynamic_spread_limit"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 255
+      },
+      "evidence": [
+        "settings_crosshair.xml:84: \"Dynamic Spread Limit\" (Crosshair › Style Settings)",
+        "convar \"cl_crosshair_dynamic_spread_limit\"",
+        "dump: cl_crosshair_dynamic_spread_limit 255 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Show Player Crosshairs",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_show_observer_crosshair"
+      },
+      "valueType": "enum",
+      "values": {
+        "No": "0",
+        "Friends and Party": "1",
+        "Everyone": "2"
+      },
+      "evidence": [
+        "settings_crosshair.xml:135: \"Show Player Crosshairs\" (Crosshair › Crosshair Settings)",
+        "convar \"cl_show_observer_crosshair\"",
+        "dump: cl_show_observer_crosshair 2 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Show my crosshair when spectating bots",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_observed_bot_crosshair"
+      },
+      "valueType": "enum",
+      "values": {
+        "Always": "0",
+        "When I can take over bot": "1",
+        "Never": "2"
+      },
+      "evidence": [
+        "settings_crosshair.xml:146: \"Show my crosshair when spectating bots\" (Crosshair › Crosshair Settings)",
+        "convar \"cl_observed_bot_crosshair\"",
+        "dump: cl_observed_bot_crosshair 2 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Keep Regular Crosshair",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_grenadecrosshair_keepusercrosshair"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:163: \"Keep Regular Crosshair\" (Crosshair › Grenade Line-up)",
+        "convar \"cl_grenadecrosshair_keepusercrosshair\"",
+        "dump: cl_grenadecrosshair_keepusercrosshair true (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Flashbangs",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_grenadecrosshairdelay_flash"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "evidence": [
+        "settings_crosshair.xml:171: \"Flashbangs\" (Crosshair › Grenade Line-up)",
+        "convar \"cl_grenadecrosshairdelay_flash\"",
+        "dump: cl_grenadecrosshairdelay_flash 2 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "HE grenades",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_grenadecrosshairdelay_explosive"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "evidence": [
+        "settings_crosshair.xml:175: \"HE grenades\" (Crosshair › Grenade Line-up)",
+        "convar \"cl_grenadecrosshairdelay_explosive\"",
+        "dump: cl_grenadecrosshairdelay_explosive 2 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Molotov cocktails / Incendiary grenades",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_grenadecrosshairdelay_fire"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "evidence": [
+        "settings_crosshair.xml:179: \"Molotov cocktails / Incendiary grenades\" (Crosshair › Grenade Line-up)",
+        "convar \"cl_grenadecrosshairdelay_fire\"",
+        "dump: cl_grenadecrosshairdelay_fire 2 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Smoke grenades",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_grenadecrosshairdelay_smoke"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "evidence": [
+        "settings_crosshair.xml:183: \"Smoke grenades\" (Crosshair › Grenade Line-up)",
+        "convar \"cl_grenadecrosshairdelay_smoke\"",
+        "dump: cl_grenadecrosshairdelay_smoke 2 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Decoy grenades",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_grenadecrosshairdelay_decoy"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "evidence": [
+        "settings_crosshair.xml:187: \"Decoy grenades\" (Crosshair › Grenade Line-up)",
+        "convar \"cl_grenadecrosshairdelay_decoy\"",
+        "dump: cl_grenadecrosshairdelay_decoy 2 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Show Scoped Sniper Rifle Inaccuracy",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_sniper_show_inaccuracy"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:207: \"Show Scoped Sniper Rifle Inaccuracy\" (Crosshair › Sniper Sights)",
+        "convar \"cl_sniper_show_inaccuracy\"",
+        "dump: cl_sniper_show_inaccuracy true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Use Crosshair Color for Scope Dot",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_ironsight_usecrosshaircolor"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_crosshair.xml:126: \"Use crosshair color for scope dot\" (Crosshair › Crosshair Settings)",
+        "convar \"cl_ironsight_usecrosshaircolor\"",
+        "dump: cl_ironsight_usecrosshaircolor false (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Scope Dot Scale",
+      "category": "Crosshair",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_ironsight_dot_scale"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0.1,
+        "max": 2
+      },
+      "evidence": [
+        "settings_crosshair.xml:223: \"Scope dot scale\" (Crosshair › Sniper Sights)",
+        "convar \"cl_ironsight_dot_scale\"",
+        "dump: cl_ironsight_dot_scale 1 (clientdll archive per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Reverse Mouse",
+      "category": "Keyboard / Mouse",
+      "where": "menu",
+      "perMachine": false,
+      "status": "manual",
+      "classification": "unknown",
+      "valueType": "enum",
+      "values": {
+        "Off": "pitch",
+        "On": "!pitch"
+      },
+      "evidence": [
+        "settings_kbmouse.xml:58: \"Reverse Mouse\" (Keyboard / Mouse › Keyboard & Mouse Settings)",
+        "no convar in the layout"
+      ],
+      "todo": "The game sets this in code: find the key with csync discover (the values above are what it stores)."
+    },
+    {
+      "name": "Duck Mode",
+      "category": "Keyboard / Mouse",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "option_duck_method"
+      },
+      "valueType": "enum",
+      "values": {
+        "Hold": "0",
+        "Toggle": "1"
+      },
+      "evidence": [
+        "settings_kbmouse.xml:66: \"Duck Mode\" (Keyboard / Mouse › Keyboard & Mouse Settings)",
+        "convar \"option_duck_method\"",
+        "dump: option_duck_method false (clientdll archive userinfo per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Walk Mode",
+      "category": "Keyboard / Mouse",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "option_speed_method"
+      },
+      "valueType": "enum",
+      "values": {
+        "Hold": "0",
+        "Toggle": "1"
+      },
+      "evidence": [
+        "settings_kbmouse.xml:74: \"Walk Mode\" (Keyboard / Mouse › Keyboard & Mouse Settings)",
+        "convar \"option_speed_method\"",
+        "dump: option_speed_method false (clientdll archive userinfo per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Zoom Button Hold",
+      "category": "Keyboard / Mouse",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "user_convar",
+      "source": {
+        "file": "convars",
+        "key": "cl_debounce_zoom"
+      },
+      "valueType": "enum",
+      "values": {
+        "Repeat Enabled": "0",
+        "Repeat Disabled": "1"
+      },
+      "evidence": [
+        "settings_kbmouse.xml:82: \"Zoom Button Hold\" (Keyboard / Mouse › Keyboard & Mouse Settings)",
+        "convar \"cl_debounce_zoom\"",
+        "dump: cl_debounce_zoom true (clientdll archive userinfo per_user)",
+        "present in your cs2_user_convars_0_slot0.vcfg"
+      ]
+    },
+    {
+      "name": "Main Menu Ambience Volume",
+      "category": "Audio",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_menumap_volume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:39: \"Main Menu Ambience Volume\" (Audio › Audio)",
+        "convar \"snd_menumap_volume\"",
+        "dump: snd_menumap_volume 1 (clientdll archive release)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Master Music Volume",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "inferred",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_musicvolume"
+      },
+      "valueType": "number",
+      "range": {
+        "min": 0,
+        "max": 1,
+        "stored": "gain"
+      },
+      "evidence": [
+        "settings_audio.xml:153: \"Master Music Volume\" (Audio › Music)",
+        "convar \"snd_musicvolume\"",
+        "dump: snd_musicvolume 1 (archive snapshot_ignored)"
+      ],
+      "todo": "Audio-gain slider: the stored value is not the on-screen percentage; confirm the curve."
+    },
+    {
+      "name": "Music Volumes For",
+      "category": "Music",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "snd_music_settings_mode"
+      },
+      "valueType": "enum",
+      "values": {
+        "Competitive": "0",
+        "Casual": "1",
+        "Arms Race": "2",
+        "Deathmatch": "3",
+        "Rush": "4"
+      },
+      "evidence": [
+        "settings_audio.xml:158: \"Music Volumes For\" (Audio › Music)",
+        "convar \"snd_music_settings_mode\"",
+        "dump: snd_music_settings_mode 0 (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Override Spectating HUD Color",
+      "category": "HUD",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_force_spec_hud_color_to_team"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:196: \"Override Spectating HUD Color\" (Game › Hud)",
+        "convar \"cl_force_spec_hud_color_to_team\"",
+        "dump: cl_force_spec_hud_color_to_team true (clientdll archive)"
+      ]
+    },
+    {
+      "name": "Display Team Tags In Death Notices",
+      "category": "Team",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_show_clan_in_death_notice"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:211: \"Display Team Tags In Death Notices\" (Game › Team)",
+        "convar \"cl_show_clan_in_death_notice\"",
+        "dump: cl_show_clan_in_death_notice true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Blur Background",
+      "category": "Radar",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_hud_radar_blur_background"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:503: \"Blur Background\" (Game › Radar / Tablet)",
+        "convar \"cl_hud_radar_blur_background\"",
+        "dump: cl_hud_radar_blur_background true (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Force Square Shape",
+      "category": "Radar",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_radar_square_always"
+      },
+      "valueType": "enum",
+      "values": {
+        "No": "0",
+        "Yes": "1"
+      },
+      "evidence": [
+        "settings_game.xml:539: \"Force Square Shape\" (Game › Radar / Tablet)",
+        "convar \"cl_radar_square_always\"",
+        "dump: cl_radar_square_always false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    },
+    {
+      "name": "Radar Is Zooming Dynamically",
+      "category": "Radar",
+      "where": "menu",
+      "perMachine": false,
+      "status": "from-game",
+      "classification": "machine_config",
+      "source": {
+        "file": "machine",
+        "key": "cl_radar_scale_dynamic"
+      },
+      "valueType": "enum",
+      "values": {
+        "Yes": "1",
+        "No": "0"
+      },
+      "evidence": [
+        "settings_game.xml:547: \"Radar Is Zooming Dynamically\" (Game › Radar / Tablet)",
+        "convar \"cl_radar_scale_dynamic\"",
+        "dump: cl_radar_scale_dynamic false (clientdll archive release)",
+        "present in your cs2_machine_convars.vcfg"
+      ]
+    }
+  ],
+  "unmatched": [
+    {
+      "tab": "Game",
+      "section": "Game",
+      "name": "CPU Cores Usage Preference",
+      "kind": "dropdown",
+      "convar": "thread_pool_option",
+      "options": [
+        {
+          "label": "Performance Cores Only",
+          "value": "0"
+        },
+        {
+          "label": "Prefer Performance Cores",
+          "value": "2"
+        },
+        {
+          "label": "No Preference",
+          "value": "3"
+        }
+      ],
+      "at": "settings_game.xml:120"
+    },
+    {
+      "tab": "Video",
+      "section": "Presets",
+      "name": "Magnification Mode",
+      "kind": "dropdown",
+      "id": "MagMode",
+      "options": [
+        {
+          "label": "Zoom",
+          "value": "0"
+        },
+        {
+          "label": "Big Pixels",
+          "value": "1"
+        }
+      ],
+      "at": "settings_video.xml:284"
+    },
+    {
+      "tab": "Video",
+      "section": "Presets",
+      "name": "Magnification",
+      "kind": "slider",
+      "convar": "csgo_map_preview_scale",
+      "id": "MagnificationSlider",
+      "min": 2,
+      "max": 8,
+      "at": "settings_video.xml:289"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Movement Keys",
+      "name": "Toggle Inventory Display",
+      "kind": "keybind",
+      "bind": "show_loadout_toggle",
+      "id": "InvDispBinder",
+      "at": "settings_kbmouse.xml:99"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Movement Keys",
+      "name": "Move Backward",
+      "kind": "keybind",
+      "bind": "+back",
+      "id": "MovBkBinder",
+      "at": "settings_kbmouse.xml:103"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Movement Keys",
+      "name": "Move Left (strafe)",
+      "kind": "keybind",
+      "bind": "+left",
+      "id": "MovLeftBinder",
+      "at": "settings_kbmouse.xml:105"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Movement Keys",
+      "name": "Move Right (strafe)",
+      "kind": "keybind",
+      "bind": "+right",
+      "id": "MovRightBinder",
+      "at": "settings_kbmouse.xml:107"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Radial Weapon Menu",
+      "kind": "keybind",
+      "bind": "+quickinv",
+      "id": "RadialWepMenuBinder",
+      "at": "settings_kbmouse.xml:130"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Select Previous Weapon",
+      "kind": "keybind",
+      "bind": "invprev",
+      "id": "SelPrevWeaponBinder",
+      "at": "settings_kbmouse.xml:132"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Select Next Weapon",
+      "kind": "keybind",
+      "bind": "invnext",
+      "id": "SelLastWeaponBinder",
+      "at": "settings_kbmouse.xml:134"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Switch Viewmodel Left/Right Hand",
+      "kind": "keybind",
+      "bind": "switchhands",
+      "id": "SwitchHandednessBinder",
+      "at": "settings_kbmouse.xml:142"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Autobuy",
+      "kind": "keybind",
+      "bind": "autobuy",
+      "id": "AutoBuyBinder",
+      "at": "settings_kbmouse.xml:146"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Rebuy",
+      "kind": "keybind",
+      "bind": "rebuy",
+      "id": "RebuyBinder",
+      "at": "settings_kbmouse.xml:148"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Melee Weapons",
+      "kind": "keybind",
+      "bind": "slot3",
+      "id": "KnifeBinder",
+      "at": "settings_kbmouse.xml:154"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "HE Grenade",
+      "kind": "keybind",
+      "bind": "slot6",
+      "id": "HEGrenadeBinder",
+      "at": "settings_kbmouse.xml:160"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Flashbang",
+      "kind": "keybind",
+      "bind": "slot7",
+      "id": "FlashBinder",
+      "at": "settings_kbmouse.xml:162"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Smoke Grenade",
+      "kind": "keybind",
+      "bind": "slot8",
+      "id": "SmkGrenadeBinder",
+      "at": "settings_kbmouse.xml:164"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Decoy Grenade",
+      "kind": "keybind",
+      "bind": "slot9",
+      "id": "DecGrenadeBinder",
+      "at": "settings_kbmouse.xml:166"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Molotov Cocktail / Incendiary Grenade",
+      "kind": "keybind",
+      "bind": "slot10",
+      "id": "MolotovBinder",
+      "at": "settings_kbmouse.xml:168"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Zeus x27",
+      "kind": "keybind",
+      "bind": "slot11",
+      "id": "ZeusBinder",
+      "at": "settings_kbmouse.xml:170"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Healthshot",
+      "kind": "keybind",
+      "bind": "slot12",
+      "id": "BoostBinder",
+      "at": "settings_kbmouse.xml:172"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Weapon Keys",
+      "name": "Utility Items",
+      "kind": "keybind",
+      "bind": "slot13",
+      "id": "UtilityBinder",
+      "at": "settings_kbmouse.xml:174"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "UI Keys",
+      "name": "Show Team Equipment",
+      "kind": "keybind",
+      "bind": "+cl_show_team_equipment",
+      "id": "ShowTeamEquipmentBinder",
+      "at": "settings_kbmouse.xml:187"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "UI Keys",
+      "name": "Toggle Radar Zoom",
+      "kind": "keybind",
+      "bind": "toggleradarscale",
+      "id": "ToggleRadarScale",
+      "at": "settings_kbmouse.xml:189"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "UI Keys",
+      "name": "Call Vote",
+      "kind": "keybind",
+      "bind": "callvote",
+      "id": "VoteBinder",
+      "at": "settings_kbmouse.xml:191"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "UI Keys",
+      "name": "Choose Team",
+      "kind": "keybind",
+      "bind": "teammenu",
+      "id": "TeamBinder",
+      "at": "settings_kbmouse.xml:193"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Communication Options",
+      "name": "Radio Message",
+      "kind": "keybind",
+      "bind": "radio",
+      "id": "CommonRadioBinder",
+      "at": "settings_kbmouse.xml:206"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Communication Options",
+      "name": "Command Radio Message",
+      "kind": "keybind",
+      "bind": "radio1",
+      "id": "CmdRadioBinder",
+      "at": "settings_kbmouse.xml:208"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Communication Options",
+      "name": "Standard Radio Message",
+      "kind": "keybind",
+      "bind": "radio2",
+      "id": "StdRadioBinder",
+      "at": "settings_kbmouse.xml:210"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Communication Options",
+      "name": "Report Radio Message",
+      "kind": "keybind",
+      "bind": "radio3",
+      "id": "ReportRadioMessageBinder",
+      "at": "settings_kbmouse.xml:212"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Communication Options",
+      "name": "Toggle between Open-Mic and Push-To-Talk",
+      "kind": "keybind",
+      "bind": "voice_toggle_open_mic",
+      "id": "ToggleOpenMic",
+      "at": "settings_kbmouse.xml:221"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Communication Options",
+      "name": "Temporarily Disable Incoming Chat",
+      "kind": "keybind",
+      "bind": "clutch_mode_toggle",
+      "id": "ClutchKey",
+      "at": "settings_kbmouse.xml:224"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Chat Wheel Keys",
+      "name": "Chat Wheel 1",
+      "kind": "keybind",
+      "bind": "+radialradio",
+      "id": "ChatwheelBinder1",
+      "at": "settings_kbmouse.xml:234"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Chat Wheel Keys",
+      "name": "Chat Wheel 2",
+      "kind": "keybind",
+      "bind": "+radialradio2",
+      "id": "ChatwheelBinder2",
+      "at": "settings_kbmouse.xml:236"
+    },
+    {
+      "tab": "Keyboard / Mouse",
+      "section": "Chat Wheel Keys",
+      "name": "Chat Wheel 3",
+      "kind": "keybind",
+      "bind": "+radialradio3",
+      "id": "ChatwheelBinder3",
+      "at": "settings_kbmouse.xml:238"
+    },
+    {
+      "tab": "Crosshair",
+      "section": "Style Settings",
+      "name": "Style",
+      "kind": "dropdown",
+      "convar": "cl_crosshairstyle",
+      "id": "XhairStyleDropdown",
+      "options": [
+        {
+          "label": "Static Cross",
+          "value": "4"
+        },
+        {
+          "label": "Static Circle",
+          "value": "3"
+        },
+        {
+          "label": "Static Square",
+          "value": "8"
+        },
+        {
+          "label": "Dot Only",
+          "value": "6"
+        },
+        {
+          "label": "Dynamic Cross",
+          "value": "0"
+        },
+        {
+          "label": "Dynamic Circle",
+          "value": "1"
+        },
+        {
+          "label": "Dynamic Cross (Classic)",
+          "value": "2"
+        },
+        {
+          "label": "Dynamic Cross (Legacy/Shot Feedback)",
+          "value": "5"
+        },
+        {
+          "label": "Dynamic Quad",
+          "value": "7"
+        }
+      ],
+      "at": "settings_crosshair.xml:34"
+    },
+    {
+      "tab": "Crosshair",
+      "section": "Sniper Sights",
+      "name": "Sniper crosshair thickness",
+      "kind": "slider",
+      "convar": "cl_crosshair_sniper_width",
+      "id": "XhairSniperThickness",
+      "min": 1,
+      "max": 6,
+      "at": "settings_crosshair.xml:221"
+    }
+  ]
+}
