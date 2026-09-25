@@ -8,3 +8,6 @@ export const GAME_SORTS: { value: GameSort; label: string }[] = [
   { value: "name", label: "Name" },
   { value: "presets", label: "Most presets" },
 ];
+
+/** Screenshots one import may send together. Shared by the (client) dialog and the API route. */
+export const MAX_SCREENSHOTS = 16;

@@ -217,7 +217,8 @@
               "source": {
                 "file": "video",
                 "key": "setting.mat_vsync"
-              }
+              },
+              "aliases": ["V-Sync"]
             },
             {
               "name": "Multisampling Anti-Aliasing Mode",
@@ -1102,7 +1103,8 @@
               "source": {
                 "file": "convars",
                 "key": "cl_crosshair_sniper_width"
-              }
+              },
+              "aliases": ["Sniper Width"]
             }
           ]
         },
@@ -1164,7 +1166,8 @@
               "source": {
                 "file": "convars",
                 "key": "cl_radar_square_with_scoreboard"
-              }
+              },
+              "aliases": ["Toggle Square Shape With Scoreboard"]
             }
           ]
         },
@@ -1322,11 +1325,1131 @@
                   "label": "Not enabled",
                   "value": "Not enabled"
                 }
-              ]
+              ],
+              "aliases": ["Voice/Microphone Mode"]
             }
           ]
         }
       ]
+    }
+  ],
+  "menuVerifiedAt": "2026-09-25",
+  "menu": [
+    {
+      "category": "Video",
+      "name": "Display",
+      "type": "text"
+    },
+    {
+      "category": "Video",
+      "name": "Boost Player Contrast",
+      "type": "boolean"
+    },
+    {
+      "category": "Video",
+      "name": "NVIDIA G-Sync",
+      "type": "boolean"
+    },
+    {
+      "category": "Video",
+      "name": "AMD Radeon Anti-Lag 2",
+      "type": "boolean"
+    },
+    {
+      "category": "Video",
+      "name": "Current Video Values Preset",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Low",
+          "value": "Low"
+        },
+        {
+          "label": "Medium",
+          "value": "Medium"
+        },
+        {
+          "label": "High",
+          "value": "High"
+        },
+        {
+          "label": "Very High",
+          "value": "Very High"
+        },
+        {
+          "label": "Custom",
+          "value": "Custom"
+        }
+      ]
+    },
+    {
+      "category": "Video",
+      "name": "Horizontal Adjustment",
+      "type": "slider",
+      "min": 0.5625,
+      "max": 1.0
+    },
+    {
+      "category": "Video",
+      "name": "Vertical Adjustment",
+      "type": "slider",
+      "min": 0.8,
+      "max": 1.0
+    },
+    {
+      "category": "Audio",
+      "name": "Play Audio When Game In Background",
+      "type": "boolean"
+    },
+    {
+      "category": "Audio",
+      "name": "Other Player Voice Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Audio",
+      "name": "Voice Input Audio Device",
+      "type": "text"
+    },
+    {
+      "category": "Audio",
+      "name": "Hear My Own Voice",
+      "type": "boolean"
+    },
+    {
+      "category": "Audio",
+      "name": "Streamlined Push To Talk",
+      "type": "boolean"
+    },
+    {
+      "category": "Audio",
+      "name": "Microphone Trigger Threshold",
+      "type": "slider",
+      "min": -120,
+      "max": 0,
+      "unit": "dB"
+    },
+    {
+      "category": "Music",
+      "name": "Main Menu Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Round Start Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Round Action Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Round End Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "MVP Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Bomb / Hostage Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Ten Second Warning Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Death Camera Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Mute MVP Music when players on both teams are alive",
+      "type": "boolean"
+    },
+    {
+      "category": "Music",
+      "name": "Competitive EQ",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "Natural",
+          "value": "Natural"
+        },
+        {
+          "label": "Crisp",
+          "value": "Crisp"
+        },
+        {
+          "label": "Smooth",
+          "value": "Smooth"
+        }
+      ]
+    },
+    {
+      "category": "Music",
+      "name": "Casual EQ",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "Natural",
+          "value": "Natural"
+        },
+        {
+          "label": "Crisp",
+          "value": "Crisp"
+        },
+        {
+          "label": "Smooth",
+          "value": "Smooth"
+        }
+      ]
+    },
+    {
+      "category": "Music",
+      "name": "Deathmatch EQ",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "Natural",
+          "value": "Natural"
+        },
+        {
+          "label": "Crisp",
+          "value": "Crisp"
+        },
+        {
+          "label": "Smooth",
+          "value": "Smooth"
+        }
+      ]
+    },
+    {
+      "category": "Music",
+      "name": "Arms Race EQ",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "Natural",
+          "value": "Natural"
+        },
+        {
+          "label": "Crisp",
+          "value": "Crisp"
+        },
+        {
+          "label": "Smooth",
+          "value": "Smooth"
+        }
+      ]
+    },
+    {
+      "category": "Game",
+      "name": "Enable Developer Console",
+      "type": "boolean",
+      "aliases": ["Launched With Developer Console"]
+    },
+    {
+      "category": "Game",
+      "name": "Max Acceptable Matchmaking Ping",
+      "type": "slider",
+      "min": 25,
+      "max": 350,
+      "unit": "ms"
+    },
+    {
+      "category": "Game",
+      "name": "Max Acceptable Game Traffic Bandwidth",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Extremely Restricted",
+          "value": "Extremely Restricted"
+        },
+        {
+          "label": "Below 1.0 Mbps",
+          "value": "Below 1.0 Mbps"
+        },
+        {
+          "label": "Up to 1.5 Mbps",
+          "value": "Up to 1.5 Mbps"
+        },
+        {
+          "label": "Up to 2.0 Mbps",
+          "value": "Up to 2.0 Mbps"
+        },
+        {
+          "label": "Up to 2.5 Mbps",
+          "value": "Up to 2.5 Mbps"
+        },
+        {
+          "label": "3 Mbps",
+          "value": "3 Mbps"
+        },
+        {
+          "label": "4 Mbps",
+          "value": "4 Mbps"
+        },
+        {
+          "label": "Unrestricted",
+          "value": "Unrestricted"
+        }
+      ]
+    },
+    {
+      "category": "Game",
+      "name": "Buffering to smooth over packet loss / jitter",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "1 Packet",
+          "value": "1 Packet"
+        },
+        {
+          "label": "2 Packets",
+          "value": "2 Packets"
+        }
+      ],
+      "aliases": ["Buffering to smooth over packet loss"]
+    },
+    {
+      "category": "Game",
+      "name": "Install Counter-Strike Workshop Tools",
+      "type": "boolean"
+    },
+    {
+      "category": "HUD",
+      "name": "Large Player Count",
+      "type": "boolean"
+    },
+    {
+      "category": "HUD",
+      "name": "Community Notification Location",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Top Left",
+          "value": "Top Left"
+        },
+        {
+          "label": "Bottom Left",
+          "value": "Bottom Left"
+        },
+        {
+          "label": "Bottom Right",
+          "value": "Bottom Right"
+        },
+        {
+          "label": "Top Right",
+          "value": "Top Right"
+        }
+      ]
+    },
+    {
+      "category": "HUD",
+      "name": "Community Notification Horizontal Offset",
+      "type": "slider",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "category": "HUD",
+      "name": "Community Notification Vertical Offset",
+      "type": "slider",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "category": "HUD",
+      "name": "Glow Weapon with Rarity Color",
+      "type": "boolean"
+    },
+    {
+      "category": "Team",
+      "name": "Show Team ID Through Walls",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Off",
+          "value": "Off"
+        },
+        {
+          "label": "Pips",
+          "value": "Pips"
+        },
+        {
+          "label": "Pips, Names, and Health",
+          "value": "Pips, Names, and Health"
+        },
+        {
+          "label": "Pips, Names, Health, and Equipment",
+          "value": "Pips, Names, Health, and Equipment"
+        }
+      ],
+      "aliases": ["Show Teams Positions Through Walls"]
+    },
+    {
+      "category": "Team",
+      "name": "Show Player Colors in Competitive",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "No",
+          "value": "No"
+        },
+        {
+          "label": "Show Colors",
+          "value": "Show Colors"
+        },
+        {
+          "label": "Colors and Letters",
+          "value": "Colors and Letters"
+        }
+      ]
+    },
+    {
+      "category": "Team",
+      "name": "Use Player Colors on Team ID",
+      "type": "boolean"
+    },
+    {
+      "category": "Team",
+      "name": "Friends Lobby Default Permissions",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Friends Need Invites",
+          "value": "Friends Need Invites"
+        },
+        {
+          "label": "All Friends Can Join",
+          "value": "All Friends Can Join"
+        }
+      ]
+    },
+    {
+      "category": "Team",
+      "name": "Looking to Play when Counter-Strike Starts",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Disabled",
+          "value": "Disabled"
+        },
+        {
+          "label": "Remember Last State",
+          "value": "Remember Last State"
+        },
+        {
+          "label": "Automatic",
+          "value": "Automatic"
+        }
+      ]
+    },
+    {
+      "category": "Communication",
+      "name": "Player Pings",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Display and Play Sound",
+          "value": "Display and Play Sound"
+        },
+        {
+          "label": "Display Without Sound",
+          "value": "Display Without Sound"
+        },
+        {
+          "label": "Disabled",
+          "value": "Disabled"
+        }
+      ]
+    },
+    {
+      "category": "Communication",
+      "name": "Mute Enemy Team",
+      "type": "boolean"
+    },
+    {
+      "category": "Communication",
+      "name": "Mute All But Friends",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "No",
+          "value": "No"
+        },
+        {
+          "label": "Only in non-competitive modes",
+          "value": "Only in non-competitive modes"
+        },
+        {
+          "label": "Always",
+          "value": "Always"
+        }
+      ]
+    },
+    {
+      "category": "Communication",
+      "name": "Allow Animated Avatars",
+      "type": "boolean"
+    },
+    {
+      "category": "Communication",
+      "name": "Hide Avatar Images and Customized Items",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Show All",
+          "value": "Show All"
+        },
+        {
+          "label": "Hide All",
+          "value": "Hide All"
+        },
+        {
+          "label": "Show Only Friends",
+          "value": "Show Only Friends"
+        }
+      ]
+    },
+    {
+      "category": "Communication",
+      "name": "Clean Player Names",
+      "type": "boolean"
+    },
+    {
+      "category": "Spectator / Scoreboard",
+      "name": "Spectator/Map Vote Number Selection Method",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Use Number Keys",
+          "value": "Use Number Keys"
+        },
+        {
+          "label": "Use Weapon Slots",
+          "value": "Use Weapon Slots"
+        }
+      ]
+    },
+    {
+      "category": "Spectator / Scoreboard",
+      "name": "Scoreboard Mouse Enable / End of Match Scoreboard Toggle",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Secondary Fire",
+          "value": "Secondary Fire"
+        },
+        {
+          "label": "Duck",
+          "value": "Duck"
+        },
+        {
+          "label": "Jump",
+          "value": "Jump"
+        },
+        {
+          "label": "Drop Weapon",
+          "value": "Drop Weapon"
+        },
+        {
+          "label": "Last Weapon Used",
+          "value": "Last Weapon Used"
+        },
+        {
+          "label": "Radio Message",
+          "value": "Radio Message"
+        },
+        {
+          "label": "Use",
+          "value": "Use"
+        }
+      ]
+    },
+    {
+      "category": "Spectator / Scoreboard",
+      "name": "End of Match Local Player Defeat Animation",
+      "type": "boolean"
+    },
+    {
+      "category": "Spectator / Scoreboard",
+      "name": "Survivors Always On",
+      "type": "boolean"
+    },
+    {
+      "category": "Spectator / Scoreboard",
+      "name": "Smooth Spectator Camera",
+      "type": "boolean"
+    },
+    {
+      "category": "Spectator / Scoreboard",
+      "name": "Smooth Spectator Camera Speed",
+      "type": "slider",
+      "min": 0.05,
+      "max": 0.4
+    },
+    {
+      "category": "Item",
+      "name": "Delay Sniper Rifle Un-Scope after Shot",
+      "type": "boolean"
+    },
+    {
+      "category": "Item",
+      "name": "Auto Re-Zoom Sniper Rifle after Shot",
+      "type": "boolean"
+    },
+    {
+      "category": "Item",
+      "name": "Detach Silencer on M4A1-S and USP-S",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Secondary Fire",
+          "value": "Secondary Fire"
+        },
+        {
+          "label": "Disabled",
+          "value": "Disabled"
+        }
+      ]
+    },
+    {
+      "category": "Item",
+      "name": "Viewmodel Position",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Desktop",
+          "value": "Desktop"
+        },
+        {
+          "label": "Couch",
+          "value": "Couch"
+        },
+        {
+          "label": "Classic",
+          "value": "Classic"
+        }
+      ]
+    },
+    {
+      "category": "Item",
+      "name": "Preferred Viewmodel Left/Right Handedness",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Right",
+          "value": "Right"
+        },
+        {
+          "label": "Left",
+          "value": "Left"
+        }
+      ]
+    },
+    {
+      "category": "Item",
+      "name": "First Person Tracers",
+      "type": "boolean"
+    },
+    {
+      "category": "Item",
+      "name": "Always Show Inventory",
+      "type": "boolean"
+    },
+    {
+      "category": "Item",
+      "name": "Open Buy Menu With Use Key",
+      "type": "boolean"
+    },
+    {
+      "category": "Item",
+      "name": "Buy Menu Number Keys",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Number Keys Buy Items",
+          "value": "Number Keys Buy Items"
+        },
+        {
+          "label": "Ignored, Handled By Game",
+          "value": "Ignored, Handled By Game"
+        }
+      ]
+    },
+    {
+      "category": "Item",
+      "name": "Buy Menu Donation Key",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Left Ctrl",
+          "value": "Left Ctrl"
+        },
+        {
+          "label": "Left Alt",
+          "value": "Left Alt"
+        },
+        {
+          "label": "Left Shift",
+          "value": "Left Shift"
+        }
+      ]
+    },
+    {
+      "category": "Item",
+      "name": "Last Weapon on Radial Weapon Tap",
+      "type": "boolean"
+    },
+    {
+      "category": "Radar",
+      "name": "Radar Hud Map Blends With Background",
+      "type": "boolean"
+    },
+    {
+      "category": "Radar",
+      "name": "Radar Hud Background Opacity",
+      "type": "slider",
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "category": "Radar",
+      "name": "Radar Map Alternate Zoom",
+      "type": "slider",
+      "min": 0.4,
+      "max": 1.0
+    },
+    {
+      "category": "Damage Prediction",
+      "name": "Predict Body Shot Effects",
+      "type": "boolean"
+    },
+    {
+      "category": "Damage Prediction",
+      "name": "Predict Head Shot Effects",
+      "type": "boolean"
+    },
+    {
+      "category": "Damage Prediction",
+      "name": "Predict Kill Ragdolls",
+      "type": "boolean"
+    },
+    {
+      "category": "Telemetry",
+      "name": "Show frame time and FPS",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Never",
+          "value": "Never"
+        },
+        {
+          "label": "If conditions are poor",
+          "value": "If conditions are poor"
+        },
+        {
+          "label": "Always",
+          "value": "Always"
+        }
+      ]
+    },
+    {
+      "category": "Telemetry",
+      "name": "Frame time warning threshold",
+      "type": "slider",
+      "min": 1,
+      "max": 100,
+      "unit": "ms"
+    },
+    {
+      "category": "Telemetry",
+      "name": "Show ping",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Never",
+          "value": "Never"
+        },
+        {
+          "label": "If conditions are poor",
+          "value": "If conditions are poor"
+        },
+        {
+          "label": "Always",
+          "value": "Always"
+        }
+      ]
+    },
+    {
+      "category": "Telemetry",
+      "name": "Show network problems (ticks missed due to loss / jitter)",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Never",
+          "value": "Never"
+        },
+        {
+          "label": "If conditions are poor",
+          "value": "If conditions are poor"
+        },
+        {
+          "label": "Always",
+          "value": "Always"
+        }
+      ]
+    },
+    {
+      "category": "Telemetry",
+      "name": "Network tick miss rate warning threshold",
+      "type": "slider",
+      "min": 0,
+      "max": 2,
+      "unit": "%"
+    },
+    {
+      "category": "Telemetry",
+      "name": "Show network jitter / misdelivery graph",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Never",
+          "value": "Never"
+        },
+        {
+          "label": "If conditions are poor",
+          "value": "If conditions are poor"
+        },
+        {
+          "label": "Always",
+          "value": "Always"
+        }
+      ]
+    },
+    {
+      "category": "Telemetry",
+      "name": "Use the detailed network quality display",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Never",
+          "value": "Never"
+        },
+        {
+          "label": "If conditions are poor",
+          "value": "If conditions are poor"
+        },
+        {
+          "label": "Always",
+          "value": "Always"
+        }
+      ]
+    },
+    {
+      "category": "Crosshair",
+      "name": "Friendly Fire Reticle Warning",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Always Off",
+          "value": "Always Off"
+        },
+        {
+          "label": "Always On",
+          "value": "Always On"
+        }
+      ]
+    },
+    {
+      "category": "Crosshair",
+      "name": "Red",
+      "type": "slider",
+      "min": 0,
+      "max": 255
+    },
+    {
+      "category": "Crosshair",
+      "name": "Green",
+      "type": "slider",
+      "min": 0,
+      "max": 255
+    },
+    {
+      "category": "Crosshair",
+      "name": "Blue",
+      "type": "slider",
+      "min": 0,
+      "max": 255
+    },
+    {
+      "category": "Crosshair",
+      "name": "Split Distance",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Crosshair",
+      "name": "Inner Split Alpha",
+      "type": "slider",
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "category": "Crosshair",
+      "name": "Outer Split Alpha",
+      "type": "slider",
+      "min": 0.3,
+      "max": 1.0
+    },
+    {
+      "category": "Crosshair",
+      "name": "Split Size Ratio",
+      "type": "slider",
+      "min": 0.0,
+      "max": 1.0
+    },
+    {
+      "category": "Crosshair",
+      "name": "Dynamic Spread Limit",
+      "type": "decimal",
+      "min": 64
+    },
+    {
+      "category": "Crosshair",
+      "name": "Show Player Crosshairs",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "No",
+          "value": "No"
+        },
+        {
+          "label": "Friends and Party",
+          "value": "Friends and Party"
+        },
+        {
+          "label": "Everyone",
+          "value": "Everyone"
+        }
+      ]
+    },
+    {
+      "category": "Crosshair",
+      "name": "Show my crosshair when spectating bots",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Always",
+          "value": "Always"
+        },
+        {
+          "label": "When I can take over bot",
+          "value": "When I can take over bot"
+        },
+        {
+          "label": "Never",
+          "value": "Never"
+        }
+      ]
+    },
+    {
+      "category": "Crosshair",
+      "name": "Keep Regular Crosshair",
+      "type": "boolean"
+    },
+    {
+      "category": "Crosshair",
+      "name": "Flashbangs",
+      "type": "boolean"
+    },
+    {
+      "category": "Crosshair",
+      "name": "HE grenades",
+      "type": "boolean"
+    },
+    {
+      "category": "Crosshair",
+      "name": "Molotov cocktails / Incendiary grenades",
+      "type": "boolean"
+    },
+    {
+      "category": "Crosshair",
+      "name": "Smoke grenades",
+      "type": "boolean"
+    },
+    {
+      "category": "Crosshair",
+      "name": "Decoy grenades",
+      "type": "boolean"
+    },
+    {
+      "category": "Crosshair",
+      "name": "Show Scoped Sniper Rifle Inaccuracy",
+      "type": "boolean"
+    },
+    {
+      "category": "Crosshair",
+      "name": "Use Crosshair Color for Scope Dot",
+      "type": "boolean"
+    },
+    {
+      "category": "Crosshair",
+      "name": "Scope Dot Scale",
+      "type": "decimal",
+      "aliases": ["Ironsight Dot Scale"]
+    },
+    {
+      "category": "Keyboard / Mouse",
+      "name": "Reverse Mouse",
+      "type": "boolean"
+    },
+    {
+      "category": "Keyboard / Mouse",
+      "name": "Duck Mode",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Hold",
+          "value": "Hold"
+        },
+        {
+          "label": "Toggle",
+          "value": "Toggle"
+        }
+      ]
+    },
+    {
+      "category": "Keyboard / Mouse",
+      "name": "Walk Mode",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Hold",
+          "value": "Hold"
+        },
+        {
+          "label": "Toggle",
+          "value": "Toggle"
+        }
+      ]
+    },
+    {
+      "category": "Keyboard / Mouse",
+      "name": "Zoom Button Hold",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Repeat Enable",
+          "value": "Repeat Enable"
+        },
+        {
+          "label": "Repeat Disabled",
+          "value": "Repeat Disabled"
+        }
+      ]
+    },
+    {
+      "category": "Audio",
+      "name": "Main Menu Ambience Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Master Music Volume",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "%"
+    },
+    {
+      "category": "Music",
+      "name": "Music Volumes For",
+      "type": "text"
+    },
+    {
+      "category": "HUD",
+      "name": "Override Spectating HUD Color",
+      "type": "boolean"
+    },
+    {
+      "category": "Team",
+      "name": "Display Team Tags In Death Notices",
+      "type": "boolean"
+    },
+    {
+      "category": "Radar",
+      "name": "Blur Background",
+      "type": "boolean"
+    },
+    {
+      "category": "Radar",
+      "name": "Force Square Shape",
+      "type": "boolean"
+    },
+    {
+      "category": "Radar",
+      "name": "Radar Is Zooming Dynamically",
+      "type": "boolean"
     }
   ]
 }

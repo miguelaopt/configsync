@@ -30,6 +30,8 @@ export function catalogToGameDoc(game: CatalogGame): GameDoc {
     steamAppId: _s,
     epicAppName: _e,
     processNames: _p,
+    menu: _m,
+    menuVerifiedAt: _mv,
     presets,
     ...rest
   } = game;
@@ -40,7 +42,7 @@ export function catalogToGameDoc(game: CatalogGame): GameDoc {
       ...p,
       categories: p.categories.map((c) => ({
         ...c,
-        settings: c.settings.map(({ source: _source, ...s }) => s),
+        settings: c.settings.map(({ source: _source, aliases: _aliases, ...s }) => s),
       })),
     })),
   };

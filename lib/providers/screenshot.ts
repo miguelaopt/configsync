@@ -1,10 +1,10 @@
 /**
  * Screenshot importer — provider contract.
  *
- * Flow: the user uploads a screenshot of a settings menu → the parser returns what it read
- * (setting names and on-screen values, as text) → lib/ai/screenshot.ts matches them to the
- * preset's own settings and coerces the values → the user reviews every row → only rows the
- * user confirms are saved.
+ * Flow: the user uploads screenshots of a settings menu → the parser reads them together and
+ * returns each setting it saw, pointing at the preset setting (or catalog menu entry) it is by
+ * ref → lib/ai/screenshot.ts resolves the refs and coerces the values → the user reviews every
+ * row → only rows the user confirms are saved.
  *
  * Providers are selected by AI_VISION_PROVIDER. See docs/architecture/ai-providers.md.
  */
@@ -19,22 +19,29 @@ export type ScreenshotImage = {
   mimeType: "image/png" | "image/jpeg" | "image/webp";
 };
 
-/** What the model is told about the preset so it can reuse exact names. */
-export type ScreenshotHints = {
-  gameName: string;
-  categories: {
-    name: string;
-    settings: { name: string; type: SettingTypeId; options?: string[]; unit?: string | null }[];
-  }[];
+/** One setting the model may point at: `t…` is in the preset, `m…` is only in the game's menu. */
+export type HintSetting = {
+  ref: string;
+  category: string;
+  name: string;
+  type: SettingTypeId;
+  options?: string[];
+  unit?: string | null;
+  aliases?: string[];
 };
+
+/** What the model is told so it can match what it reads to settings that already exist. */
+export type ScreenshotHints = { gameName: string; tracked: HintSetting[]; menu: HintSetting[] };
 
 /** One thing the model read. Values are on-screen text; the core coerces them to setting types. */
 export type ProposedSetting = {
-  /** Exact existing name when the label matches one of the hints, else the on-screen label. */
+  /** The hint this row is, or null when it is none of them. */
+  ref: string | null;
+  /** The label as written on screen. */
   name: string;
   /** "On", "1920x1080", "0.85", "High", "Mouse 4", … */
   rawValue: string;
-  /** Heading or tab the setting appeared under. */
+  /** For unmatched rows: the hint category it belongs in, else the on-screen tab or heading. */
   category: string | null;
   /** Best-effort guess, only meaningful for names not in the hints. */
   type: SettingTypeId | null;
@@ -49,7 +56,8 @@ export type ParseResult = {
 
 export interface ScreenshotParser {
   readonly id: string;
-  parse(image: ScreenshotImage, hints: ScreenshotHints): Promise<ParseResult>;
+  /** All screenshots of one menu go in one call, so headings and context carry across them. */
+  parse(images: ScreenshotImage[], hints: ScreenshotHints): Promise<ParseResult>;
 }
 
 /**
@@ -63,7 +71,7 @@ export function getScreenshotParser(): ScreenshotParser | null {
   switch (env.AI_VISION_PROVIDER) {
     case "anthropic":
       parser = createAnthropicParser(
-        new Anthropic({ apiKey: env.AI_VISION_API_KEY, timeout: 60_000, maxRetries: 1 }),
+        new Anthropic({ apiKey: env.AI_VISION_API_KEY, timeout: 180_000, maxRetries: 1 }),
         env.AI_VISION_MODEL,
       );
       break;
