@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { applyScreenshotAction } from "@/lib/actions/ai";
-import { mergeRows, normalise, type ScreenshotRow } from "@/lib/ai/screenshot";
+import { mergeRows, normalise, rowKey, type ScreenshotRow } from "@/lib/ai/screenshot";
 import {
   formatValue,
   SETTING_TYPE_IDS,
@@ -44,7 +44,7 @@ type Props = {
 };
 
 /**
- * A row plus its review state. `key` is stable across merges (settingId or normalised name).
+ * A row plus its review state. `key` is stable across merges (see rowKey).
  * `categoryKey` is an existing category's id, or `new:<name>` for one Apply will create.
  */
 type Row = ScreenshotRow & { key: string; checked: boolean; categoryKey: string };
@@ -82,7 +82,7 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
       : undefined;
     return {
       ...r,
-      key: r.settingId ?? `new:${normalise(r.name)}`,
+      key: rowKey(r),
       // Preset rows that change something, and menu rows the game is known to have, start ticked;
       // settings known only from the screen wait for the user.
       checked:

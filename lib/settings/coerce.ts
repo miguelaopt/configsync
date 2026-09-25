@@ -58,12 +58,12 @@ function parse(def: SettingDefinition, text: string): SettingValue | null {
   }
 }
 
+/** Case and spacing never matter; a trailing note the game adds, like "(Recommended)", may. */
 function option(def: SettingDefinition, text: string): string | null {
   const options = def.options ?? [];
   if (options.length === 0) return text;
-  const lower = text.toLowerCase();
-  return (
-    options.find((o) => o.label.toLowerCase() === lower || o.value.toLowerCase() === lower)
-      ?.value ?? null
-  );
+  const flat = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
+  const find = (t: string) =>
+    options.find((o) => flat(o.label) === t || flat(o.value) === t)?.value ?? null;
+  return find(flat(text)) ?? find(flat(text.replace(/\([^)]*\)\s*$/, "")));
 }

@@ -294,3 +294,21 @@ describe("knownSettings", () => {
     expect(knownSettings(null).menu).toEqual([]);
   });
 });
+
+describe("one label in two categories", () => {
+  it("keeps Rocket League's two Match Notifications apart", () => {
+    const rl = knownSettings(getCatalogGame("rocket-league"));
+    const rows = matchProposals(
+      [
+        proposal({ name: "Match Notifications", rawValue: "All", category: "Interface" }),
+        proposal({ name: "Match Notifications", rawValue: "Off", category: "Chat" }),
+      ],
+      [],
+      rl,
+    );
+    expect(rows).toEqual([
+      expect.objectContaining({ category: "Interface", value: "All", source: "menu" }),
+      expect.objectContaining({ category: "Chat", value: false, source: "menu" }),
+    ]);
+  });
+});

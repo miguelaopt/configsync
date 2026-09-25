@@ -40,7 +40,7 @@ const definitionOf = (s: Setting | CatalogMenuSetting): SettingDefinition => ({
   type: s.type,
   min: s.min,
   max: s.max,
-  step: "step" in s ? s.step : null,
+  step: s.step,
   options: s.options,
   unit: s.unit,
 });
@@ -209,11 +209,18 @@ export function matchProposals(
   return mergeRows([[...resolved.map((k) => k.row), ...fresh]]);
 }
 
+/**
+ * Identifies a row across analyses: its setting, or for a new one its category and name (a game
+ * can use one label in two places, like Rocket League's two "Match Notifications").
+ */
+export const rowKey = (r: Pick<ScreenshotRow, "settingId" | "category" | "name">) =>
+  r.settingId ?? `new:${normalise(r.category ?? "")}:${normalise(r.name)}`;
+
 /** Rows from one or more analyses: the same setting keeps its most confident reading; preset rows first. */
 export function mergeRows(batches: ScreenshotRow[][]): ScreenshotRow[] {
   const seen = new Map<string, ScreenshotRow>();
   for (const row of batches.flat()) {
-    const key = row.settingId ?? `new:${normalise(row.name)}`;
+    const key = rowKey(row);
     const prev = seen.get(key);
     if (!prev || row.confidence > prev.confidence) seen.set(key, row);
   }

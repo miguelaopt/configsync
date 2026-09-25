@@ -16,6 +16,25 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-25",
+    version: "0.14.2",
+    title: "Rocket League's whole menu from screenshots",
+    changes: [
+      {
+        kind: "improved",
+        text: "Import from screenshot knows Rocket League's full settings menu as the game shows it today: gameplay, camera with its keyboard and controller free look, interface, Stream Safe, the scoreboard for every mode, chat, training, and every binding for both keyboard and mouse and gamepad, with their real choices and ranges. Renamed labels such as FOV still land on the setting you have.",
+      },
+      {
+        kind: "improved",
+        text: 'Values a game prints with a note, like "144 FPS (Recommended)" or "All (Default)", are read as the choice they are.',
+      },
+      {
+        kind: "fixed",
+        text: "A new Rocket League game offers the choices the game really has for Render Quality, Render Detail, Texture Detail, World Detail, Particle Detail, Effect Intensity, Controller Vibration and the frame-rate cap, and the full ranges for the deadzones and vibration intensity.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-25",
     version: "0.14.1",
     title: "A whole settings menu from screenshots",
     changes: [

@@ -48,9 +48,19 @@
             {
               "name": "Resolution",
               "type": "resolution",
-              "value": { "width": 1920, "height": 1080 },
-              "defaultValue": { "width": 1920, "height": 1080 },
-              "source": { "file": "video", "width": "ResX", "height": "ResY" }
+              "value": {
+                "width": 1920,
+                "height": 1080
+              },
+              "defaultValue": {
+                "width": 1920,
+                "height": 1080
+              },
+              "source": {
+                "file": "video",
+                "width": "ResX",
+                "height": "ResY"
+              }
             },
             {
               "name": "Display Mode",
@@ -58,24 +68,42 @@
               "value": "Fullscreen",
               "defaultValue": "Fullscreen",
               "options": [
-                { "label": "Fullscreen", "value": "Fullscreen" },
-                { "label": "Borderless", "value": "Borderless" },
-                { "label": "Windowed", "value": "Windowed" }
+                {
+                  "label": "Fullscreen",
+                  "value": "Fullscreen"
+                },
+                {
+                  "label": "Borderless",
+                  "value": "Borderless"
+                },
+                {
+                  "label": "Windowed",
+                  "value": "Windowed"
+                }
               ],
               "source": {
                 "file": "video",
                 "match": [
                   {
                     "value": "Fullscreen",
-                    "keys": { "Fullscreen": "True", "Borderless": "False" }
+                    "keys": {
+                      "Fullscreen": "True",
+                      "Borderless": "False"
+                    }
                   },
                   {
                     "value": "Borderless",
-                    "keys": { "Fullscreen": "False", "Borderless": "True" }
+                    "keys": {
+                      "Fullscreen": "False",
+                      "Borderless": "True"
+                    }
                   },
                   {
                     "value": "Windowed",
-                    "keys": { "Fullscreen": "False", "Borderless": "False" }
+                    "keys": {
+                      "Fullscreen": "False",
+                      "Borderless": "False"
+                    }
                   }
                 ]
               }
@@ -85,7 +113,10 @@
               "type": "boolean",
               "value": false,
               "defaultValue": false,
-              "source": { "file": "video", "key": "UseVsync" }
+              "source": {
+                "file": "video",
+                "key": "UseVsync"
+              }
             },
             {
               "name": "Render Quality",
@@ -93,9 +124,22 @@
               "value": "High Quality",
               "defaultValue": "High Quality",
               "options": [
-                { "label": "Performance", "value": "Performance" },
-                { "label": "Quality", "value": "Quality" },
-                { "label": "High Quality", "value": "High Quality" }
+                {
+                  "label": "High Performance",
+                  "value": "High Performance"
+                },
+                {
+                  "label": "Performance",
+                  "value": "Performance"
+                },
+                {
+                  "label": "Quality",
+                  "value": "Quality"
+                },
+                {
+                  "label": "High Quality",
+                  "value": "High Quality"
+                }
               ]
             },
             {
@@ -104,9 +148,22 @@
               "value": "High Quality",
               "defaultValue": "High Quality",
               "options": [
-                { "label": "Performance", "value": "Performance" },
-                { "label": "Quality", "value": "Quality" },
-                { "label": "High Quality", "value": "High Quality" }
+                {
+                  "label": "Performance",
+                  "value": "Performance"
+                },
+                {
+                  "label": "Quality",
+                  "value": "Quality"
+                },
+                {
+                  "label": "High Quality",
+                  "value": "High Quality"
+                },
+                {
+                  "label": "Custom",
+                  "value": "Custom"
+                }
               ]
             },
             {
@@ -115,14 +172,44 @@
               "value": "60",
               "defaultValue": "60",
               "options": [
-                { "label": "30", "value": "30" },
-                { "label": "60", "value": "60" },
-                { "label": "120", "value": "120" },
-                { "label": "144", "value": "144" },
-                { "label": "240", "value": "240" },
-                { "label": "250", "value": "250" },
-                { "label": "Uncapped", "value": "Uncapped" }
-              ]
+                {
+                  "label": "30 FPS",
+                  "value": "30"
+                },
+                {
+                  "label": "50 FPS",
+                  "value": "50"
+                },
+                {
+                  "label": "60 FPS",
+                  "value": "60"
+                },
+                {
+                  "label": "90 FPS",
+                  "value": "90"
+                },
+                {
+                  "label": "120 FPS",
+                  "value": "120"
+                },
+                {
+                  "label": "144 FPS",
+                  "value": "144"
+                },
+                {
+                  "label": "240 FPS",
+                  "value": "240"
+                },
+                {
+                  "label": "250 FPS",
+                  "value": "250"
+                },
+                {
+                  "label": "Uncapped",
+                  "value": "Uncapped"
+                }
+              ],
+              "aliases": ["Frames Per Second"]
             },
             {
               "name": "Anti-Aliasing",
@@ -130,11 +217,26 @@
               "value": "Off",
               "defaultValue": "Off",
               "options": [
-                { "label": "Off", "value": "Off" },
-                { "label": "FXAA Low", "value": "FXAA Low" },
-                { "label": "FXAA High", "value": "FXAA High" },
-                { "label": "MLAA", "value": "MLAA" },
-                { "label": "SMAA", "value": "SMAA" }
+                {
+                  "label": "Off",
+                  "value": "Off"
+                },
+                {
+                  "label": "FXAA Low",
+                  "value": "FXAA Low"
+                },
+                {
+                  "label": "FXAA High",
+                  "value": "FXAA High"
+                },
+                {
+                  "label": "MLAA",
+                  "value": "MLAA"
+                },
+                {
+                  "label": "SMAA",
+                  "value": "SMAA"
+                }
               ]
             },
             {
@@ -143,10 +245,22 @@
               "value": "High Quality",
               "defaultValue": "High Quality",
               "options": [
-                { "label": "Low", "value": "Low" },
-                { "label": "Medium", "value": "Medium" },
-                { "label": "High", "value": "High" },
-                { "label": "High Quality", "value": "High Quality" }
+                {
+                  "label": "High Performance",
+                  "value": "High Performance"
+                },
+                {
+                  "label": "Performance",
+                  "value": "Performance"
+                },
+                {
+                  "label": "Quality",
+                  "value": "Quality"
+                },
+                {
+                  "label": "High Quality",
+                  "value": "High Quality"
+                }
               ]
             },
             {
@@ -155,31 +269,54 @@
               "value": "High Quality",
               "defaultValue": "High Quality",
               "options": [
-                { "label": "Performance", "value": "Performance" },
-                { "label": "Quality", "value": "Quality" },
-                { "label": "High Quality", "value": "High Quality" }
+                {
+                  "label": "High Performance",
+                  "value": "High Performance"
+                },
+                {
+                  "label": "Performance",
+                  "value": "Performance"
+                },
+                {
+                  "label": "Quality",
+                  "value": "Quality"
+                },
+                {
+                  "label": "High Quality",
+                  "value": "High Quality"
+                }
               ]
             },
             {
               "name": "Particle Detail",
               "type": "dropdown",
-              "value": "High",
-              "defaultValue": "High",
+              "value": "High Quality",
+              "defaultValue": "High Quality",
               "options": [
-                { "label": "Low", "value": "Low" },
-                { "label": "Medium", "value": "Medium" },
-                { "label": "High", "value": "High" }
+                {
+                  "label": "Performance",
+                  "value": "Performance"
+                },
+                {
+                  "label": "High Quality",
+                  "value": "High Quality"
+                }
               ]
             },
             {
               "name": "Effect Intensity",
               "type": "dropdown",
-              "value": "High",
-              "defaultValue": "High",
+              "value": "Default",
+              "defaultValue": "Default",
               "options": [
-                { "label": "Low", "value": "Low" },
-                { "label": "Medium", "value": "Medium" },
-                { "label": "High", "value": "High" }
+                {
+                  "label": "Low Intensity",
+                  "value": "Low Intensity"
+                },
+                {
+                  "label": "Default",
+                  "value": "Default"
+                }
               ]
             },
             {
@@ -193,49 +330,70 @@
               "type": "boolean",
               "value": true,
               "defaultValue": true,
-              "source": { "file": "video", "key": "AmbientOcclusion" }
+              "source": {
+                "file": "video",
+                "key": "AmbientOcclusion"
+              }
             },
             {
               "name": "Depth of Field",
               "type": "boolean",
               "value": true,
               "defaultValue": true,
-              "source": { "file": "video", "key": "DepthOfField" }
+              "source": {
+                "file": "video",
+                "key": "DepthOfField"
+              }
             },
             {
               "name": "Bloom",
               "type": "boolean",
               "value": true,
               "defaultValue": true,
-              "source": { "file": "video", "key": "Bloom" }
+              "source": {
+                "file": "video",
+                "key": "Bloom"
+              }
             },
             {
               "name": "Light Shafts",
               "type": "boolean",
               "value": true,
               "defaultValue": true,
-              "source": { "file": "video", "key": "bAllowLightShafts" }
+              "source": {
+                "file": "video",
+                "key": "bAllowLightShafts"
+              }
             },
             {
               "name": "Lens Flares",
               "type": "boolean",
               "value": true,
               "defaultValue": true,
-              "source": { "file": "video", "key": "LensFlares" }
+              "source": {
+                "file": "video",
+                "key": "LensFlares"
+              }
             },
             {
               "name": "Dynamic Shadows",
               "type": "boolean",
               "value": true,
               "defaultValue": true,
-              "source": { "file": "video", "key": "DynamicShadows" }
+              "source": {
+                "file": "video",
+                "key": "DynamicShadows"
+              }
             },
             {
               "name": "Motion Blur",
               "type": "boolean",
               "value": true,
               "defaultValue": true,
-              "source": { "file": "video", "key": "MotionBlur" }
+              "source": {
+                "file": "video",
+                "key": "MotionBlur"
+              }
             },
             {
               "name": "Weather Effects",
@@ -267,7 +425,8 @@
               "value": 90,
               "defaultValue": 90,
               "min": 60,
-              "max": 110
+              "max": 110,
+              "aliases": ["FOV"]
             },
             {
               "name": "Distance",
@@ -334,8 +493,14 @@
               "value": "Toggle",
               "defaultValue": "Toggle",
               "options": [
-                { "label": "Toggle", "value": "Toggle" },
-                { "label": "Hold", "value": "Hold" }
+                {
+                  "label": "Toggle",
+                  "value": "Toggle"
+                },
+                {
+                  "label": "Hold",
+                  "value": "Hold"
+                }
               ]
             }
           ]
@@ -367,8 +532,8 @@
               "type": "decimal",
               "value": 0.2,
               "defaultValue": 0.2,
-              "min": 0.05,
-              "max": 0.5,
+              "min": 0.0,
+              "max": 0.75,
               "step": 0.01
             },
             {
@@ -377,22 +542,37 @@
               "value": 0.5,
               "defaultValue": 0.5,
               "min": 0.1,
-              "max": 0.9,
+              "max": 1.0,
               "step": 0.01
             },
             {
               "name": "Controller Vibration",
-              "type": "boolean",
-              "value": true,
-              "defaultValue": true
+              "type": "dropdown",
+              "value": "Default",
+              "defaultValue": "Default",
+              "options": [
+                {
+                  "label": "Disabled",
+                  "value": "Disabled"
+                },
+                {
+                  "label": "Default",
+                  "value": "Default"
+                },
+                {
+                  "label": "All",
+                  "value": "All"
+                }
+              ]
             },
             {
               "name": "Vibration Intensity",
-              "type": "percentage",
-              "value": 100,
-              "defaultValue": 100,
-              "min": 0,
-              "max": 100
+              "type": "decimal",
+              "value": 1.0,
+              "defaultValue": 1.0,
+              "min": 0.0,
+              "max": 3.0,
+              "step": 0.1
             },
             {
               "name": "Ball Cam Indicator",
@@ -407,7 +587,10 @@
               "defaultValue": 10,
               "min": 1,
               "max": 100,
-              "source": { "file": "input", "key": "MouseSensitivity" }
+              "source": {
+                "file": "input",
+                "key": "MouseSensitivity"
+              }
             }
           ]
         },
@@ -421,7 +604,8 @@
               "value": 100,
               "defaultValue": 100,
               "min": 0,
-              "max": 100
+              "max": 100,
+              "aliases": ["Master"]
             },
             {
               "name": "Gameplay Volume",
@@ -429,7 +613,8 @@
               "value": 100,
               "defaultValue": 100,
               "min": 0,
-              "max": 100
+              "max": 100,
+              "aliases": ["Gameplay"]
             },
             {
               "name": "Game Music Volume",
@@ -437,7 +622,8 @@
               "value": 100,
               "defaultValue": 100,
               "min": 0,
-              "max": 100
+              "max": 100,
+              "aliases": ["Music - Gameplay"]
             },
             {
               "name": "Music Volume",
@@ -445,7 +631,8 @@
               "value": 100,
               "defaultValue": 100,
               "min": 0,
-              "max": 100
+              "max": 100,
+              "aliases": ["Music - Playlists"]
             },
             {
               "name": "Crowd Volume",
@@ -453,7 +640,8 @@
               "value": 100,
               "defaultValue": 100,
               "min": 0,
-              "max": 100
+              "max": 100,
+              "aliases": ["Crowd"]
             },
             {
               "name": "Ambient Volume",
@@ -461,11 +649,1984 @@
               "value": 100,
               "defaultValue": 100,
               "min": 0,
-              "max": 100
+              "max": 100,
+              "aliases": ["Ambient"]
             }
           ]
         }
       ]
+    }
+  ],
+  "menuVerifiedAt": "2026-09-25",
+  "menu": [
+    {
+      "category": "Gameplay",
+      "name": "Splitscreen Layout",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Horizontal",
+          "value": "Horizontal"
+        },
+        {
+          "label": "Vertical",
+          "value": "Vertical"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Cross-Platform Play",
+      "type": "boolean"
+    },
+    {
+      "category": "Gameplay",
+      "name": "Client Send Rate",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Low",
+          "value": "Low"
+        },
+        {
+          "label": "Medium",
+          "value": "Medium"
+        },
+        {
+          "label": "High",
+          "value": "High"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Server Send Rate",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Low",
+          "value": "Low"
+        },
+        {
+          "label": "Medium",
+          "value": "Medium"
+        },
+        {
+          "label": "High",
+          "value": "High"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Bandwidth Limit",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Low",
+          "value": "Low"
+        },
+        {
+          "label": "Medium",
+          "value": "Medium"
+        },
+        {
+          "label": "High",
+          "value": "High"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Input Buffer",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "STS",
+          "value": "STS"
+        },
+        {
+          "label": "CSTS",
+          "value": "CSTS"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Show Competitive Divisions",
+      "type": "boolean"
+    },
+    {
+      "category": "Gameplay",
+      "name": "Show Competitive Ranks",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "Extra Modes Only",
+          "value": "Extra Modes Only"
+        },
+        {
+          "label": "Standard Modes Only",
+          "value": "Standard Modes Only"
+        },
+        {
+          "label": "All",
+          "value": "All"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Show Competitive MMR",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "Main Menu Only",
+          "value": "Main Menu Only"
+        },
+        {
+          "label": "In-Game Only",
+          "value": "In-Game Only"
+        },
+        {
+          "label": "Everywhere",
+          "value": "Everywhere"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Force Default Team Colors",
+      "type": "boolean"
+    },
+    {
+      "category": "Gameplay",
+      "name": "Game Stat Display Level",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "No Stats",
+          "value": "No Stats"
+        },
+        {
+          "label": "Main Stats Only",
+          "value": "Main Stats Only"
+        },
+        {
+          "label": "All Stats",
+          "value": "All Stats"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Tournament Schedule Region",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "US-East",
+          "value": "US-East [USE]"
+        },
+        {
+          "label": "US-Central",
+          "value": "US-Central [USC]"
+        },
+        {
+          "label": "US-West",
+          "value": "US-West [USW]"
+        },
+        {
+          "label": "Europe",
+          "value": "Europe [EU]"
+        },
+        {
+          "label": "Asia-SE Mainland",
+          "value": "Asia-SE Mainland [ASC]"
+        },
+        {
+          "label": "Asia-SE Maritime",
+          "value": "Asia-SE Maritime [ASM]"
+        },
+        {
+          "label": "Asia-East",
+          "value": "Asia-East [JPN]"
+        },
+        {
+          "label": "Middle East",
+          "value": "Middle East [ME]"
+        },
+        {
+          "label": "Oceania",
+          "value": "Oceania [OCE]"
+        },
+        {
+          "label": "South Africa",
+          "value": "South Africa [SAF]"
+        },
+        {
+          "label": "South America",
+          "value": "South America [SAM]"
+        },
+        {
+          "label": "India",
+          "value": "India [IND]"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Display Party Leader Left Message",
+      "type": "boolean"
+    },
+    {
+      "category": "Gameplay",
+      "name": "Skip Drop Opening Animation",
+      "type": "boolean"
+    },
+    {
+      "category": "Gameplay",
+      "name": "Flip Reset Indicator",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Off",
+          "value": "Off"
+        },
+        {
+          "label": "Audio Only",
+          "value": "Audio Only"
+        },
+        {
+          "label": "Visuals Only",
+          "value": "Visuals Only"
+        },
+        {
+          "label": "On",
+          "value": "On"
+        }
+      ]
+    },
+    {
+      "category": "Stream Safe",
+      "name": "Anonymize My Name To Others",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Off",
+          "value": "Off"
+        },
+        {
+          "label": "Teammates Only",
+          "value": "Teammates Only"
+        },
+        {
+          "label": "Opponents Only",
+          "value": "Opponents Only"
+        },
+        {
+          "label": "Everyone",
+          "value": "Everyone"
+        }
+      ],
+      "aliases": ["Streamer Mode - Username Anonymization"]
+    },
+    {
+      "category": "Camera",
+      "name": "Camera Preset",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "Legacy",
+          "value": "Legacy"
+        },
+        {
+          "label": "Custom",
+          "value": "Custom"
+        }
+      ]
+    },
+    {
+      "category": "Camera",
+      "name": "Demo Transition Time",
+      "type": "slider",
+      "min": 0.0,
+      "max": 1.0,
+      "unit": "s"
+    },
+    {
+      "category": "Controls",
+      "name": "Keyboard Input Acceleration Time",
+      "type": "slider",
+      "min": 0.0,
+      "max": 0.25
+    },
+    {
+      "category": "Controls",
+      "name": "Rumble Activation Buffer",
+      "type": "decimal"
+    },
+    {
+      "category": "Controls",
+      "name": "Keyboard Aerial Safety",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Interface Scale",
+      "type": "percentage",
+      "max": 100
+    },
+    {
+      "category": "Interface",
+      "name": "Display Scale",
+      "type": "percentage",
+      "max": 100
+    },
+    {
+      "category": "Interface",
+      "name": "Nameplate Scale",
+      "type": "percentage",
+      "max": 200
+    },
+    {
+      "category": "Interface",
+      "name": "Nameplate Mode",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "Nearby Only",
+          "value": "Nearby Only"
+        }
+      ]
+    },
+    {
+      "category": "Interface",
+      "name": "Match Notifications",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "All",
+          "value": "All"
+        },
+        {
+          "label": "Time Updates Only",
+          "value": "Time Updates Only"
+        },
+        {
+          "label": "Kickoffs Only",
+          "value": "Kickoffs Only"
+        }
+      ]
+    },
+    {
+      "category": "Interface",
+      "name": "Connection Quality Indicators",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Social Notifications During Gameplay",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Item Shop Notifications",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Team-Colored Boost Meter",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Metric",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Ball Arrow",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Stat Graphs",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "Performance Summary",
+          "value": "Performance Summary"
+        },
+        {
+          "label": "Performance Graph (short)",
+          "value": "Performance Graph (short)"
+        },
+        {
+          "label": "Performance Graph (long)",
+          "value": "Performance Graph (long)"
+        },
+        {
+          "label": "Network Summary",
+          "value": "Network Summary"
+        },
+        {
+          "label": "Network Graph (short)",
+          "value": "Network Graph (short)"
+        },
+        {
+          "label": "Network Graph (long)",
+          "value": "Network Graph (long)"
+        },
+        {
+          "label": "Speed Summary",
+          "value": "Speed Summary"
+        },
+        {
+          "label": "Speed Graph (short)",
+          "value": "Speed Graph (short)"
+        },
+        {
+          "label": "Speed Graph (long)",
+          "value": "Speed Graph (long)"
+        }
+      ],
+      "aliases": ["Performance Graphs"]
+    },
+    {
+      "category": "Interface",
+      "name": "Convert Platform Friends",
+      "type": "boolean"
+    },
+    {
+      "category": "Audio",
+      "name": "Voice Chat",
+      "type": "percentage",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "category": "Audio",
+      "name": "Output Type",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Speakers",
+          "value": "Speakers"
+        },
+        {
+          "label": "Headphones",
+          "value": "Headphones"
+        }
+      ]
+    },
+    {
+      "category": "Audio",
+      "name": "Dynamic Range",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Low (Night)",
+          "value": "Low (Night)"
+        },
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "High (Theater)",
+          "value": "High (Theater)"
+        }
+      ]
+    },
+    {
+      "category": "Audio",
+      "name": "Gameplay Music Settings",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Main Menu Only",
+          "value": "Main Menu Only"
+        },
+        {
+          "label": "Main Menu and Training",
+          "value": "Main Menu and Training"
+        },
+        {
+          "label": "Everywhere",
+          "value": "Everywhere"
+        },
+        {
+          "label": "Training Only",
+          "value": "Training Only"
+        },
+        {
+          "label": "Matches Only",
+          "value": "Matches Only"
+        },
+        {
+          "label": "Matches and Training",
+          "value": "Matches and Training"
+        },
+        {
+          "label": "Matches and Main Menu",
+          "value": "Matches and Main Menu"
+        },
+        {
+          "label": "Muted",
+          "value": "Muted"
+        }
+      ]
+    },
+    {
+      "category": "Audio",
+      "name": "Player Anthems",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Always On",
+          "value": "Always On"
+        },
+        {
+          "label": "Matches Only",
+          "value": "Matches Only"
+        },
+        {
+          "label": "Off",
+          "value": "Off"
+        }
+      ]
+    },
+    {
+      "category": "Stream Safe",
+      "name": "Streamer Safe Music",
+      "type": "boolean"
+    },
+    {
+      "category": "Audio",
+      "name": "Mute on Unfocused",
+      "type": "boolean"
+    },
+    {
+      "category": "Audio",
+      "name": "Use Standard Boost Sound",
+      "type": "boolean",
+      "aliases": ["Override Boost Audio"]
+    },
+    {
+      "category": "Chat",
+      "name": "Block non-tactical Quick Chat",
+      "type": "boolean"
+    },
+    {
+      "category": "Chat",
+      "name": "Quick Chat",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Allow Quick Chat with Everyone",
+          "value": "Allow Quick Chat with Everyone"
+        },
+        {
+          "label": "Allow Quick Chat with Teammates Only",
+          "value": "Allow Quick Chat with Teammates Only"
+        },
+        {
+          "label": "Allow Quick Chat with Nobody (Off)",
+          "value": "Allow Quick Chat with Nobody (Off)"
+        }
+      ]
+    },
+    {
+      "category": "Chat",
+      "name": "Match Chat",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Allow Text Chat with Everyone",
+          "value": "Allow Text Chat with Everyone"
+        },
+        {
+          "label": "Allow Text Chat with Friends and Teammates Only",
+          "value": "Allow Text Chat with Friends and Teammates Only"
+        },
+        {
+          "label": "Allow Text Chat with Friends Only",
+          "value": "Allow Text Chat with Friends Only"
+        },
+        {
+          "label": "Allow Text Chat with Nobody (Off)",
+          "value": "Allow Text Chat with Nobody (Off)"
+        }
+      ]
+    },
+    {
+      "category": "Chat",
+      "name": "Party Chat",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Allow Party Text Chat with Everyone",
+          "value": "Allow Party Text Chat with Everyone"
+        },
+        {
+          "label": "Allow Party Text Chat with Friends Only",
+          "value": "Allow Party Text Chat with Friends Only"
+        },
+        {
+          "label": "Allow Party Text Chat with Nobody (Off)",
+          "value": "Allow Party Text Chat with Nobody (Off)"
+        }
+      ]
+    },
+    {
+      "category": "Chat",
+      "name": "Voice Chat",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Allow Voice Chat with Everyone",
+          "value": "Allow Voice Chat with Everyone"
+        },
+        {
+          "label": "Allow Voice Chat with Friends and Teammates Only",
+          "value": "Allow Voice Chat with Friends and Teammates Only"
+        },
+        {
+          "label": "Allow Voice Chat with Friends Only",
+          "value": "Allow Voice Chat with Friends Only"
+        },
+        {
+          "label": "Allow Voice Chat with Nobody (Off)",
+          "value": "Allow Voice Chat with Nobody (Off)"
+        }
+      ]
+    },
+    {
+      "category": "Chat",
+      "name": "Voice Chat Input Device",
+      "type": "text"
+    },
+    {
+      "category": "Chat",
+      "name": "Voice Chat Output Device",
+      "type": "text"
+    },
+    {
+      "category": "Chat",
+      "name": "Push To Talk",
+      "type": "boolean"
+    },
+    {
+      "category": "Chat",
+      "name": "Preferred Voice Channel",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Party",
+          "value": "Party"
+        },
+        {
+          "label": "Team",
+          "value": "Team"
+        }
+      ]
+    },
+    {
+      "category": "Chat",
+      "name": "Main Menu Notifications",
+      "type": "boolean"
+    },
+    {
+      "category": "Chat",
+      "name": "Match Notifications",
+      "type": "boolean"
+    },
+    {
+      "category": "Chat",
+      "name": "Text Chat Notifications",
+      "type": "boolean"
+    },
+    {
+      "category": "Free Play",
+      "name": "Game Speed",
+      "type": "percentage",
+      "min": 50,
+      "max": 100
+    },
+    {
+      "category": "Free Play",
+      "name": "Controls Display",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Always Visible",
+          "value": "Always Visible"
+        },
+        {
+          "label": "Hidden",
+          "value": "Hidden"
+        },
+        {
+          "label": "Fade Out",
+          "value": "Fade Out"
+        }
+      ]
+    },
+    {
+      "category": "Free Play",
+      "name": "Disable Goal Reset",
+      "type": "boolean"
+    },
+    {
+      "category": "Free Play",
+      "name": "Boost Options",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Unlimited",
+          "value": "Unlimited"
+        },
+        {
+          "label": "Standard",
+          "value": "Standard"
+        },
+        {
+          "label": "Auto-Refill",
+          "value": "Auto-Refill"
+        }
+      ]
+    },
+    {
+      "category": "Free Play",
+      "name": "Boost Recharge Delay",
+      "type": "decimal",
+      "unit": "s"
+    },
+    {
+      "category": "Custom Training",
+      "name": "Ball Speed Modifier",
+      "type": "slider",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "category": "Custom Training",
+      "name": "Ball Location Modifier",
+      "type": "slider",
+      "min": 0,
+      "max": 1000
+    },
+    {
+      "category": "Custom Training",
+      "name": "Ball Height Modifier",
+      "type": "slider",
+      "min": 0,
+      "max": 1000
+    },
+    {
+      "category": "Custom Training",
+      "name": "Vehicle Location Modifier",
+      "type": "slider",
+      "min": 0,
+      "max": 1000
+    },
+    {
+      "category": "Custom Training",
+      "name": "Vehicle Rotation Modifier",
+      "type": "slider",
+      "min": 0,
+      "max": 100,
+      "unit": "°"
+    },
+    {
+      "category": "Custom Training",
+      "name": "Spawn Vehicle on Ground",
+      "type": "boolean"
+    },
+    {
+      "category": "Custom Training",
+      "name": "Skip Goal Replay",
+      "type": "boolean"
+    },
+    {
+      "category": "Custom Training",
+      "name": "Round Start Input Delay",
+      "type": "slider",
+      "min": 0.0,
+      "max": 0.1,
+      "unit": "s"
+    },
+    {
+      "category": "Custom Training",
+      "name": "Car Velocity",
+      "type": "decimal"
+    },
+    {
+      "category": "Custom Training",
+      "name": "Car Pitch",
+      "type": "decimal"
+    },
+    {
+      "category": "Custom Training",
+      "name": "Boost Amount",
+      "type": "decimal"
+    },
+    {
+      "category": "Gameplay",
+      "name": "Show In-Match Event Visuals",
+      "type": "boolean"
+    },
+    {
+      "category": "Gameplay",
+      "name": "Suppressed Honor Duel Notifications",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "Challenges",
+          "value": "Challenges"
+        },
+        {
+          "label": "Spectate",
+          "value": "Spectate"
+        },
+        {
+          "label": "All",
+          "value": "All"
+        }
+      ]
+    },
+    {
+      "category": "Camera",
+      "name": "Preview Spawn Transition Time",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Camera",
+      "name": "Preview Spawn Changed Transition Time",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Camera",
+      "name": "Invert Swivel (KBM)",
+      "type": "boolean"
+    },
+    {
+      "category": "Camera",
+      "name": "Invert Swivel (Controller)",
+      "type": "boolean"
+    },
+    {
+      "category": "Camera",
+      "name": "Free Look Camera (KBM)",
+      "type": "boolean"
+    },
+    {
+      "category": "Camera",
+      "name": "Camera Free Look Smoothing (KBM)",
+      "type": "boolean"
+    },
+    {
+      "category": "Camera",
+      "name": "Camera Acceleration Rate (KBM)",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Camera",
+      "name": "Camera Deceleration Rate (KBM)",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Camera",
+      "name": "Free Look Speed (KBM)",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Camera",
+      "name": "Free Look Camera (Controller)",
+      "type": "boolean"
+    },
+    {
+      "category": "Camera",
+      "name": "Camera Free Look Smoothing (Controller)",
+      "type": "boolean"
+    },
+    {
+      "category": "Camera",
+      "name": "Camera Acceleration Rate (Controller)",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Camera",
+      "name": "Camera Deceleration Rate (Controller)",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Camera",
+      "name": "Free Look Speed (Controller)",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Controls",
+      "name": "Free Look Deadzone",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Controls",
+      "name": "Control Presets",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Standard",
+          "value": "Standard"
+        },
+        {
+          "label": "Legacy",
+          "value": "Legacy"
+        },
+        {
+          "label": "Modern",
+          "value": "Modern"
+        },
+        {
+          "label": "Custom",
+          "value": "Custom"
+        }
+      ]
+    },
+    {
+      "category": "Gameplay",
+      "name": "Skip Goal Replay",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Color Blind Mode",
+      "type": "boolean"
+    },
+    {
+      "category": "Interface",
+      "name": "Center Dot Style",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "Chevron",
+          "value": "Chevron"
+        },
+        {
+          "label": "Dot",
+          "value": "Dot"
+        }
+      ]
+    },
+    {
+      "category": "Interface",
+      "name": "Center Dot Scale",
+      "type": "decimal",
+      "min": 0
+    },
+    {
+      "category": "Interface",
+      "name": "Center Dot Opacity",
+      "type": "percentage",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "category": "Interface",
+      "name": "Hide In-Game HUD",
+      "type": "boolean"
+    },
+    {
+      "category": "Stream Safe",
+      "name": "Anonymize Teammate Display Names",
+      "type": "boolean"
+    },
+    {
+      "category": "Stream Safe",
+      "name": "Anonymize Opponent Display Names",
+      "type": "boolean"
+    },
+    {
+      "category": "Stream Safe",
+      "name": "Hide Matchmaking Status",
+      "type": "boolean"
+    },
+    {
+      "category": "Stream Safe",
+      "name": "Maximum Matchmaking Delay",
+      "type": "decimal",
+      "min": 0,
+      "unit": "s"
+    },
+    {
+      "category": "Chat",
+      "name": "Text Reporting",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Always On",
+          "value": "Always On"
+        },
+        {
+          "label": "Off When Possible",
+          "value": "Off When Possible"
+        }
+      ]
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Soccar Stat 1",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Soccar Stat 2",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Soccar Stat 3",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Soccar Stat 4",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Hoops Stat 1",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Hoops Stat 2",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Hoops Stat 3",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Hoops Stat 4",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Snow Day Stat 1",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Snow Day Stat 2",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Snow Day Stat 3",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Snow Day Stat 4",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Rumble Stat 1",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Rumble Stat 2",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Rumble Stat 3",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Rumble Stat 4",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Dropshot Stat 1",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Dropshot Stat 2",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Dropshot Stat 3",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Dropshot Stat 4",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Heatseeker Stat 1",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Heatseeker Stat 2",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Heatseeker Stat 3",
+      "type": "text"
+    },
+    {
+      "category": "Scoreboard",
+      "name": "Heatseeker Stat 4",
+      "type": "text"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Drive Forward",
+      "type": "keybind",
+      "aliases": ["Throttle"]
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Drive Backwards",
+      "type": "keybind",
+      "aliases": ["Brake"]
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Steer Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Steer Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Jump",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Jump (Alternative)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Boost",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Powerslide",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Air Roll",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Focus On Ball",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Rear View",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Air Steer Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Air Steer Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Air Pitch Up",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Air Pitch Down",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Air Roll Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Air Roll Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Toggle Score View",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Skip Replay",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Camera Swivel Up",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Camera Swivel Down",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Camera Swivel Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Camera Swivel Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Free Look Up",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Free Look Down",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Free Look Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Free Look Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Scoreboard",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Skip Music Track",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Play Again",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Post Match Freeplay",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Select Left Demo Spawn",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Select Right Demo Spawn",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Select Music Playlists",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Quick Chat - Information/Post Game",
+      "type": "keybind",
+      "aliases": ["Quick Chat - Information"]
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Quick Chat - Compliments",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Quick Chat - Reactions",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Quick Chat - Apologies",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Text Chat",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Team Text Chat",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Party Text Chat",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Voice Chat (Push To Talk/Toggle Mute)",
+      "type": "keybind",
+      "aliases": ["Voice Chat (Push To Talk)"]
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Mouse Throttle Forward",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Mouse Throttle Reverse",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Mouse Steer Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Mouse Steer Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Spectator Look Up",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Spectator Look Down",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Spectator Look Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Spectator Look Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Move Forward",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Move Backward",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Move Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Move Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Move Up",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Move Down",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Roll Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Roll Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Reset Roll",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Hold To Roll (Hold)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Add Keyframe (Hold)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Remove Keyframe (Hold)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Next Keyframe (Hold)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Previous Keyframe (Hold)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Rewind",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Fast Forward",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Pause",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Speed Menu (Hold)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Save Replay",
+      "type": "keybind",
+      "aliases": ["Save Replay (HOLD)"]
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Replay FX Menu",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Reset Shot",
+      "type": "keybind",
+      "aliases": ["Reset Shot (Training)"]
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Reset Mouse Center",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Use Item",
+      "type": "keybind",
+      "aliases": ["Use Item (Rumble)"]
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Next Item",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Grab (KO)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Break Stun (KO)",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Cycle Target Left",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Keyboard / Mouse)",
+      "name": "Cycle Target Right",
+      "type": "keybind"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Drive Forward",
+      "type": "controller_binding",
+      "aliases": ["Throttle"]
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Drive Backwards",
+      "type": "controller_binding",
+      "aliases": ["Brake"]
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Steer Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Steer Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Jump",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Jump (Alternative)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Boost",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Powerslide",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Air Roll",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Focus On Ball",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Rear View",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Air Steer Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Air Steer Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Air Pitch Up",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Air Pitch Down",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Air Roll Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Air Roll Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Toggle Score View",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Skip Replay",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Camera Swivel Up",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Camera Swivel Down",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Camera Swivel Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Camera Swivel Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Free Look Up",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Free Look Down",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Free Look Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Free Look Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Scoreboard",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Skip Music Track",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Play Again",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Post Match Freeplay",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Select Left Demo Spawn",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Select Right Demo Spawn",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Select Music Playlists",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Quick Chat - Information/Post Game",
+      "type": "controller_binding",
+      "aliases": ["Quick Chat - Information"]
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Quick Chat - Compliments",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Quick Chat - Reactions",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Quick Chat - Apologies",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Text Chat",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Team Text Chat",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Party Text Chat",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Voice Chat (Push To Talk/Toggle Mute)",
+      "type": "controller_binding",
+      "aliases": ["Voice Chat (Push To Talk)"]
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Mouse Throttle Forward",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Mouse Throttle Reverse",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Mouse Steer Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Mouse Steer Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Spectator Look Up",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Spectator Look Down",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Spectator Look Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Spectator Look Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Move Forward",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Move Backward",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Move Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Move Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Move Up",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Move Down",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Roll Right",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Roll Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Reset Roll",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Hold To Roll (Hold)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Add Keyframe (Hold)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Remove Keyframe (Hold)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Next Keyframe (Hold)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Previous Keyframe (Hold)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Rewind",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Fast Forward",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Pause",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Speed Menu (Hold)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Save Replay",
+      "type": "controller_binding",
+      "aliases": ["Save Replay (HOLD)"]
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Replay FX Menu",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Reset Shot",
+      "type": "controller_binding",
+      "aliases": ["Reset Shot (Training)"]
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Reset Mouse Center",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Use Item",
+      "type": "controller_binding",
+      "aliases": ["Use Item (Rumble)"]
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Next Item",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Grab (KO)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Break Stun (KO)",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Cycle Target Left",
+      "type": "controller_binding"
+    },
+    {
+      "category": "Bindings (Gamepad)",
+      "name": "Cycle Target Right",
+      "type": "controller_binding"
     }
   ]
 }
