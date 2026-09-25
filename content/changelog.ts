@@ -16,6 +16,25 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-25",
+    version: "0.14.1",
+    title: "A whole settings menu from screenshots",
+    changes: [
+      {
+        kind: "improved",
+        text: "Import from screenshot reads up to 16 screenshots together, so a menu that spans several pages comes in as one: a setting cut between two screenshots is read once, and a heading carries over to the next page.",
+      },
+      {
+        kind: "improved",
+        text: "Settings are recognised by what they are, not only by their label. When a game renames one (V-Sync for Wait for Vertical Sync), it still lands on the setting you already have, and a Display row no longer ends up on Display Mode.",
+      },
+      {
+        kind: "improved",
+        text: "For Counter-Strike 2, settings your preset doesn't have yet arrive with their real choices and ranges, filed under the menu's own sections. A section your preset lacks, such as Music, is created when you apply.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-25",
     version: "0.14.0",
     title: "Everything about a setting, one click away",
     changes: [

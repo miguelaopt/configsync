@@ -57,12 +57,19 @@ describe("catalog", () => {
             {
               name: "Video",
               settings: [
-                { name: "Resolution", type: "resolution", source: { file: "video", key: "k" } },
+                {
+                  name: "Resolution",
+                  type: "resolution",
+                  source: { file: "video", key: "k" },
+                  aliases: ["Screen Resolution"],
+                },
               ],
             },
           ],
         },
       ],
+      menu: [{ category: "Video", name: "Display", type: "text" }],
+      menuVerifiedAt: "2026-09-25",
     };
     const doc = catalogToGameDoc(game);
     expect(doc.catalogId).toBe("test-game");
@@ -71,8 +78,23 @@ describe("catalog", () => {
     expect(doc).not.toHaveProperty("steamAppId");
     expect(doc).not.toHaveProperty("processNames");
     expect(doc).not.toHaveProperty("epicAppName");
+    expect(doc).not.toHaveProperty("menu");
+    expect(doc).not.toHaveProperty("menuVerifiedAt");
     expect(doc.presets[0]!.categories[0]!.settings[0]).not.toHaveProperty("source");
+    expect(doc.presets[0]!.categories[0]!.settings[0]).not.toHaveProperty("aliases");
     expect(exportFileSchema.safeParse(buildExportFile([doc], "game")).success).toBe(true);
+  });
+  it("cs2's menu names settings the preset lacks, once each, never a preset setting again", () => {
+    const cs2 = getCatalogGame("cs2")!;
+    const norm = (n: string) => n.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    const preset = cs2.presets[0]!.categories.flatMap((c) => c.settings);
+    const presetNames = new Set(preset.flatMap((s) => [s.name, ...(s.aliases ?? [])]).map(norm));
+    const menuNames = cs2.menu.flatMap((m) => [m.name, ...(m.aliases ?? [])]).map(norm);
+    expect(cs2.menu.length).toBeGreaterThan(100);
+    expect(menuNames.filter((n) => presetNames.has(n))).toEqual([]);
+    expect(new Set(menuNames).size).toBe(menuNames.length);
+    expect(preset.find((s) => s.name === "Wait for Vertical Sync")!.aliases).toContain("V-Sync");
+    expect(cs2.menu.find((m) => m.name === "Display")).toMatchObject({ category: "Video" });
   });
   it("cs2 maps resolution, display mode and a keybind", () => {
     const cs2 = getCatalogGame("cs2")!;

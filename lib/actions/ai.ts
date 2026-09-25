@@ -4,7 +4,7 @@ import { z } from "zod";
 import { applyScreenshotRows } from "@/lib/data/ai";
 import { AppError } from "@/lib/data/errors";
 import { settingValueSchema } from "@/lib/import-export/schema";
-import { settingTypeSchema } from "@/lib/settings/types";
+import { settingOptionSchema, settingTypeSchema } from "@/lib/settings/types";
 import { id, settingValueUpdateSchema } from "@/lib/validation";
 import { runAction } from "./shared";
 
@@ -14,10 +14,18 @@ const schema = z.object({
   creates: z
     .array(
       z.object({
-        categoryId: id,
+        /** An existing category, or the name of one to create. */
+        category: z.union([
+          z.object({ id }),
+          z.object({ name: z.string().trim().min(1, "Category name is required").max(80) }),
+        ]),
         name: z.string().trim().min(1, "Setting name is required").max(120),
         type: settingTypeSchema,
         value: settingValueSchema.nullish(),
+        options: z.array(settingOptionSchema).max(200).nullish(),
+        min: z.number().finite().nullish(),
+        max: z.number().finite().nullish(),
+        unit: z.string().trim().max(20).nullish(),
       }),
     )
     .max(200)

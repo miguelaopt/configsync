@@ -32,10 +32,15 @@ async function getCategory(userId: string, categoryId: string, tx: Tx | typeof d
   return row;
 }
 
-export async function createCategory(userId: string, presetId: string, input: CategoryInput) {
+export async function createCategory(
+  userId: string,
+  presetId: string,
+  input: CategoryInput,
+  tx: Tx | typeof db = db,
+) {
   await getPresetById(userId, presetId);
-  const next = await nextPosition(db, categories, eq(categories.presetId, presetId));
-  const [row] = await db
+  const next = await nextPosition(tx, categories, eq(categories.presetId, presetId));
+  const [row] = await tx
     .insert(categories)
     .values({ presetId, userId, name: input.name, icon: input.icon ?? null, position: next })
     .returning();

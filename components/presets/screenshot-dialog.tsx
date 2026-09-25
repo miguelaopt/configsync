@@ -27,6 +27,7 @@ import {
 import { SettingControl } from "@/components/settings/setting-control";
 import { toastError } from "@/components/ui/toaster";
 import { plural } from "@/lib/utils/format";
+import { MAX_SCREENSHOTS } from "@/lib/types";
 
 export type ScreenshotMenuProps = {
   enabled: boolean;
@@ -42,12 +43,15 @@ type Props = {
   categories: { id: string; name: string }[];
 };
 
-/** A row plus its review state. `key` is stable across merges (settingId or normalised name). */
-type Row = ScreenshotRow & { key: string; checked: boolean; categoryId: string | null };
+/**
+ * A row plus its review state. `key` is stable across merges (settingId or normalised name).
+ * `categoryKey` is an existing category's id, or `new:<name>` for one Apply will create.
+ */
+type Row = ScreenshotRow & { key: string; checked: boolean; categoryKey: string };
 type Phase = "pick" | "analysing" | "review";
 
-const MAX_FILES = 5;
 const MAX_EDGE = 1568;
+const NEW = "new:";
 const PRIVACY =
   "Screenshots are sent to Anthropic to read the settings. They are analysed once and not stored.";
 
@@ -73,45 +77,49 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
 
   const toRow = (r: ScreenshotRow): Row => {
     if ("key" in r) return r as Row; // survived a merge: keep the user's edits
-    const guess = r.category
+    const existing = r.category
       ? categories.find((c) => normalise(c.name) === normalise(r.category!))
       : undefined;
     return {
       ...r,
       key: r.settingId ?? `new:${normalise(r.name)}`,
+      // Preset rows that change something, and menu rows the game is known to have, start ticked;
+      // settings known only from the screen wait for the user.
       checked:
-        r.settingId != null && r.value != null && r.confidence >= 0.5 && !same(r.value, r.current),
-      categoryId: guess?.id ?? categories[0]?.id ?? null,
+        r.source !== "screen" &&
+        r.value != null &&
+        r.confidence >= 0.5 &&
+        !same(r.value, r.current),
+      categoryKey: existing?.id ?? NEW + (r.category?.trim() || "Other"),
     };
+  };
+
+  const addFiles = (list: File[]) => {
+    const next = [...files];
+    for (const f of list)
+      if (!next.some((n) => n.name === f.name && n.size === f.size)) next.push(f);
+    if (next.length > MAX_SCREENSHOTS)
+      toast.error(`Up to ${MAX_SCREENSHOTS} screenshots at a time.`);
+    setFiles(next.slice(0, MAX_SCREENSHOTS));
   };
 
   const analyse = async () => {
     setPhase("analysing");
-    const results = await Promise.all(
-      files.map(async (file) => {
-        try {
-          const blob = await downscale(file);
-          const res = await fetch(`/api/ai/screenshot?preset=${presetId}`, {
-            method: "POST",
-            body: blob,
-            headers: { "Content-Type": blob.type || file.type },
-          });
-          const json = (await res.json()) as { rows?: ScreenshotRow[]; error?: string };
-          if (!res.ok || !json.rows) {
-            toastError(json.error ?? `Couldn't analyse ${file.name}.`);
-            return null;
-          }
-          return json.rows;
-        } catch {
-          toast.error(`Couldn't analyse ${file.name}.`);
-          return null;
-        }
-      }),
-    );
-    const ok = results.filter((r): r is ScreenshotRow[] => r != null);
-    const merged = ok.length ? mergeRows([rows, ...ok]) : rows;
-    if (ok.length === 0 || merged.length === 0) {
-      if (ok.length > 0) toast.error("No settings found in those screenshots.");
+    let found: ScreenshotRow[] | null = null;
+    try {
+      // All screenshots of the menu in one request: the model reads them as one menu.
+      const body = new FormData();
+      for (const file of files) body.append("file", await downscale(file), file.name);
+      const res = await fetch(`/api/ai/screenshot?preset=${presetId}`, { method: "POST", body });
+      const json = (await res.json()) as { rows?: ScreenshotRow[]; error?: string };
+      if (!res.ok || !json.rows) toastError(json.error ?? "Couldn't analyse those screenshots.");
+      else found = json.rows;
+    } catch {
+      toast.error("Couldn't analyse those screenshots.");
+    }
+    const merged = found ? mergeRows([rows, found]) : rows;
+    if (!found || merged.length === 0) {
+      if (found) toast.error("No settings found in those screenshots.");
       setPhase(rows.length ? "review" : "pick");
       return;
     }
@@ -125,9 +133,11 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
 
   const matched = rows.filter((r) => r.settingId);
   const fresh = rows.filter((r) => !r.settingId);
-  const selected = rows.filter(
-    (r) => r.checked && r.value != null && (r.settingId || r.categoryId),
-  );
+  const selected = rows.filter((r) => r.checked && r.value != null);
+  // Existing categories first, then every new one a row points at.
+  const newCategories = [
+    ...new Set(rows.filter((r) => r.categoryKey.startsWith(NEW)).map((r) => r.categoryKey)),
+  ];
 
   const apply = () =>
     startTransition(async () => {
@@ -139,15 +149,24 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
         creates: selected
           .filter((r) => !r.settingId)
           .map((r) => ({
-            categoryId: r.categoryId!,
+            category: r.categoryKey.startsWith(NEW)
+              ? { name: r.categoryKey.slice(NEW.length) }
+              : { id: r.categoryKey },
             name: r.name,
             type: r.def.type,
             value: r.value,
+            options: r.def.options ?? null,
+            min: r.def.min ?? null,
+            max: r.def.max ?? null,
+            unit: r.def.unit ?? null,
           })),
       });
       if (!r.ok) return toastError(r.error);
       toast.success(
-        `Applied ${plural(r.data.updated + r.data.created, "setting")} from your screenshots`,
+        `Applied ${plural(r.data.updated + r.data.created, "setting")} from your screenshots` +
+          (r.data.createdCategories
+            ? ` and added ${plural(r.data.createdCategories, "category", "categories")}`
+            : ""),
       );
       router.refresh();
       close(false);
@@ -181,22 +200,32 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
           </div>
         ) : phase === "pick" ? (
           <div className="flex flex-col gap-4">
+            <p className="text-[13px] text-ink-2">
+              Add every page of the menu, up to {MAX_SCREENSHOTS}. They are read together, so a
+              setting split across two screenshots is still one setting.
+            </p>
             <Input
               type="file"
               multiple
               accept="image/png,image/jpeg,image/webp"
               onChange={(e) => {
-                const list = Array.from(e.target.files ?? []);
-                if (list.length > MAX_FILES)
-                  toast.error(`Up to ${MAX_FILES} screenshots at a time.`);
-                setFiles(list.slice(0, MAX_FILES));
+                addFiles(Array.from(e.target.files ?? []));
+                e.target.value = "";
               }}
             />
             {files.length ? (
               <ul className="flex flex-wrap gap-2">
                 {files.map((f) => (
-                  <li key={`${f.name}-${f.size}`}>
+                  <li key={`${f.name}-${f.size}`} className="relative">
                     <Thumb file={f} />
+                    <button
+                      type="button"
+                      onClick={() => setFiles((fs) => fs.filter((x) => x !== f))}
+                      aria-label={`Remove ${f.name}`}
+                      className="absolute -top-1.5 -right-1.5 grid size-5 place-items-center rounded-full border border-line bg-raised text-[11px] text-ink-2 hover:text-ink"
+                    >
+                      ×
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -208,7 +237,7 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                 </Button>
               ) : null}
               <Button variant="primary" onClick={analyse} disabled={files.length === 0}>
-                Analyse
+                Analyse {files.length ? plural(files.length, "screenshot") : ""}
               </Button>
             </DialogFooter>
           </div>
@@ -266,11 +295,6 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                 <h3 className="mb-1 text-xs font-medium tracking-wide text-ink-3 uppercase">
                   Not in this preset
                 </h3>
-                {categories.length === 0 ? (
-                  <p className="text-[13px] text-ink-2">
-                    Add a category to this preset first to create these.
-                  </p>
-                ) : null}
                 <ul>
                   {fresh.map((r) => (
                     <li
@@ -279,7 +303,7 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                     >
                       <Checkbox
                         checked={r.checked}
-                        disabled={categories.length === 0 || r.value == null}
+                        disabled={r.value == null}
                         onCheckedChange={(c) => update(r.key, { checked: c === true })}
                         aria-label={`Create ${r.name}`}
                       />
@@ -312,9 +336,8 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                           </SelectContent>
                         </Select>
                         <Select
-                          value={r.categoryId ?? undefined}
-                          onValueChange={(c) => update(r.key, { categoryId: c })}
-                          disabled={categories.length === 0}
+                          value={r.categoryKey}
+                          onValueChange={(c) => update(r.key, { categoryKey: c })}
                         >
                           <SelectTrigger aria-label="Category">
                             <SelectValue placeholder="Category" />
@@ -323,6 +346,11 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                             {categories.map((c) => (
                               <SelectItem key={c.id} value={c.id}>
                                 {c.name}
+                              </SelectItem>
+                            ))}
+                            {newCategories.map((k) => (
+                              <SelectItem key={k} value={k}>
+                                New: {k.slice(NEW.length)}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -334,15 +362,15 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
                             def={r.def}
                             value={r.value}
                             layout="row"
-                            onChange={(v) =>
-                              update(r.key, {
-                                value: v,
-                                checked: v != null && categories.length > 0,
-                              })
-                            }
+                            onChange={(v) => update(r.key, { value: v, checked: v != null })}
                           />
                           {r.value == null ? (
                             <div className="mt-1 text-xs text-note">Read as “{r.rawValue}”.</div>
+                          ) : null}
+                          {r.source === "screen" ? (
+                            <div className="mt-1 text-xs text-ink-3">
+                              Not a setting this game is known to have. Check the name and type.
+                            </div>
                           ) : null}
                         </div>
                       </div>
@@ -373,11 +401,20 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
 }
 
 function Thumb({ file }: { file: File }) {
-  const url = React.useMemo(() => URL.createObjectURL(file), [file]);
-  React.useEffect(() => () => URL.revokeObjectURL(url), [url]);
+  // The ref creates the URL and its cleanup revokes that same URL, so a re-attach never shows a
+  // revoked one.
+  const attach = React.useCallback(
+    (img: HTMLImageElement | null) => {
+      if (!img) return;
+      const url = URL.createObjectURL(file);
+      img.src = url;
+      return () => URL.revokeObjectURL(url);
+    },
+    [file],
+  );
   return (
     // eslint-disable-next-line @next/next/no-img-element -- local object URL
-    <img src={url} alt={file.name} className="h-16 rounded-xs border border-line object-cover" />
+    <img ref={attach} alt={file.name} className="h-16 rounded-xs border border-line object-cover" />
   );
 }
 

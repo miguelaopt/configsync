@@ -31,7 +31,29 @@ export const catalogFileSchema = z.object({
 });
 export type CatalogFile = z.infer<typeof catalogFileSchema>;
 
-const catalogSettingSchema = settingDocSchema.extend({ source: settingSourceSchema.optional() });
+/** Other labels the game has used for a setting ("V-Sync" for "Wait for Vertical Sync"). */
+const aliasesSchema = z.array(z.string().min(1)).optional();
+
+const catalogSettingSchema = settingDocSchema.extend({
+  source: settingSourceSchema.optional(),
+  aliases: aliasesSchema,
+});
+
+/**
+ * A setting the game's own menu has but the catalog preset does not carry. Never added to a
+ * preset on its own: the screenshot importer uses it to name, type and file what it reads.
+ */
+export const catalogMenuSettingSchema = z.object({
+  category: z.string().min(1),
+  name: z.string().min(1),
+  type: settingDocSchema.shape.type,
+  options: settingDocSchema.shape.options,
+  min: settingDocSchema.shape.min,
+  max: settingDocSchema.shape.max,
+  unit: settingDocSchema.shape.unit,
+  aliases: aliasesSchema,
+});
+export type CatalogMenuSetting = z.infer<typeof catalogMenuSettingSchema>;
 const catalogCategorySchema = categoryDocSchema.extend({ settings: z.array(catalogSettingSchema) });
 const catalogPresetSchema = presetDocSchema.extend({ categories: z.array(catalogCategorySchema) });
 
@@ -43,6 +65,9 @@ export const catalogGameSchema = gameDocSchema.extend({
   /** Executable names as a process list shows them (no paths), any platform. */
   processNames: z.array(z.string().min(1)).default([]),
   presets: z.array(catalogPresetSchema).min(1),
+  /** The rest of the in-game menu, and the date it was last checked against the game. */
+  menu: z.array(catalogMenuSettingSchema).default([]),
+  menuVerifiedAt: z.string().optional(),
 });
 export type CatalogGame = z.infer<typeof catalogGameSchema>;
 export type CatalogSetting = z.infer<typeof catalogSettingSchema>;
