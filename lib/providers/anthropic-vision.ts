@@ -30,7 +30,7 @@ You also receive the settings this game is known to have, each with a ref:
 For every row on screen:
 - "label" is the setting's name exactly as written on screen.
 - "ref" is the known setting this row IS, decided by meaning, not by spelling. Games rename and abbreviate labels between versions ("V-Sync" is "Wait for Vertical Sync"; "Enable Developer Console" is "Launched With Developer Console"), so use the category, the value and its options, and the "also shown as" names. A label that merely contains another setting's name is a different setting: "Display" (which monitor) is not "Display Mode" (fullscreen or windowed). Prefer a "t" ref over an "m" ref for the same setting. Never give two rows the same ref. Use null when the row is none of the known settings.
-- "value" is the current value exactly as displayed ("On", "1920x1080", "0.85", "High", "Mouse 4"), without markers the game adds around it, such as a leading "*". Never convert units or add precision.
+- "value" is the current value exactly as displayed ("On", "1920x1080", "0.85", "High", "Mouse 4"), without markers the game adds around it, such as a leading "*" or a trailing "(Default)" or "(Recommended)". Never convert units or add precision.
 - "category": for a row with a ref, use that setting's category. For a row with no ref, use the known category it fits best (a row under an "Advanced Video" or "Frame Pacing" heading on the Video tab belongs in "Video"); only when none fits, use the on-screen tab or heading.
 - "type" is your best guess for rows with no ref, else null.
 - "confidence" (0–1) reflects how legible the value is and how sure you are of the ref.

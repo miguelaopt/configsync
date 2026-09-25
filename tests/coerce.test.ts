@@ -43,6 +43,21 @@ describe("coerceValue", () => {
     ).toBeNull();
   });
 
+  it("ignores spacing and a trailing note the game adds to a choice", () => {
+    const fps = def("dropdown", {
+      options: [
+        { label: "144 FPS", value: "144" },
+        { label: "240 FPS", value: "240" },
+      ],
+    });
+    expect(coerceValue(fps, "240  FPS")).toBe("240");
+    expect(coerceValue(fps, "144 FPS (Recommended)")).toBe("144");
+    expect(
+      coerceValue(def("dropdown", { options: [{ label: "All", value: "All" }] }), "All (Default)"),
+    ).toBe("All");
+    expect(coerceValue(fps, "300 FPS (Recommended)")).toBeNull();
+  });
+
   it("reads resolutions and colours, keeps free text trimmed, rejects blanks", () => {
     expect(coerceValue(def("resolution"), "1920 x 1080")).toEqual({ width: 1920, height: 1080 });
     expect(coerceValue(def("resolution"), "2560×1440")).toEqual({ width: 2560, height: 1440 });
