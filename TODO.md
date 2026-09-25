@@ -43,7 +43,7 @@ a card, a dashboard login)
 
 ## 3. Trust and operations
 
-- [ ] **Get the backups off the server** — **owner**, 5 minutes. They live only on the machine
+- [x] **Get the backups off the server** — done 2026-09-24, a daily systemd timer on Miguel's PC. They live only on the machine
       that holds the database. `PRE-LAUNCH.md` §6 has the `rsync` one-liner and the weekly cron.
 - [ ] **Do the restore drill once** — **owner**. `PRE-LAUNCH.md` §7 restores the newest dump into a
       scratch `gsv_drill` database and compares row counts. Safe to run on production. Write down
@@ -54,7 +54,7 @@ a card, a dashboard login)
 
 ## 4. Product, next
 
-- [ ] **Setting details panel** on the preset page. The mockup has it; the honest version shows the
+- [x] **Setting details panel** on the preset page — 0.14.0, click a setting's name. The mockup has it; the honest version shows the
       setting's name, description and default value, and drops "tip" and "related settings", which
       do not exist. Needs a selected-setting state threaded through `components/settings/preset-editor.tsx`.
 - [ ] **Search within a preset** — a client-side filter over the rows, plus a category filter. Small
@@ -69,9 +69,8 @@ a card, a dashboard login)
 
 ## 5. Housekeeping
 
-- [ ] `WALKTHROUGH.md` is out of date — it still describes merging PRs #5 and #6.
-- [ ] `design/HANDOFF.md` documents the rejected "direction A" landing page. Delete it or mark it
-      historical; it contradicts the shipped design.
+- [x] `WALKTHROUGH.md` marked historical; `PROJECT_STATE.md` is the current state.
+- [x] `design/HANDOFF.md` (the rejected "direction A" landing) deleted.
 - [ ] `@fontsource/barlow-semi-condensed` is still a dependency and nothing imports it any more.
 - [ ] Decide what `/search` should be now that the library page has its own filter and sort.
 

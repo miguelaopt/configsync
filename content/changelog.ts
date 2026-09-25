@@ -15,6 +15,17 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-09-25",
+    version: "0.14.0",
+    title: "Everything about a setting, one click away",
+    changes: [
+      {
+        kind: "new",
+        text: "Click a setting's name in a preset to see its details: the value against its default, the range or choices, your description and notes, and for Counter-Strike 2 and Rocket League the exact config file and key the companion reads and writes. Reset, edit or copy it from there.",
+      },
+    ],
+  },
+  {
     date: "2026-09-24",
     version: "0.13.2",
     title: "Game cards with character",

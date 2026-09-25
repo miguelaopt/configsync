@@ -65,3 +65,36 @@ export function publicCatalog() {
   }));
 }
 export type PublicCatalogEntry = ReturnType<typeof publicCatalog>[number];
+
+/** Where a catalog setting lives on disk, for the setting details panel. Client-safe shape. */
+export type SettingFileInfo = { file: string; keys: string[]; bind: boolean };
+
+/**
+ * Setting name → the file it is stored in and the key(s) inside it, for one catalog game.
+ * Settings the catalog does not map to a file are absent: the companion skips them on apply.
+ */
+export function settingFiles(catalogId: string): Record<string, SettingFileInfo> {
+  const game = getCatalogGame(catalogId);
+  if (!game) return {};
+  const fileName = (id: string) => {
+    const f = game.files.find((x) => x.id === id);
+    const path = f?.paths["steam-windows"] ?? Object.values(f?.paths ?? {})[0] ?? id;
+    return path.split(/[\\/]/).pop() ?? path;
+  };
+  const out: Record<string, SettingFileInfo> = {};
+  for (const c of game.presets[0]?.categories ?? [])
+    for (const s of c.settings) {
+      const src = s.source;
+      if (!src) continue;
+      const keys =
+        "key" in src
+          ? [src.key]
+          : "width" in src
+            ? [src.width, src.height]
+            : "bind" in src
+              ? [src.bind]
+              : [...new Set(src.match.flatMap((m) => Object.keys(m.keys)))];
+      out[s.name] = { file: fileName(src.file), keys, bind: "bind" in src };
+    }
+  return out;
+}

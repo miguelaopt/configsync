@@ -133,26 +133,26 @@ docker compose --profile app --profile proxy up -d
 Right now the nightly dump lives in `~/backups` **on the same machine as the database**. If that
 server dies, the backups die with it. Pick one of these.
 
-### A. Pull to your own PC (simplest, do this today)
+### A. Pull to your own PC — done 2026-09-24
 
-One command, run from your PC:
-
-```bash
-mkdir -p ~/Backups/configsync
-rsync -av --delete miguel@49.13.123.75:~/backups/ ~/Backups/configsync/
-```
-
-Make it weekly so you never think about it again:
+A systemd user timer on Miguel's PC pulls the dumps every day (`Persistent=true`: a day the PC was
+off is caught up at the next boot). It runs `rsync` **without `--delete`**, so the PC keeps every
+dump even after the server prunes it at 14 days, and a wiped server cannot wipe the copies.
 
 ```bash
-( crontab -l 2>/dev/null
-  echo '0 20 * * 0 rsync -aq --delete miguel@49.13.123.75:~/backups/ ~/Backups/configsync/'
-) | crontab -
+# ~/.config/systemd/user/configsync-backup.service
+ExecStart=/usr/bin/rsync -aq -e "ssh -o BatchMode=yes -o ConnectTimeout=20" \
+  miguel@49.13.123.75:backups/ %h/Backups/configsync/
+# ~/.config/systemd/user/configsync-backup.timer
+OnCalendar=daily · RandomizedDelaySec=30m · Persistent=true
+
+systemctl --user list-timers | grep configsync      # next run
+journalctl --user -u configsync-backup -n 5         # last runs
+ls -lh ~/Backups/configsync                         # the dumps
 ```
 
-- [ ] Ran it once by hand; `ls -lh ~/Backups/configsync` shows today's `gsv-YYYY-MM-DD.sql.gz`.
-- [ ] Added the cron line.
-- [ ] Your PC is off sometimes — that is fine, rsync catches up on the next Sunday it is on.
+- [x] First pull by hand: 8 dumps (18–24 Sep), the newest checked with `gunzip -t`.
+- [x] Timer enabled.
 
 ### B. Also push to a second provider (survives your PC dying too)
 

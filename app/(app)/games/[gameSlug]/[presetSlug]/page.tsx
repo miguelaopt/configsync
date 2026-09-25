@@ -6,7 +6,7 @@ import { getPresetBySlug, getPresetFull, toCategoryDocs } from "@/lib/data/prese
 import { listRevisions } from "@/lib/data/revisions";
 import { getPlan } from "@/lib/billing/plan";
 import { screenshotAssistantEnabled } from "@/lib/env";
-import { publicCatalog } from "@/lib/catalog";
+import { publicCatalog, settingFiles } from "@/lib/catalog";
 import Link from "next/link";
 import { deviceRowsForGame } from "@/lib/data/devices";
 import { summarise } from "@/lib/data/sync";
@@ -121,6 +121,7 @@ export default async function PresetPage({
               preset={presetOnly}
               categories={categories}
               preferences={profile?.preferences ?? {}}
+              files={game.catalogId ? settingFiles(game.catalogId) : null}
             />
           </div>
         </div>
