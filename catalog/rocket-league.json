@@ -836,51 +836,51 @@
       "type": "dropdown",
       "options": [
         {
-          "label": "US-East [USE]",
+          "label": "US-East",
           "value": "US-East [USE]"
         },
         {
-          "label": "US-Central [USC]",
+          "label": "US-Central",
           "value": "US-Central [USC]"
         },
         {
-          "label": "US-West [USW]",
+          "label": "US-West",
           "value": "US-West [USW]"
         },
         {
-          "label": "Europe [EU]",
+          "label": "Europe",
           "value": "Europe [EU]"
         },
         {
-          "label": "Asia-SE Mainland [ASC]",
+          "label": "Asia-SE Mainland",
           "value": "Asia-SE Mainland [ASC]"
         },
         {
-          "label": "Asia-SE Maritime [ASM]",
+          "label": "Asia-SE Maritime",
           "value": "Asia-SE Maritime [ASM]"
         },
         {
-          "label": "Asia-East [JPN]",
+          "label": "Asia-East",
           "value": "Asia-East [JPN]"
         },
         {
-          "label": "Middle East [ME]",
+          "label": "Middle East",
           "value": "Middle East [ME]"
         },
         {
-          "label": "Oceania [OCE]",
+          "label": "Oceania",
           "value": "Oceania [OCE]"
         },
         {
-          "label": "South Africa [SAF]",
+          "label": "South Africa",
           "value": "South Africa [SAF]"
         },
         {
-          "label": "South America [SAM]",
+          "label": "South America",
           "value": "South America [SAM]"
         },
         {
-          "label": "India [IND]",
+          "label": "India",
           "value": "India [IND]"
         }
       ]
@@ -898,23 +898,31 @@
     {
       "category": "Gameplay",
       "name": "Flip Reset Indicator",
-      "type": "text"
-    },
-    {
-      "category": "Gameplay",
-      "name": "Streamer Mode",
-      "type": "boolean"
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Off",
+          "value": "Off"
+        },
+        {
+          "label": "Audio Only",
+          "value": "Audio Only"
+        },
+        {
+          "label": "Visuals Only",
+          "value": "Visuals Only"
+        },
+        {
+          "label": "On",
+          "value": "On"
+        }
+      ]
     },
     {
       "category": "Stream Safe",
       "name": "Anonymize My Name To Others",
       "type": "text",
       "aliases": ["Streamer Mode - Username Anonymization"]
-    },
-    {
-      "category": "Gameplay",
-      "name": "Speed Stat Graphs",
-      "type": "boolean"
     },
     {
       "category": "Camera",
@@ -1045,7 +1053,49 @@
     {
       "category": "Interface",
       "name": "Stat Graphs",
-      "type": "text",
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "Performance Summary",
+          "value": "Performance Summary"
+        },
+        {
+          "label": "Performance Graph (short)",
+          "value": "Performance Graph (short)"
+        },
+        {
+          "label": "Performance Graph (long)",
+          "value": "Performance Graph (long)"
+        },
+        {
+          "label": "Network Summary",
+          "value": "Network Summary"
+        },
+        {
+          "label": "Network Graph (short)",
+          "value": "Network Graph (short)"
+        },
+        {
+          "label": "Network Graph (long)",
+          "value": "Network Graph (long)"
+        },
+        {
+          "label": "Speed Summary",
+          "value": "Speed Summary"
+        },
+        {
+          "label": "Speed Graph (short)",
+          "value": "Speed Graph (short)"
+        },
+        {
+          "label": "Speed Graph (long)",
+          "value": "Speed Graph (long)"
+        }
+      ],
       "aliases": ["Performance Graphs"]
     },
     {
@@ -1078,7 +1128,21 @@
     {
       "category": "Audio",
       "name": "Dynamic Range",
-      "type": "text"
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "Low (Night)",
+          "value": "Low (Night)"
+        },
+        {
+          "label": "Default",
+          "value": "Default"
+        },
+        {
+          "label": "High (Theater)",
+          "value": "High (Theater)"
+        }
+      ]
     },
     {
       "category": "Audio",
@@ -1513,6 +1577,11 @@
       "type": "text"
     },
     {
+      "category": "Gameplay",
+      "name": "Skip Goal Replay",
+      "type": "boolean"
+    },
+    {
       "category": "Interface",
       "name": "Color Blind Mode",
       "type": "boolean"
@@ -1520,13 +1589,39 @@
     {
       "category": "Interface",
       "name": "Center Dot Style",
-      "type": "text"
+      "type": "dropdown",
+      "options": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "Chevron",
+          "value": "Chevron"
+        },
+        {
+          "label": "Dot",
+          "value": "Dot"
+        }
+      ]
     },
     {
       "category": "Interface",
       "name": "Center Dot Scale",
       "type": "decimal",
       "min": 0
+    },
+    {
+      "category": "Interface",
+      "name": "Center Dot Opacity",
+      "type": "percentage",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "category": "Interface",
+      "name": "Hide In-Game HUD",
+      "type": "boolean"
     },
     {
       "category": "Stream Safe",
