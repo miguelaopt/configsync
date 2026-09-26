@@ -59,8 +59,8 @@ a card, a dashboard login)
 ## 4. Product, next
 
 - [~] **Admin dashboard** — `/admin` built (see `PROJECT_STATE.md`). Next, in order: server
-      error log, Resend delivery webhooks → email log, maintenance-mode switch, in-app
-      announcements, last-backup status (needs the host to write a marker the app can read).
+  error log, Resend delivery webhooks → email log, maintenance-mode switch, in-app
+  announcements, last-backup status (needs the host to write a marker the app can read).
 
 - [x] **Setting details panel** on the preset page — 0.14.0, click a setting's name. The mockup has it; the honest version shows the
       setting's name, description and default value, and drops "tip" and "related settings", which
