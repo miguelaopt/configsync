@@ -15,6 +15,21 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-09-27",
+    version: "0.15.1",
+    title: "A first dashboard with somewhere to start",
+    changes: [
+      {
+        kind: "improved",
+        text: "A new account's dashboard puts Counter-Strike 2 and Rocket League one click away, shows the three steps to the same setup on every PC with the ones already done ticked, and keeps the Windows app beside them.",
+      },
+      {
+        kind: "improved",
+        text: "The Windows app card links to the csync companion for Linux or the terminal.",
+      },
+    ],
+  },
+  {
     date: "2026-09-26",
     version: "0.15.0",
     title: "Find a setting, and sync from the tray",
