@@ -21,6 +21,8 @@ const base = z.object({
   PADDLE_PRICE_MONTHLY: z.string().optional(),
   PADDLE_PRICE_LIFETIME: z.string().optional(),
   PADDLE_DISCOUNT_CODE: z.string().optional(),
+  /** Comma-separated; these accounts get /admin. Synced to users.role at boot. */
+  ADMIN_EMAILS: z.string().optional(),
   AI_VISION_PROVIDER: z.enum(["anthropic", "tesseract"]).optional(),
   AI_VISION_API_KEY: z.string().optional(),
   AI_VISION_MODEL: z.string().default("claude-opus-5"),

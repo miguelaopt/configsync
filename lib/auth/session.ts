@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { auth } from "@/lib/auth";
 import { db, schema } from "@/lib/db";
@@ -23,6 +23,16 @@ export async function requireUserId(): Promise<string> {
   const session = await getSession();
   if (!session) throw new UnauthorizedError();
   return session.user.id;
+}
+
+/**
+ * The signed-in admin, or a 404 for everyone else: /admin does not exist for them. While an admin
+ * views the app as someone else, the session is that user's, so /admin is gone until they stop.
+ */
+export async function requireAdmin() {
+  const session = await getSession();
+  if (session?.user.role !== "admin") notFound();
+  return session.user;
 }
 
 export class UnauthorizedError extends Error {

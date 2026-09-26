@@ -43,6 +43,11 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  // better-auth admin plugin. `role` is synced from ADMIN_EMAILS at boot (lib/db/admins.ts).
+  role: text("role"),
+  banned: boolean("banned").default(false),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires", { withTimezone: true }),
   ...timestamps,
 });
 
@@ -54,6 +59,8 @@ export const sessions = pgTable(
     token: text("token").notNull().unique(),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
+    /** Set on a session an admin opened as this user (better-auth admin plugin). */
+    impersonatedBy: text("impersonated_by"),
     userId: text("user_id")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
@@ -470,6 +477,29 @@ export const billingEvents = pgTable("billing_events", {
 });
 
 export type PlanRowSelect = typeof plans.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// Admin: every action taken from /admin, kept after the target account is deleted
+// ---------------------------------------------------------------------------
+
+export const adminAudit = pgTable(
+  "admin_audit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    actorId: text("actor_id").references(() => users.id, { onDelete: "set null" }),
+    action: text("action").notNull(),
+    /** No foreign key: the row outlives a deleted account. `details.email` names it. */
+    targetUserId: text("target_user_id"),
+    details: jsonb("details").$type<Record<string, unknown>>().default({}).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => [
+    index("admin_audit_created_idx").on(t.createdAt),
+    index("admin_audit_target_idx").on(t.targetUserId),
+  ],
+);
+
+export type AdminAudit = typeof adminAudit.$inferSelect;
 
 // ---------------------------------------------------------------------------
 // Relations

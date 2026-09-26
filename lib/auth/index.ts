@@ -1,11 +1,13 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { admin } from "better-auth/plugins";
 import { db, schema } from "@/lib/db";
 import { env, githubOAuthEnabled } from "@/lib/env";
 import { sendEmail } from "@/lib/email";
 import { resetPasswordEmail } from "@/lib/email-templates";
 import { createProfileForUser } from "@/lib/auth/profile";
+import { LEGAL } from "@/lib/legal";
 
 export const auth = betterAuth({
   appName: "ConfigSync",
@@ -70,7 +72,14 @@ export const auth = betterAuth({
       },
     },
   },
-  plugins: [nextCookies()],
+  plugins: [
+    // Roles, bans and "view as" for /admin. Who is admin comes from ADMIN_EMAILS (lib/db/admins.ts).
+    admin({
+      bannedUserMessage: `This account is suspended. Write to ${LEGAL.email} if you think that's a mistake.`,
+      impersonationSessionDuration: 60 * 60,
+    }),
+    nextCookies(),
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;
