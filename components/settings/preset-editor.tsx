@@ -14,6 +14,7 @@ import {
   Plus,
   RotateCcw,
   Save,
+  Search,
   Trash2,
   X,
 } from "lucide-react";
@@ -42,6 +43,14 @@ import { formatValue, valuesEqual, type SettingValue } from "@/lib/settings/type
 import { CATEGORY_ICONS } from "@/lib/settings/icons";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ConfirmDialog } from "@/components/ui/alert-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -59,6 +68,7 @@ import { SettingControl, isWideControl } from "./setting-control";
 import { SettingDialog } from "./setting-dialog";
 import { CategoryDialog } from "./category-dialog";
 import { SettingDetails } from "./setting-details";
+import { filterSettings } from "@/lib/settings/filter";
 import { plural } from "@/lib/utils/format";
 import { cn } from "@/lib/utils/cn";
 
@@ -95,6 +105,8 @@ export function PresetEditor({ game, preset, categories, preferences, files = nu
   const [selectMode, setSelectMode] = React.useState(false);
   const [selected, setSelected] = React.useState<Set<string>>(new Set());
   const [addingCategory, setAddingCategory] = React.useState(false);
+  const [query, setQuery] = React.useState("");
+  const [onlyCategory, setOnlyCategory] = React.useState<string | null>(null);
   const [activeCategory, setActiveCategory] = React.useState<string | null>(
     categories[0]?.id ?? null,
   );
@@ -219,6 +231,24 @@ export function PresetEditor({ game, preset, categories, preferences, files = nu
   };
 
   const totalSettings = categories.reduce((n, c) => n + c.settings.length, 0);
+  const shown = filterSettings(
+    categories,
+    query,
+    onlyCategory && categories.some((c) => c.id === onlyCategory) ? onlyCategory : null,
+    (s) => files?.[s.name]?.keys ?? [],
+  );
+  const shownCount = shown ? [...shown.values()].reduce((n, s) => n + s.length, 0) : totalSettings;
+  const clearFilter = () => {
+    setQuery("");
+    setOnlyCategory(null);
+  };
+  // With one category shown, the rail switches the filter instead of scrolling to a hidden section.
+  const current = onlyCategory ?? activeCategory;
+  const pickCategory = (id: string) => (e: React.MouseEvent) => {
+    if (!onlyCategory) return;
+    e.preventDefault();
+    setOnlyCategory(id);
+  };
 
   return (
     <div className="lg:grid lg:grid-cols-[200px_1fr] lg:gap-8">
@@ -233,10 +263,11 @@ export function PresetEditor({ game, preset, categories, preferences, files = nu
                 <li key={c.id}>
                   <a
                     href={`#category-${c.id}`}
-                    aria-current={activeCategory === c.id ? "true" : undefined}
+                    onClick={pickCategory(c.id)}
+                    aria-current={current === c.id ? "true" : undefined}
                     className={cn(
                       "flex h-9 items-center gap-2 rounded-sm border-l-2 px-2.5 text-[13px] transition-colors",
-                      activeCategory === c.id
+                      current === c.id
                         ? "border-accent bg-raised text-ink"
                         : "border-transparent text-ink-2 hover:bg-surface hover:text-ink",
                     )}
@@ -274,10 +305,11 @@ export function PresetEditor({ game, preset, categories, preferences, files = nu
               <a
                 key={c.id}
                 href={`#category-${c.id}`}
-                aria-current={activeCategory === c.id ? "true" : undefined}
+                onClick={pickCategory(c.id)}
+                aria-current={current === c.id ? "true" : undefined}
                 className={cn(
                   "flex h-8 shrink-0 items-center rounded-sm border px-3 text-[13px] whitespace-nowrap",
-                  activeCategory === c.id
+                  current === c.id
                     ? "border-accent bg-accent-soft text-ink"
                     : "border-line text-ink-2",
                 )}
@@ -297,10 +329,58 @@ export function PresetEditor({ game, preset, categories, preferences, files = nu
 
         {/* Toolbar */}
         {totalSettings > 0 ? (
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <div className="relative w-full sm:w-72">
+              <Search
+                className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-ink-3"
+                aria-hidden
+              />
+              <Input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setQuery("");
+                }}
+                placeholder="Search settings or config keys"
+                aria-label="Search settings"
+                className="pr-8 pl-8"
+              />
+              {query ? (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  aria-label="Clear search"
+                  className="absolute top-1/2 right-1.5 flex size-6 -translate-y-1/2 cursor-pointer items-center justify-center rounded-xs text-ink-3 hover:text-ink"
+                >
+                  <X className="size-3.5" />
+                </button>
+              ) : null}
+            </div>
+            <Select
+              value={onlyCategory ?? "all"}
+              onValueChange={(v) => setOnlyCategory(v === "all" ? null : v)}
+            >
+              <SelectTrigger aria-label="Show category" className="w-44">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All categories</SelectItem>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        ) : null}
+        {totalSettings > 0 ? (
           <div className="mb-3 flex items-center justify-between gap-2">
-            <p className="text-[13px] text-ink-3">
-              {plural(categories.length, "category", "categories")} ·{" "}
-              {plural(totalSettings, "setting")}
+            <p className="text-[13px] text-ink-3" aria-live="polite">
+              {shown
+                ? `${shownCount} of ${plural(totalSettings, "setting")}`
+                : `${plural(categories.length, "category", "categories")} · ${plural(totalSettings, "setting")}`}
             </p>
             {selectMode ? (
               <div className="flex items-center gap-2">
@@ -348,12 +428,23 @@ export function PresetEditor({ game, preset, categories, preferences, files = nu
               </Button>
             }
           />
+        ) : shown && shown.size === 0 ? (
+          <EmptyState
+            title="No settings match"
+            description={`Nothing in this preset matches “${query.trim()}”.`}
+            action={
+              <Button variant="secondary" onClick={clearFilter}>
+                Clear search
+              </Button>
+            }
+          />
         ) : (
           <div className="flex flex-col gap-8">
             {categories.map((category, index) => (
               <CategorySection
                 key={category.id}
                 category={category}
+                visible={shown ? (shown.get(category.id) ?? null) : undefined}
                 index={index}
                 count={categories.length}
                 allCategories={categories}
@@ -427,6 +518,8 @@ export function PresetEditor({ game, preset, categories, preferences, files = nu
 
 type SectionProps = {
   category: CategoryWithSettings;
+  /** The settings a search or category filter leaves, null to hide the section, undefined when unfiltered. */
+  visible?: Setting[] | null;
   index: number;
   count: number;
   allCategories: CategoryWithSettings[];
@@ -446,6 +539,7 @@ type SectionProps = {
 
 function CategorySection({
   category,
+  visible,
   index,
   count,
   allCategories,
@@ -501,6 +595,10 @@ function CategorySection({
   };
 
   const hasDefaults = category.settings.some((s) => s.defaultValue != null);
+  const filtered = visible !== undefined;
+  const rows = visible ?? category.settings;
+
+  if (visible === null) return null;
 
   return (
     <section
@@ -512,14 +610,14 @@ function CategorySection({
         <button
           type="button"
           onClick={toggleCollapsed}
-          aria-expanded={!collapsed}
+          aria-expanded={!collapsed || filtered}
           aria-controls={`category-${category.id}-body`}
           className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-sm text-left"
         >
           <ChevronDown
             className={cn(
               "size-4 shrink-0 text-ink-3 transition-transform",
-              collapsed && "-rotate-90",
+              collapsed && !filtered && "-rotate-90",
             )}
             aria-hidden
           />
@@ -589,7 +687,7 @@ function CategorySection({
         </DropdownMenu>
       </div>
 
-      <div id={`category-${category.id}-body`} hidden={collapsed}>
+      <div id={`category-${category.id}-body`} hidden={collapsed && !filtered}>
         {category.settings.length === 0 ? (
           <div className="flex items-center justify-between gap-3 py-4 pl-3">
             <p className="text-[13px] text-ink-3">No settings in {category.name} yet.</p>
@@ -599,7 +697,7 @@ function CategorySection({
           </div>
         ) : (
           <ul>
-            {category.settings.map((setting, i) => (
+            {rows.map((setting, i) => (
               <SettingRow
                 key={setting.id}
                 setting={setting}
@@ -614,8 +712,8 @@ function CategorySection({
                 category={category.name}
                 file={files?.[setting.name] ?? null}
                 catalogGame={catalogGame}
-                canMoveUp={i > 0}
-                canMoveDown={i < category.settings.length - 1}
+                canMoveUp={!filtered && i > 0}
+                canMoveDown={!filtered && i < rows.length - 1}
                 onMove={(dir) => onMoveSetting(setting.id, dir)}
               />
             ))}

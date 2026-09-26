@@ -23,6 +23,17 @@ AI_VISION_API_KEY=sk-ant-…
 AI_VISION_MODEL=claude-opus-5  # optional
 ```
 
+Offline instead, with no key and no image leaving the server:
+
+```
+AI_VISION_PROVIDER=tesseract   # needs the tesseract binary + English data
+```
+
+The Docker image installs them when built with `--build-arg OCR=true` (about 30 MB). The OCR
+provider (`lib/providers/tesseract-ocr.ts`) only recognises rows whose label is a known setting
+name or alias and reads the text after it on the same line as the value: dropdowns, numbers and
+resolutions come through, checkboxes and sliders do not. The model reads more; OCR is private.
+
 Keys are read server-side only. The cap is `LIMITS.pro.aiScreenshots` (30 images per rolling
 24 h per user) in `lib/billing/limits.ts`; Free has 0. Without Paddle everyone is Pro, so a
 self-hosted instance with a key gives every account 30 images a day.
@@ -43,10 +54,10 @@ self-hosted instance with a key gives every account 30 images a day.
 ## Adding a provider
 
 Implement `ScreenshotParser` from `lib/providers/screenshot.ts` (image + hints → proposals +
-usage) and add a case to `getScreenshotParser()`. An offline OCR provider fits the same
-contract.
+usage) and add a case to `getScreenshotParser()`. `tesseract-ocr.ts` is the smallest example.
 
 ## Privacy
 
 Screenshots sent to a hosted model leave the server. The dialog says which provider receives
-the image before upload. Self-hosters who don't want that leave `AI_VISION_PROVIDER` unset.
+the image before upload. Self-hosters who don't want that use `tesseract`, or leave
+`AI_VISION_PROVIDER` unset.

@@ -31,6 +31,8 @@ import { MAX_SCREENSHOTS } from "@/lib/types";
 
 export type ScreenshotMenuProps = {
   enabled: boolean;
+  /** Read on this server (OCR) rather than by a hosted model. */
+  offline: boolean;
   pro: boolean;
   categories: { id: string; name: string }[];
 };
@@ -39,6 +41,7 @@ type Props = {
   open: boolean;
   onOpenChange: (o: boolean) => void;
   presetId: string;
+  offline: boolean;
   pro: boolean;
   categories: { id: string; name: string }[];
 };
@@ -54,11 +57,20 @@ const MAX_EDGE = 1568;
 const NEW = "new:";
 const PRIVACY =
   "Screenshots are sent to Anthropic to read the settings. They are analysed once and not stored.";
+const PRIVACY_OFFLINE =
+  "Screenshots are read on the ConfigSync server and never leave it. They are analysed once and not stored.";
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 
 /** Upload screenshots of the game's settings menu, review what was read, apply what you tick. */
-export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories }: Props) {
+export function ScreenshotDialog({
+  open,
+  onOpenChange,
+  presetId,
+  offline,
+  pro,
+  categories,
+}: Props) {
   const router = useRouter();
   const [files, setFiles] = React.useState<File[]>([]);
   const [rows, setRows] = React.useState<Row[]>([]);
@@ -179,7 +191,9 @@ export function ScreenshotDialog({ open, onOpenChange, presetId, pro, categories
         description={
           phase === "review"
             ? "Tick what to apply. Nothing is saved until you press Apply."
-            : PRIVACY
+            : offline
+              ? PRIVACY_OFFLINE
+              : PRIVACY
         }
         size={phase === "review" ? "lg" : "md"}
       >

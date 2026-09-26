@@ -15,7 +15,7 @@ export async function generateMetadata({
   const p = await getPublicProfile((await params).username);
   return p
     ? {
-        title: `${p.displayName ?? p.username} · ConfigSync`,
+        title: `${p.displayName ?? p.username}`,
         description: p.bio ?? `Game settings shared by ${p.username}`,
       }
     : { title: "Profile" };

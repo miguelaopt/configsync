@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: P }): Promise<Metad
   const pub = await getPublicPreset(username, gameSlug, presetSlug);
   return pub
     ? {
-        title: `${pub.preset.name} · ${pub.game.name} · ConfigSync`,
+        title: `${pub.preset.name} · ${pub.game.name}`,
         description:
           pub.preset.description ?? `${pub.game.name} settings shared by ${pub.profile.username}`,
       }

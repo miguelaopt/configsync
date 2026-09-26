@@ -5,7 +5,7 @@ import { getGameBySlug, listPresetsForGame } from "@/lib/data/games";
 import { getPresetBySlug, getPresetFull, toCategoryDocs } from "@/lib/data/presets";
 import { listRevisions } from "@/lib/data/revisions";
 import { getPlan } from "@/lib/billing/plan";
-import { screenshotAssistantEnabled } from "@/lib/env";
+import { screenshotAssistantEnabled, screenshotReadOffline } from "@/lib/env";
 import { publicCatalog, settingFiles } from "@/lib/catalog";
 import Link from "next/link";
 import { deviceRowsForGame } from "@/lib/data/devices";
@@ -112,6 +112,7 @@ export default async function PresetPage({
               }
               ai={{
                 enabled: screenshotAssistantEnabled,
+                offline: screenshotReadOffline,
                 pro: plan === "pro",
                 categories: categories.map((c) => ({ id: c.id, name: c.name })),
               }}

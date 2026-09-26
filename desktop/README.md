@@ -4,6 +4,14 @@ A Tauri window around the companion. It does nothing itself: every read, write a
 `csync.exe --json`, shipped inside the app as a sidecar. See
 `docs/superpowers/specs/2026-09-23-windows-desktop-app-design.md`.
 
+## Tray
+
+The app lives in the tray: Open, **Keep games in sync**, Quit. Closing the window hides it. The
+tick runs the sidecar's `csync watch` as a child process and registers the app to start with
+Windows (`--tray`, window hidden); unticking stops both. Ticking also deletes the CLI's
+`Startup\csync-watch.cmd`, so one PC never runs two watches. The choice is remembered in the
+app's config dir (`watch-on`).
+
 ## Try it on Windows (nothing to install)
 
 The `Desktop` workflow builds the `.msi` on every PR that touches `desktop/` or `companion/`

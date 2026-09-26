@@ -13,6 +13,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { env } from "@/lib/env";
 import type { SettingTypeId } from "@/lib/settings/types";
 import { createAnthropicParser } from "./anthropic-vision";
+import { createTesseractParser } from "./tesseract-ocr";
 
 export type ScreenshotImage = {
   bytes: Uint8Array;
@@ -74,6 +75,9 @@ export function getScreenshotParser(): ScreenshotParser | null {
         new Anthropic({ apiKey: env.AI_VISION_API_KEY, timeout: 180_000, maxRetries: 1 }),
         env.AI_VISION_MODEL,
       );
+      break;
+    case "tesseract":
+      parser = createTesseractParser();
       break;
     default:
       parser = null;

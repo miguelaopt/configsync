@@ -15,6 +15,25 @@ export type ChangelogEntry = {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "2026-09-26",
+    version: "0.15.0",
+    title: "Find a setting, and sync from the tray",
+    changes: [
+      {
+        kind: "new",
+        text: "Search inside a preset: type part of a setting's name, its description or its config key, and only the matching settings stay. Pick one category to see just that one.",
+      },
+      {
+        kind: "new",
+        text: "The Windows app lives in the tray. Tick Keep games in sync and it starts with Windows and keeps every game on this PC's preset, even with its window closed (Pro).",
+      },
+      {
+        kind: "fixed",
+        text: "Public profile and preset pages carry the site's name once in their title.",
+      },
+    ],
+  },
+  {
     date: "2026-09-25",
     version: "0.14.2",
     title: "Rocket League's whole menu from screenshots",
