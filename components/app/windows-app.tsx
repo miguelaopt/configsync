@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/site";
@@ -18,6 +19,12 @@ export function WindowsAppCard({ className }: { className?: string }) {
       <p className="text-xs text-ink-3">
         Windows 10 and 11. Windows may warn about an unknown app the first time: More info → Run
         anyway.
+      </p>
+      <p className="border-t border-line pt-3 text-xs text-ink-3">
+        On Linux, or prefer a terminal?{" "}
+        <Link href="/docs/companion" className="text-accent-text hover:underline">
+          Install the csync companion
+        </Link>
       </p>
     </section>
   );

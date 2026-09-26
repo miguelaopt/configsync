@@ -16,7 +16,8 @@ export function CatalogPicker({
 }: {
   entries: PublicCatalogEntry[];
   owned: string[];
-  onDone: () => void;
+  /** Closes the dialog it sits in; the empty dashboard has none. */
+  onDone?: () => void;
 }) {
   const router = useRouter();
   const [pendingId, setPendingId] = React.useState<string | null>(null);
@@ -26,7 +27,7 @@ export function CatalogPicker({
       setPendingId(null);
       if (!result.ok) return toastError(result.error);
       toast.success("Game added with its real settings menu");
-      onDone();
+      onDone?.();
       router.push(`/games/${result.data.slug}`);
     });
   };

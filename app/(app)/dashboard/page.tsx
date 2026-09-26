@@ -49,6 +49,19 @@ export default async function DashboardPage() {
   const firstName = user.name.split(" ")[0] || "there";
   const empty = data.totals.games === 0;
   const overall = data.overall ? OVERALL_COPY[data.overall] : null;
+  const upsell =
+    billingEnabled && plan !== "pro" ? (
+      <section className="panel flex flex-col gap-3 p-5">
+        <h2 className="text-[15px] font-semibold text-ink">Go further with Pro</h2>
+        <p className="text-[13px] text-ink-2">
+          Unlimited games and history, auto-switch on every PC, per-PC presets and the AI screenshot
+          importer.
+        </p>
+        <Button asChild variant="primary" size="lg" className="mt-1 w-full">
+          <Link href="/pricing">Upgrade to Pro</Link>
+        </Button>
+      </section>
+    ) : null;
 
   return (
     <Page size="xl">
@@ -104,10 +117,12 @@ export default async function DashboardPage() {
       </div>
 
       {empty ? (
-        <>
-          <EmptyVault catalog={catalog} owned={owned} />
-          <WindowsAppCard className="mt-5 max-w-md" />
-        </>
+        <EmptyVault
+          catalog={catalog}
+          owned={owned}
+          pcConnected={data.devices.length > 0}
+          rail={upsell}
+        />
       ) : (
         <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_336px]">
           {/* Main column */}
@@ -347,18 +362,7 @@ export default async function DashboardPage() {
                 },
               ]}
             />
-            {billingEnabled && plan !== "pro" ? (
-              <section className="panel flex flex-col gap-3 p-5">
-                <h2 className="text-[15px] font-semibold text-ink">Go further with Pro</h2>
-                <p className="text-[13px] text-ink-2">
-                  Unlimited games and history, auto-switch on every PC, per-PC presets and the AI
-                  screenshot importer.
-                </p>
-                <Button asChild variant="primary" size="lg" className="mt-1 w-full">
-                  <Link href="/pricing">Upgrade to Pro</Link>
-                </Button>
-              </section>
-            ) : null}
+            {upsell}
           </aside>
         </div>
       )}
