@@ -1,7 +1,7 @@
 # Project state
 
-Last updated 2026-09-24, after PR #63 was merged and deployed. Live version **0.13.2**;
-companion version **0.5.0**.
+Last updated 2026-09-26, after 0.15.0 was deployed (PRs #67, #68, #46). Live version **0.15.0**;
+companion version **0.5.0**. The admin dashboard (below) is on its own PR.
 
 This is what exists and where it lives. `TODO.md` is what is left. `AGENTS.md` is how to work.
 
@@ -93,6 +93,19 @@ FAQPage. Search Console is verified and the sitemap submitted (owner, 2026-09-20
 founder offer (lifetime at 10 € through a Paddle discount code, `FOUNDER` in
 `lib/billing/public.ts`). The webhook handles `transaction.*`, `subscription.*` and
 `adjustment.*`; a real purchase and refund were verified end to end on 2026-09-24.
+
+**Admin (`/admin`).** Only for accounts listed in `ADMIN_EMAILS`: `instrumentation.ts` syncs
+`users.role` from it at every boot (`lib/db/admins.ts`), and everyone else gets a 404. Overview
+(accounts, active users, Pro split, MRR, revenue from the stored Paddle webhooks, sign-ups per
+day, latest events), Users (search, filters, a page per account with sessions, PCs, tokens,
+games, payments), Billing (plans, every webhook with its payload), Usage (catalog games,
+companion, screenshot import, public presets with take-down), System (config, table sizes) and
+an audit log. Actions: grant or revoke a manual Pro, suspend or lift (better-auth `admin`
+plugin; also revokes companion tokens), sign out everywhere, revoke tokens, mark email
+verified, email the account, delete it (refused while a paid subscription runs), and "view as"
+for an hour with a bar to stop. Every action lands in `admin_audit`. Errors, email delivery,
+backups, maintenance mode, announcements and uptime are `ComingSoonPanel`s: the data is not
+collected yet.
 
 ---
 
