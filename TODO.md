@@ -25,6 +25,9 @@ a card, a dashboard login)
       coercion in `lib/settings/coerce.ts`. A Pro feature that misreads is worse than one that is
       off.
 
+- [ ] **Apply the CS2 mapping to the catalog** — `CS2_CATALOG_MAPPING.md` has the checklist. The
+      catalog still writes old crosshair convars and wrong Ambient Occlusion / HDR values.
+
 ## 2. Getting found
 
 - [~] **Search engines.** Done and live: searchable titles and descriptions, `robots.txt`,
@@ -48,7 +51,8 @@ a card, a dashboard login)
 - [ ] **Do the restore drill once** — **owner**. `PRE-LAUNCH.md` §7 restores the newest dump into a
       scratch `gsv_drill` database and compares row counts. Safe to run on production. Write down
       how long it took; that is the recovery time.
-- [ ] **Test the maintenance page once**: `docker compose stop app`, load the site, bring it back.
+- [x] **Maintenance page** — checked 2026-09-26 with the production Caddyfile and the app down:
+      502 → "ConfigSync — back shortly". Not rehearsed on the live server.
 - [ ] **Mark a few presets public** — **owner**. The profile is on (2026-09-20); with no public
       presets `/p/miguel-ferreira` says "No public presets yet".
 
@@ -57,15 +61,14 @@ a card, a dashboard login)
 - [x] **Setting details panel** on the preset page — 0.14.0, click a setting's name. The mockup has it; the honest version shows the
       setting's name, description and default value, and drops "tip" and "related settings", which
       do not exist. Needs a selected-setting state threaded through `components/settings/preset-editor.tsx`.
-- [ ] **Search within a preset** — a client-side filter over the rows, plus a category filter. Small
+- [x] **Search within a preset** — 0.15.0: a client-side filter over the rows, plus a category filter. Small
       and clearly useful on an 81-setting preset.
 - [ ] **More catalog games.** `docs/catalog.md`. Every game added is a reason for someone new to
       sign up. Valorant, Apex, Fortnite and Minecraft are the obvious next ones.
 - [ ] **Friends, public profiles, pro players** — the three `Coming soon` cards. Needs a real
       design pass first: following, a discovery feed, and what "verified" means.
-- [ ] **Desktop tray app** around `csync watch`. Autostart already works, so this is UX sugar.
-- [ ] **Offline OCR provider** for self-hosters who do not want images leaving their server —
-      the `ScreenshotParser` contract in `lib/providers/screenshot.ts` is the seam.
+- [x] **Desktop tray app** around `csync watch` — 0.15.0 (Keep games in sync, starts with Windows).
+- [x] **Offline OCR provider** — `AI_VISION_PROVIDER=tesseract` (0.15.0). Reads text values only.
 
 ## 5. Housekeeping
 
