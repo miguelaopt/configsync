@@ -2,13 +2,22 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Download, Gamepad2, LayoutDashboard, Search, Settings, Upload } from "lucide-react";
+import {
+  Download,
+  Gamepad2,
+  LayoutDashboard,
+  Search,
+  Settings,
+  ShieldCheck,
+  Upload,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { Logo } from "./logo";
 import { Kbd } from "@/components/ui/kbd";
 import { CommandPalette } from "./command-palette";
 import { UserMenu } from "./user-menu";
 import { SITE } from "@/lib/site";
+import { ImpersonationBar } from "./impersonation-bar";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -30,11 +39,19 @@ type ShellProps = {
   username: string;
   /** null when billing is off (self-host) — no badge either way. */
   plan?: "free" | "pro" | null;
+  /** Adds Admin to the navigation. */
+  admin?: boolean;
+  /** Set while an admin views the app as this user. */
+  impersonating?: boolean;
   children: React.ReactNode;
 };
 
-export function AppShell({ user, username, plan, children }: ShellProps) {
+const ADMIN_NAV = { href: "/admin", label: "Admin", icon: ShieldCheck } as const;
+
+export function AppShell({ user, username, plan, admin, impersonating, children }: ShellProps) {
   const pathname = usePathname();
+  const nav = admin ? [...NAV, ADMIN_NAV] : NAV;
+  const mobileNav = admin ? [...MOBILE_NAV, ADMIN_NAV] : MOBILE_NAV;
   const [paletteOpen, setPaletteOpen] = React.useState(false);
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
@@ -61,7 +78,7 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
           <Logo size={28} className="text-[19px]" />
         </Link>
         <ul className="flex flex-col gap-1 px-3 py-3">
-          {NAV.map(({ href, label, icon: Icon }) => (
+          {nav.map(({ href, label, icon: Icon }) => (
             <li key={href}>
               <Link
                 href={href}
@@ -132,6 +149,7 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
         </header>
 
         <main id="main" className="min-w-0 flex-1 pb-20 lg:pb-8">
+          {impersonating ? <ImpersonationBar name={user.name} email={user.email} /> : null}
           {children}
         </main>
       </div>
@@ -142,7 +160,7 @@ export function AppShell({ user, username, plan, children }: ShellProps) {
         className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-[rgb(62_70_108/0.4)] bg-[rgb(18_22_48/0.7)] backdrop-blur-xl lg:hidden"
       >
         <ul className="flex h-14 items-stretch">
-          {MOBILE_NAV.map(({ href, label, icon: Icon }) => (
+          {mobileNav.map(({ href, label, icon: Icon }) => (
             <li key={href} className="flex-1">
               <Link
                 href={href}

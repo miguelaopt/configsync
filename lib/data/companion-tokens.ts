@@ -1,9 +1,9 @@
 import "server-only";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { generateToken, hashToken } from "@/lib/auth/companion-token";
 
-const { companionTokens } = schema;
+const { companionTokens, users } = schema;
 
 /** Returns the plaintext token once; only its hash is stored. */
 export async function createCompanionToken(userId: string, name: string) {
@@ -29,13 +29,21 @@ export async function revokeCompanionToken(userId: string, id: string) {
     .where(and(eq(companionTokens.userId, userId), eq(companionTokens.id, id)));
 }
 
-/** Resolves a bearer token to its user and stamps last_used_at; null when unknown. */
+/**
+ * Resolves a bearer token to its user and stamps last_used_at; null when unknown or when the
+ * account is suspended (a ban revokes tokens too, but this holds even if one survived it).
+ */
 export async function userIdForToken(token: string) {
   if (!token.startsWith("csync_")) return null;
   const [row] = await db
     .update(companionTokens)
     .set({ lastUsedAt: new Date() })
-    .where(eq(companionTokens.tokenHash, hashToken(token)))
+    .where(
+      and(
+        eq(companionTokens.tokenHash, hashToken(token)),
+        sql`not exists (select 1 from ${users} u where u.id = ${companionTokens.userId} and u.banned is true and (u.ban_expires is null or u.ban_expires > now()))`,
+      ),
+    )
     .returning({ userId: companionTokens.userId });
   return row?.userId ?? null;
 }

@@ -12,4 +12,11 @@ export async function register() {
     await runMigrations(url);
     console.log("[csync] migrations applied");
   }
+
+  if (process.env.DATABASE_URL) {
+    const { parseAdminEmails, syncAdmins } = await import("@/lib/db/admins");
+    const emails = parseAdminEmails(process.env.ADMIN_EMAILS);
+    await syncAdmins(process.env.DATABASE_URL, emails);
+    console.log(`[csync] admins: ${emails.length}`);
+  }
 }
