@@ -229,6 +229,7 @@ export function PresetActionsMenu({
           open={screenshot}
           onOpenChange={setScreenshot}
           presetId={preset.id}
+          offline={ai.offline}
           pro={ai.pro}
           categories={ai.categories}
         />

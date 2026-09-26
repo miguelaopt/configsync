@@ -21,14 +21,17 @@ const base = z.object({
   PADDLE_PRICE_MONTHLY: z.string().optional(),
   PADDLE_PRICE_LIFETIME: z.string().optional(),
   PADDLE_DISCOUNT_CODE: z.string().optional(),
-  AI_VISION_PROVIDER: z.enum(["anthropic"]).optional(),
+  AI_VISION_PROVIDER: z.enum(["anthropic", "tesseract"]).optional(),
   AI_VISION_API_KEY: z.string().optional(),
   AI_VISION_MODEL: z.string().default("claude-opus-5"),
 });
-const schema = base.refine((e) => !e.AI_VISION_PROVIDER || Boolean(e.AI_VISION_API_KEY), {
-  message: "AI_VISION_API_KEY is required when AI_VISION_PROVIDER is set",
-  path: ["AI_VISION_API_KEY"],
-});
+const schema = base.refine(
+  (e) => e.AI_VISION_PROVIDER !== "anthropic" || Boolean(e.AI_VISION_API_KEY),
+  {
+    message: "AI_VISION_API_KEY is required when AI_VISION_PROVIDER is anthropic",
+    path: ["AI_VISION_API_KEY"],
+  },
+);
 
 function load() {
   const parsed = schema.safeParse({
@@ -64,3 +67,5 @@ export const founderCode = billingEnabled ? (env.PADDLE_DISCOUNT_CODE ?? null) :
 export const founderOfferEnabled = founderCode !== null;
 /** Whether the screenshot importer is offered at all. Off ⇒ the UI never mentions it. */
 export const screenshotAssistantEnabled = Boolean(env.AI_VISION_PROVIDER);
+/** `tesseract`: screenshots are read on this server and never sent anywhere. */
+export const screenshotReadOffline = env.AI_VISION_PROVIDER === "tesseract";
