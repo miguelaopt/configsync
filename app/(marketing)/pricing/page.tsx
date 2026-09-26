@@ -129,7 +129,7 @@ export default async function PricingPage() {
             },
             {
               t: "The work continuing",
-              d: "More games in the catalog, the desktop tray app, friends and public profiles. Pro is what funds the next thing rather than the next investor.",
+              d: "More games in the catalog, friends and public profiles. Pro is what funds the next thing rather than the next investor.",
             },
           ].map((c) => (
             <div key={c.t} className="panel flex flex-col gap-2 p-5">

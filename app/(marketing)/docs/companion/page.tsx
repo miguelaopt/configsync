@@ -97,6 +97,11 @@ export default function CompanionDocsPage() {
           game is closed. Change the Default from your phone; the PC follows.
         </p>
         <Code>{`csync watch --install     # start with your session\ncsync watch --once        # one pass, for scripts\ncsync watch --uninstall`}</Code>
+        <p>
+          On Windows, the ConfigSync app does the same from the tray: tick{" "}
+          <Cmd>Keep games in sync</Cmd> and it starts with Windows and keeps running after you close
+          its window.
+        </p>
       </Section>
 
       <Section title="Apply right before launch">
