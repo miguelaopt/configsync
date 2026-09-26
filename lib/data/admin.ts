@@ -1,6 +1,7 @@
 import "server-only";
 import { and, asc, count, desc, eq, gte, ilike, or, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
+import { requireAdmin } from "@/lib/auth/session";
 import { resolvePlan, type PlanRow } from "@/lib/billing/paddle";
 import { everyDay, planCounts, revenue } from "@/lib/admin/metrics";
 import type { DeviceApplied } from "@/lib/db/schema";
@@ -21,6 +22,9 @@ const {
   aiRequests,
   adminAudit,
 } = schema;
+
+// Every exported reader checks the admin itself: the /admin layout's check doesn't run on a
+// client navigation between its pages, so a page must never be the only guard of its data.
 
 const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000);
 
@@ -62,6 +66,7 @@ export type AdminActivity = {
 };
 
 export async function getAdminOverview() {
+  await requireAdmin();
   const [
     totalUsers,
     new1,
@@ -223,6 +228,7 @@ const planRowOf = (r: {
  * app gates on. ponytail: one query over all users; move the filter into SQL past ~20k accounts.
  */
 export async function listAdminUsers(opts: { q: string; filter: AdminUserFilter; page: number }) {
+  await requireAdmin();
   const rows = (await loadUserRows(opts.q.trim())).map((r) => ({
     ...r,
     lastActive: r.lastActive ? new Date(r.lastActive) : null,
@@ -250,6 +256,7 @@ export async function listAdminUsers(opts: { q: string; filter: AdminUserFilter;
 }
 
 export async function getAdminUser(userId: string) {
+  await requireAdmin();
   const user = await db.query.users.findFirst({ where: eq(users.id, userId) });
   if (!user) return null;
   const [
@@ -344,6 +351,7 @@ export async function getAdminUser(userId: string) {
 // Billing ----------------------------------------------------------------------------------------
 
 export async function getAdminBilling(opts: { type: string; page: number }) {
+  await requireAdmin();
   const where = opts.type ? ilike(billingEvents.eventType, `${opts.type}%`) : undefined;
   const [planRows, events, [total], types] = await Promise.all([
     db
@@ -393,6 +401,7 @@ export async function getAdminBilling(opts: { type: string; page: number }) {
 // Usage ------------------------------------------------------------------------------------------
 
 export async function getAdminUsage() {
+  await requireAdmin();
   const [
     byCatalog,
     customGames,
@@ -531,6 +540,7 @@ const TABLES = [
 ] as const;
 
 export async function getAdminSystem() {
+  await requireAdmin();
   const [[size], tables, [sess]] = await Promise.all([
     db.execute<{ bytes: string }>(sql`select pg_database_size(current_database())::text as bytes`),
     db.execute<{ table: string; rows: number; bytes: string }>(sql`
@@ -572,6 +582,7 @@ export async function recordAudit(entry: {
 export async function listAudit(
   opts: { targetUserId?: string; limit?: number; page?: number } = {},
 ) {
+  await requireAdmin();
   const limit = opts.limit ?? ADMIN_PAGE_SIZE;
   return db
     .select({
@@ -591,6 +602,7 @@ export async function listAudit(
 }
 
 export async function countAudit() {
+  await requireAdmin();
   const [row] = await db.select({ n: count() }).from(adminAudit);
   return row?.n ?? 0;
 }

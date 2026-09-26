@@ -47,7 +47,8 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
     updateAge: 60 * 60 * 24, // refresh once a day
-    cookieCache: { enabled: true, maxAge: 60 * 5 },
+    // Short, so a ban, a role change or "sign out everywhere" reaches open tabs within a minute.
+    cookieCache: { enabled: true, maxAge: 60 },
   },
   rateLimit: {
     enabled: true,

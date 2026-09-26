@@ -94,8 +94,11 @@ founder offer (lifetime at 10 € through a Paddle discount code, `FOUNDER` in
 `lib/billing/public.ts`). The webhook handles `transaction.*`, `subscription.*` and
 `adjustment.*`; a real purchase and refund were verified end to end on 2026-09-24.
 
-**Admin (`/admin`).** Only for accounts listed in `ADMIN_EMAILS`: `instrumentation.ts` syncs
-`users.role` from it at every boot (`lib/db/admins.ts`), and everyone else gets a 404. Overview
+**Admin (`/admin`).** Only for accounts listed in `ADMIN_EMAILS` whose email is verified:
+`instrumentation.ts` syncs `users.role` from it at every boot (`lib/db/admins.ts`), and everyone
+else gets a 404. Sign-up doesn't verify emails, so an unverified account never becomes admin.
+Every reader in `lib/data/admin.ts` checks the role itself (a layout check alone is bypassable
+by a client navigation). Overview
 (accounts, active users, Pro split, MRR, revenue from the stored Paddle webhooks, sign-ups per
 day, latest events), Users (search, filters, a page per account with sessions, PCs, tokens,
 games, payments), Billing (plans, every webhook with its payload), Usage (catalog games,
