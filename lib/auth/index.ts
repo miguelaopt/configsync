@@ -3,9 +3,9 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin } from "better-auth/plugins";
 import { db, schema } from "@/lib/db";
-import { env, githubOAuthEnabled } from "@/lib/env";
+import { emailVerificationRequired, env, githubOAuthEnabled } from "@/lib/env";
 import { sendEmail } from "@/lib/email";
-import { resetPasswordEmail } from "@/lib/email-templates";
+import { resetPasswordEmail, verifyEmail } from "@/lib/email-templates";
 import { createProfileForUser } from "@/lib/auth/profile";
 import { LEGAL } from "@/lib/legal";
 
@@ -27,10 +27,25 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     maxPasswordLength: 128,
     autoSignIn: true,
+    // Ignored for new accounts while verification is required: sign-up then creates no session.
+    requireEmailVerification: emailVerificationRequired,
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: async ({ user, url }) => {
       // Not awaited on purpose: keeps response timing independent of the mail server.
       void sendEmail({ to: user.email, ...resetPasswordEmail({ url, name: user.name }) });
+    },
+  },
+  // Social sign-ins arrive verified by the provider. better-auth links one to an existing account
+  // with the same email only once that account's email is verified (requireLocalEmailVerified,
+  // on by default) — so nobody can sign up with someone else's address and wait for them.
+  emailVerification: {
+    sendOnSignUp: emailVerificationRequired,
+    // An unverified account that tries to sign in gets a fresh link instead of a dead end.
+    sendOnSignIn: true,
+    autoSignInAfterVerification: true,
+    expiresIn: 60 * 60 * 24,
+    sendVerificationEmail: async ({ user, url }) => {
+      void sendEmail({ to: user.email, ...verifyEmail({ url, name: user.name }) });
     },
   },
   socialProviders: githubOAuthEnabled
@@ -58,6 +73,7 @@ export const auth = betterAuth({
       "/sign-in/email": { window: 60, max: 10 },
       "/sign-up/email": { window: 60, max: 5 },
       "/request-password-reset": { window: 60, max: 3 },
+      "/send-verification-email": { window: 60, max: 3 },
     },
   },
   advanced: {

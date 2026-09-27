@@ -59,6 +59,11 @@ function load() {
 
 export const env = load();
 export const githubOAuthEnabled = Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET);
+/**
+ * New email/password accounts must click a link before they can sign in. Needs a mailer: without
+ * SMTP (a local self-host, the e2e suite) nobody could ever receive the link, so the gate is off.
+ */
+export const emailVerificationRequired = Boolean(env.SMTP_URL);
 /** No Paddle configured ⇒ no plans: every account is Pro (self-hosting). */
 export const billingEnabled = Boolean(env.PADDLE_API_KEY && env.PADDLE_WEBHOOK_SECRET);
 /**

@@ -27,6 +27,7 @@ const FRIENDLY: Record<string, string> = {
   PASSWORD_TOO_SHORT: "Use at least 8 characters.",
   PASSWORD_TOO_LONG: "Passwords can't be longer than 128 characters.",
   INVALID_TOKEN: "This reset link is invalid or has expired. Request a new one.",
+  EMAIL_NOT_VERIFIED: "Confirm your email first — we've just sent you a new link.",
 };
 
 function friendly(error: { code?: string; message?: string; status?: number } | null | undefined) {
@@ -79,7 +80,7 @@ export function SignInForm({ githubEnabled }: { githubEnabled: boolean }) {
     e.preventDefault();
     setPending(true);
     setError(null);
-    const { error } = await authClient.signIn.email({ email, password });
+    const { error } = await authClient.signIn.email({ email, password, callbackURL: next });
     setPending(false);
     if (error) return setError(friendly(error));
     router.push(next);
@@ -157,18 +158,28 @@ export function SignUpForm({ githubEnabled }: { githubEnabled: boolean }) {
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
+  const [sent, setSent] = React.useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 8) return setError("Use at least 8 characters for your password.");
     setPending(true);
     setError(null);
-    const { error } = await authClient.signUp.email({ name: name.trim(), email, password });
+    const { data, error } = await authClient.signUp.email({
+      name: name.trim(),
+      email,
+      password,
+      callbackURL: next,
+    });
     setPending(false);
     if (error) return setError(friendly(error));
+    // No session means the server wants the email confirmed first.
+    if (!data?.token) return setSent(true);
     router.push(next);
     router.refresh();
   };
+
+  if (sent) return <CheckEmail email={email} next={next} />;
 
   return (
     <div>
@@ -253,6 +264,48 @@ export function SignUpForm({ githubEnabled }: { githubEnabled: boolean }) {
           Sign in
         </Link>
       </p>
+    </div>
+  );
+}
+
+function CheckEmail({ email, next }: { email: string; next: string }) {
+  const [state, setState] = React.useState<"idle" | "pending" | "resent" | "error">("idle");
+
+  const resend = async () => {
+    setState("pending");
+    const { error } = await authClient.sendVerificationEmail({ email, callbackURL: next });
+    setState(error ? "error" : "resent");
+  };
+
+  return (
+    <div>
+      <h1 className="font-display text-[30px] font-semibold tracking-tight">Check your email</h1>
+      <p className="mt-2 text-[14px] leading-relaxed text-ink-2">
+        We sent a link to <span className="text-ink">{email}</span>. Click it to confirm your
+        address and you&apos;re in. It works for 24 hours.
+      </p>
+      <p className="mt-4 text-[13px] leading-relaxed text-ink-3">
+        Nothing there? Look in spam, or send it again.
+      </p>
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          variant="secondary"
+          loading={state === "pending"}
+          disabled={state === "resent"}
+          onClick={resend}
+        >
+          {state === "resent" ? "Sent again" : "Resend the link"}
+        </Button>
+        <Button asChild variant="ghost">
+          <Link href="/sign-in">Back to sign in</Link>
+        </Button>
+      </div>
+      {state === "error" ? (
+        <p role="alert" className="mt-4 text-[13px] text-bad">
+          Couldn&apos;t send it right now. Wait a minute and try again.
+        </p>
+      ) : null}
     </div>
   );
 }

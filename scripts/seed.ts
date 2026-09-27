@@ -11,6 +11,8 @@ try {
 } catch {
   /* optional */
 }
+// The demo address is fake: never mail it. The account is marked verified below instead.
+process.env.SMTP_URL = "";
 
 const DEMO_EMAIL = process.env.SEED_EMAIL ?? "demo@example.com";
 const DEMO_PASSWORD = process.env.SEED_PASSWORD ?? "demo-vault-2026";
@@ -27,6 +29,10 @@ async function main() {
     const res = await auth.api.signUpEmail({
       body: { email: DEMO_EMAIL, password: DEMO_PASSWORD, name: DEMO_NAME },
     });
+    await db
+      .update(schema.users)
+      .set({ emailVerified: true })
+      .where(eq(schema.users.id, res.user.id));
     user = (await db.query.users.findFirst({ where: eq(schema.users.id, res.user.id) }))!;
     console.log(`[seed] created ${DEMO_EMAIL} (password: ${DEMO_PASSWORD})`);
   } else {

@@ -65,3 +65,27 @@ If this wasn't you, ignore this email — your password stays as it is.
     ),
   };
 }
+
+export function verifyEmail({ url, name }: { url: string; name?: string | null }) {
+  const hi = name ? `Hi ${name},` : "Hi,";
+  const safeHi = name ? `Hi ${esc(name)},` : "Hi,";
+  const safeUrl = esc(url);
+  return {
+    subject: `Confirm your ${LEGAL.brand} email`,
+    text: `${hi}
+
+Confirm this is your email address to finish creating your ${LEGAL.brand} account:
+${url}
+
+The link works for 24 hours. If you didn't sign up, ignore this email.
+
+— ${LEGAL.brand} · ${LEGAL.email}`,
+    html: frame(
+      "Confirm your email",
+      `<p style="margin:0 0 8px">${safeHi}</p>
+       <p style="margin:0">Confirm this is your email address to finish creating your ${LEGAL.brand} account. The link works for <strong>24 hours</strong>.</p>
+       ${button(safeUrl, "Confirm my email")}
+       <p style="margin:0;color:${INK_2};font-size:13px">If you didn’t sign up, ignore this email.<br>Button not working? Paste this into your browser:<br><span style="word-break:break-all">${safeUrl}</span></p>`,
+    ),
+  };
+}
