@@ -16,6 +16,17 @@ export type ChangelogEntry = {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "2026-09-27",
+    version: "0.16.0",
+    title: "Confirm your email",
+    changes: [
+      {
+        kind: "new",
+        text: "A new account confirms its email address with a link before its first sign-in. Didn't get it? Send it again from the same screen, or just sign in — a fresh link goes out.",
+      },
+    ],
+  },
+  {
+    date: "2026-09-27",
     version: "0.15.1",
     title: "A first dashboard with somewhere to start",
     changes: [

@@ -89,6 +89,13 @@ from the catalog: every setting with its config key, files per launcher, FAQ wit
 `robots`, `sitemap` (12 URLs), OG images, schema.org Organization / WebSite / SoftwareApplication /
 FAQPage. Search Console is verified and the sitemap submitted (owner, 2026-09-20); Bing done.
 
+**Accounts.** Email + password (better-auth), GitHub when `GITHUB_CLIENT_ID` is set. With a mailer
+(`SMTP_URL`) a new email account must click a 24-hour link before its first sign-in; signing in
+unverified mails a fresh link, and the sign-up screen can resend it. A social sign-in is linked to
+an existing account with the same email only once that account is verified (better-auth's
+`requireLocalEmailVerified` default) — keep it that way when Google and others are added. Accounts
+made before 0.16.0 are verified at their next sign-in; admins can mark one verified by hand.
+
 **Billing.** Paddle is merchant of record, domain approved. Monthly and lifetime, plus the alpha
 founder offer (lifetime at 10 € through a Paddle discount code, `FOUNDER` in
 `lib/billing/public.ts`). The webhook handles `transaction.*`, `subscription.*` and
@@ -96,7 +103,7 @@ founder offer (lifetime at 10 € through a Paddle discount code, `FOUNDER` in
 
 **Admin (`/admin`).** Only for accounts listed in `ADMIN_EMAILS` whose email is verified:
 `instrumentation.ts` syncs `users.role` from it at every boot (`lib/db/admins.ts`), and everyone
-else gets a 404. Sign-up doesn't verify emails, so an unverified account never becomes admin.
+else gets a 404. An account whose email isn't verified never becomes admin.
 Every reader in `lib/data/admin.ts` checks the role itself (a layout check alone is bypassable
 by a client navigation). Overview
 (accounts, active users, Pro split, MRR, revenue from the stored Paddle webhooks, sign-ups per

@@ -36,8 +36,7 @@ a card, a dashboard login)
   the changelog. Search Console verified + sitemap submitted, GitHub repo homepage set
   (2026-09-20). Left:
   - [x] **Bing Webmaster Tools** — done 2026-09-24. Import from Search Console; covers DuckDuckGo too.
-  - [ ] Check the link preview by pasting `https://configsync.app` into a Discord DM and into X's
-        compose box. Expect the purple card, not a grey box.
+  - [x] Link preview — the purple card shows in Discord (2026-09-27). X not checked.
   - [x] `/contact` and `/docs/import-export` — shipped in 0.8.0.
 - [ ] **A reason to link to the site.** Nothing here ranks without inbound links: a post in the
       CS2 / Rocket League config corners of Reddit, a short YouTube walkthrough of `csync watch`,
@@ -48,15 +47,23 @@ a card, a dashboard login)
 
 - [x] **Get the backups off the server** — done 2026-09-24, a daily systemd timer on Miguel's PC. They live only on the machine
       that holds the database. `PRE-LAUNCH.md` §6 has the `rsync` one-liner and the weekly cron.
-- [ ] **Do the restore drill once** — **owner**. `PRE-LAUNCH.md` §7 restores the newest dump into a
-      scratch `gsv_drill` database and compares row counts. Safe to run on production. Write down
-      how long it took; that is the recovery time.
+- [~] **Restore drill** — done 2026-09-27 from the offsite copy on Miguel's PC: `gsv-2026-09-26`
+  restored into a scratch database in **~1 s**, zero errors, all 19 tables (3 users, 4 games,
+  4 presets, 213 settings, 6 migrations; `0006_admin` shipped after the dump). Left, **owner**:
+  the §7 run on the server to compare against live counts. Note: the PC timer runs at ~00:20 and
+  the server dumps at 04:00, so the offsite copy is up to a day behind — move the timer to 06:00
+  if that matters.
 - [x] **Maintenance page** — checked 2026-09-26 with the production Caddyfile and the app down:
       502 → "ConfigSync — back shortly". Not rehearsed on the live server.
-- [ ] **Mark a few presets public** — **owner**. The profile is on (2026-09-20); with no public
-      presets `/p/miguel-ferreira` says "No public presets yet".
+- [x] **Mark a few presets public** — `/p/miguel-ferreira-rs5u` (2026-09-27).
+
+- [x] **Email verification** — 0.16.0. Needed before Google / other social sign-ins land.
 
 ## 4. Product, next
+
+- [ ] **Google sign-in (and others)** — add under `socialProviders` in `lib/auth/index.ts` plus a
+      button beside GitHub. Keep `requireLocalEmailVerified` on (the default). Also point
+      `onAPIError.errorURL` at `/sign-in` so an "account not linked" error isn't a bare page.
 
 - [~] **Admin dashboard** — `/admin` built (see `PROJECT_STATE.md`). Next, in order: server
   error log, Resend delivery webhooks → email log, maintenance-mode switch, in-app

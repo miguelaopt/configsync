@@ -28,6 +28,8 @@ export default defineConfig({
       PORT: String(port),
       BETTER_AUTH_URL: baseURL,
       NEXT_PUBLIC_APP_URL: baseURL,
+      // No mailer: test sign-ups must not send real email, and it turns off email verification.
+      SMTP_URL: "",
       // Plans on (dummy Paddle values, no network) so the Free limit is exercised.
       PADDLE_API_KEY: "e2e-dummy",
       PADDLE_WEBHOOK_SECRET: "e2e-dummy",
